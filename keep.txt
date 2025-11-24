@@ -31,40 +31,41 @@ karyawan biasa : - hak akses
 -fitur search
 
 4.barang masuk : 
--tabel barang masuk : - ui
+-tabel barang masuk : - ui✅
                       - api
--form tambah/edit : - ui
+-form tambah/edit : - ui✅
                     - api
--cetak lapor barang : - ui
+-cetak lapor barang : - ui✅
                       - api
 -fitur search
 
 5.barang keluar :
--tabel barang keluar : - ui
+-tabel barang keluar : - ui✅
                        - api
--form tambah/edit : - ui
+-form tambah/edit : - ui✅
                     - api
 -fitur search
 
 6.laporan barang masuk :
--tabel barang masuk : - ui
+-tabel barang masuk : - ui✅
                       - api
--cetak laporan : - ui
+-cetak laporan : - ui✅
                  - api
 -filter data by tanggal
 
 7.laporan barang keluar :
--tabel barang keluar : - ui
+-tabel barang keluar : - ui✅
                        - api
--cetak laporan : - ui
+-cetak laporan : - ui✅
                  - api
 -filter data by tanggal
 
 8.user :
 -fitur search(nama,no hp)
--tabel user : - ui
+-tabel user : - ui✅
               - api
--form tambah/edit : - ui  
+-form tambah/edit : - ui✅
+                    - password hanya muncul ketika tambah data
                     - api
 
 9.absensi saya :

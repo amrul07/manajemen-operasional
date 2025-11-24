@@ -32,6 +32,7 @@ import { IconExclamationCircle, IconPrinter, IconShoppingCartPlus, IconTrash } f
 import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import CustomCheckBox from '../../../ui-component/checkbox/CustomCheckBox';
 
 export default function PermintaanBarang() {
   return (
@@ -135,25 +136,8 @@ export default function PermintaanBarang() {
                           alignItems: 'center'
                         }}
                       >
-                        {/* {loadingDetail === true &&
-                                value.selectedId === row.id ? (
-                                  <CircularProgress
-                                    size={"20px"}
-                                    sx={{
-                                      color: "#23176D",
-                                    }}
-                                  />
-                                ) : ( */}
-                        {/* <CustomButton
-                          bg={'#e3f2fd'}
-                          hover={'#1e88e5'}
-                          color={'#1e88e5'}
-                          label={<VisibilityIcon style={{ fontSize: '18px' }} />}
-                          // onClick={() =>
-                          //   func.handleDetailClick(row.id)
-                          // }
-                        /> */}
-                        {/* )} */}
+                        {/* buttom ceklis */}
+                        <CustomCheckBox />
                         {/* button pemesanan */}
                         <CustomButton
                           bg={'#fff8e1'}
@@ -162,15 +146,7 @@ export default function PermintaanBarang() {
                           label={<CreateIcon style={{ fontSize: '18px' }} />}
                           // onClick={() => func.handleEdit(row.id)}
                         />
-                        <Checkbox
-                          sx={{
-                            '& .MuiSvgIcon-root': { fontSize: 38 },
-                            color: '1e88e5',
-                            '&.Mui-checked': {
-                              color: '1e88e5'
-                            }
-                          }}
-                        />
+                        {/* button delete */}
                         <CustomButton
                           bg={'#FFD5CC'}
                           color={'red'}
@@ -290,7 +266,7 @@ export default function PermintaanBarang() {
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
           <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
-            Pesan
+            Simpan
           </ButtonStyle>
           <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
             Batal

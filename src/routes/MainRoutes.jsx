@@ -20,9 +20,12 @@ const CetakDataStok = Loadable(lazy(() => import('views/pages/data-stok/cetak/Ce
 const PermintaanBarang = Loadable(lazy(() => import('views/pages/permintaan-barang/PermintaanBarang')));
 const CetakPermintaanBarang = Loadable(lazy(() => import('views/pages/permintaan-barang/cetak/CetakPermintaanBarang')));
 const BarangMasuk = Loadable(lazy(() => import('views/pages/barang-masuk/BarangMasuk')));
+const CetakBarangMasuk = Loadable(lazy(() => import('views/pages/barang-masuk/cetak/CetakBarangMasuk')));
 const BarangKeluar = Loadable(lazy(() => import('views/pages/barang-keluar/BarangKeluar')));
 const LaporanBarangMasuk = Loadable(lazy(() => import('views/pages/laporan-barang-masuk/LaporanBarangMasuk')));
+const CetakLaporanBarangMasuk = Loadable(lazy(() => import('views/pages/laporan-barang-masuk/cetak/CetakLaporanBarangMasuk')));
 const LaporanBarangKeluar = Loadable(lazy(() => import('views/pages/laporan-barang-keluar/LaporanBarangKeluar')));
+const CetakLaporanBarangKeluar = Loadable(lazy(() => import('views/pages/laporan-barang-keluar/cetak/CetakLaporanBarangKeluar')));
 const AbsensiSaya = Loadable(lazy(() => import('views/pages/absensi-saya/AbsensiSaya')));
 const User = Loadable(lazy(() => import('views/pages/user/User')));
 
@@ -91,6 +94,10 @@ const MainRoutes = {
       element: <BarangMasuk />
     },
     {
+      path: 'barang-masuk/cetak/:id',
+      element: <CetakBarangMasuk />
+    },
+    {
       path: 'barang-keluar',
       element: <BarangKeluar />
     },
@@ -99,8 +106,16 @@ const MainRoutes = {
       element: <LaporanBarangMasuk />
     },
     {
+      path: 'laporan-barang-masuk/cetak/:id',
+      element: <CetakLaporanBarangMasuk />
+    },
+    {
       path: 'laporan-barang-keluar',
       element: <LaporanBarangKeluar />
+    },
+    {
+      path: 'laporan-barang-keluar/cetak/:id',
+      element: <CetakLaporanBarangKeluar />
     },
     {
       path: 'user',

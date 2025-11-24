@@ -14,7 +14,7 @@ export default function CetakLaporanAbsensi() {
 
         const opt = {
           margin:       10,
-          filename:     'laporan-absensi.pdf',
+          filename:     'laporan absensi.pdf',
           image:        { type: 'jpeg', quality: 0.98 },
           html2canvas:  { scale: 2 },
           jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -65,7 +65,7 @@ export default function CetakLaporanAbsensi() {
         </TableContainer>
 
         {/* mengetahui */}
-        <Stack sx={{ my: 12 }}>
+        <Stack sx={{ mt: 12, height: '200px', width: '95%', justifySelf: "center", }}>
           <Poppins>Mengetahui,</Poppins>
           <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Poppins>Staf</Poppins>

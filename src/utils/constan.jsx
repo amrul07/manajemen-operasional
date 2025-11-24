@@ -14,11 +14,11 @@ export const dataAbsensi = [
 ] 
 
 export const dataUser = [
-    {id:1,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan - Pelapor",},
-    {id:2,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan - Pelapor",},
-    {id:3,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan - Pelapor",},
-    {id:4,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan - Pelapor",},
-    {id:5,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan - Pelapor",},
+    {id:1,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan Pelapor",},
+    {id:2,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan Pelapor",},
+    {id:3,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan Pelapor",},
+    {id:4,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan Pelapor",},
+    {id:5,nama: "Alif Ramadhan",noHp: "085123456789",jabatan: "Karyawan Pelapor",},
 ]
 
 export const dataAbsensiSaya = [
@@ -97,4 +97,37 @@ export const dataPermitaanBarang = [
     {id:3,nama: "Gelas",jumlah: 9,tanggalPermintaan: "20 Desember 2025",modal: "20.000",no: 12345,terjual: 6,kode: "12345",harga: "10.000",stok: 200,stokAwal: 100,tanggalMasuk: "20 Desember 2025",},
     {id:4,nama: "Gelas",jumlah: 9,tanggalPermintaan: "20 Desember 2025",modal: "20.000",no: 12345,terjual: 6,kode: "12345",harga: "10.000",stok: 200,stokAwal: 100,tanggalMasuk: "20 Desember 2025",},
     {id:5,nama: "Gelas",jumlah: 9,tanggalPermintaan: "20 Desember 2025",modal: "20.000",no: 12345,terjual: 6,kode: "12345",harga: "10.000",stok: 200,stokAwal: 100,tanggalMasuk: "20 Desember 2025",},
+]
+
+export const dataBarangMasuk = [
+    {id:1,kode: 12345,nama: "Lemari",harga: "20.000",jumlah: 20,kategori: "Alat",tanggalMasuk: "30 Desember 2025"},
+    {id:2,kode: 12345,nama: "Lemari",harga: "20.000",jumlah: 20,kategori: "Alat",tanggalMasuk: "30 Desember 2025"},
+    {id:3,kode: 12345,nama: "Lemari",harga: "20.000",jumlah: 20,kategori: "Alat",tanggalMasuk: "30 Desember 2025"},
+    {id:4,kode: 12345,nama: "Lemari",harga: "20.000",jumlah: 20,kategori: "Alat",tanggalMasuk: "30 Desember 2025"},
+    {id:5,kode: 12345,nama: "Lemari",harga: "20.000",jumlah: 20,kategori: "Alat",tanggalMasuk: "30 Desember 2025"},
+   
+]
+
+export const dataBarangKeluar = [
+    {id:1,kode: 12345,nama: 'Kipas',harga: "30.000",tanggalKeluar: '30 Desember 2025',kategori: "ALat",tokoTujuan: "Grand Toserba",jumlah: 3},
+    {id:2,kode: 12345,nama: 'Kipas',harga: "30.000",tanggalKeluar: '30 Desember 2025',kategori: "ALat",tokoTujuan: "Grand Toserba",jumlah: 3},
+    {id:3,kode: 12345,nama: 'Kipas',harga: "30.000",tanggalKeluar: '30 Desember 2025',kategori: "ALat",tokoTujuan: "Grand Toserba",jumlah: 3},
+    {id:4,kode: 12345,nama: 'Kipas',harga: "30.000",tanggalKeluar: '30 Desember 2025',kategori: "ALat",tokoTujuan: "Grand Toserba",jumlah: 3},
+    {id:5,kode: 12345,nama: 'Kipas',harga: "30.000",tanggalKeluar: '30 Desember 2025',kategori: "ALat",tokoTujuan: "Grand Toserba",jumlah: 3},
+]
+
+export const dataLaporanBarangMasuk = [
+    {id:1,kode:12345,nama: "Pintu",harga: "35.000",jumlah: 5,kategori: 'Alat',tanggalMasuk: "25 Desember 2025"},
+    {id:2,kode:12345,nama: "Pintu",harga: "35.000",jumlah: 5,kategori: 'Alat',tanggalMasuk: "25 Desember 2025"},
+    {id:3,kode:12345,nama: "Pintu",harga: "35.000",jumlah: 5,kategori: 'Alat',tanggalMasuk: "25 Desember 2025"},
+    {id:4,kode:12345,nama: "Pintu",harga: "35.000",jumlah: 5,kategori: 'Alat',tanggalMasuk: "25 Desember 2025"},
+    {id:5,kode:12345,nama: "Pintu",harga: "35.000",jumlah: 5,kategori: 'Alat',tanggalMasuk: "25 Desember 2025"},
+]
+
+export const dataLaporanBarangKeluar = [
+    {id:1,kode:12345,nama: "Jendela",harga: "20.000",tanggalKeluar: "21 Februari 2025",kategori: "Alat",toko: "Grand Toserba",jumlah: 7},
+    {id:2,kode:12345,nama: "Jendela",harga: "20.000",tanggalKeluar: "21 Februari 2025",kategori: "Alat",toko: "Grand Toserba",jumlah: 7},
+    {id:3,kode:12345,nama: "Jendela",harga: "20.000",tanggalKeluar: "21 Februari 2025",kategori: "Alat",toko: "Grand Toserba",jumlah: 7},
+    {id:4,kode:12345,nama: "Jendela",harga: "20.000",tanggalKeluar: "21 Februari 2025",kategori: "Alat",toko: "Grand Toserba",jumlah: 7},
+    {id:5,kode:12345,nama: "Jendela",harga: "20.000",tanggalKeluar: "21 Februari 2025",kategori: "Alat",toko: "Grand Toserba",jumlah: 7},
 ]

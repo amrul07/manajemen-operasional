@@ -13,7 +13,7 @@ export default function CustomModal({ open, handleClose, children }) {
     boxShadow: 24,
     p: 4,
     maxHeight: "95vh",
-    // overflowY: "scroll"
+    overflowY: "auto"
   };
 
   return (

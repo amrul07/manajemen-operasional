@@ -40,7 +40,7 @@ export default function MainCard({
         ':hover': {
           boxShadow: boxShadow ? shadow || defaultShadow : 'inherit'
         },
-        ...(typeof sx === 'function' ? sx(theme) : sx || {})
+        ...(typeof sx === 'function' ? sx(theme) : sx || {}),
       })}
     >
       {/* card header and action */}

@@ -14,7 +14,7 @@ export default function CetakPermintaanBarang() {
 
       const opt = {
         margin:       10,
-        filename:     'permintaan-barang.pdf',
+        filename:     'permintaan barang.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -41,12 +41,10 @@ export default function CetakPermintaanBarang() {
               <TableRow sx={{}}>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>No</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nama Barang</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Kode Barang </TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Harga Barang</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Stok</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Stok Awal</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Terjual</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Tanggal Masuk</TableCell>
+                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Jumlah Permintaan </TableCell>
+                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Tanggal Permintaan</TableCell>
+                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Modal</TableCell>
+                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nomor Npwp  Gudang</TableCell>
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -55,12 +53,10 @@ export default function CetakPermintaanBarang() {
                   <StyledTableRowCetak key={row.id}>
                     <StyledTableCellCetak>{row.id}</StyledTableCellCetak>
                     <StyledTableCellCetak>{row.nama}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.kode}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.harga}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.stok}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.stokAwal}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.terjual}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.tanggalMasuk}</StyledTableCellCetak>
+                    <StyledTableCellCetak>{row.jumlah}</StyledTableCellCetak>
+                    <StyledTableCellCetak>{row.tanggalPermintaan}</StyledTableCellCetak>
+                    <StyledTableCellCetak>{row.modal}</StyledTableCellCetak>
+                    <StyledTableCellCetak>{row.no}</StyledTableCellCetak>
                   </StyledTableRowCetak>
                 );
               })}
@@ -68,7 +64,7 @@ export default function CetakPermintaanBarang() {
           </Table>
         </TableContainer>
         {/* mengetahui */}
-        <Stack sx={{ my: 12 }}>
+        <Stack sx={{ mt: 12, height: '200px', width: '95%', justifySelf: "center", }}>
           <Poppins>Mengetahui,</Poppins>
           <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Poppins>Staf</Poppins>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomButton = ({ label, onClick, bg, color, hover,colorHover }) => {
+const CustomButton = ({ label, onClick, bg, color, hover, colorHover }) => {
   // Mengatur state untuk hover effect
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -21,7 +21,8 @@ const CustomButton = ({ label, onClick, bg, color, hover,colorHover }) => {
       cursor: 'pointer',
       transition: 'background-color 0.3s',
       textAlign: 'center',
-      fontFamily: `'Poppins', sans-serif`
+      fontFamily: `'Poppins', sans-serif`,
+
     },
     buttonHover: {
       backgroundColor: hover,
@@ -33,7 +34,7 @@ const CustomButton = ({ label, onClick, bg, color, hover,colorHover }) => {
     <button
       style={{
         ...styles.button,
-        ...(isHovered ? styles.buttonHover : {})
+        ...(isHovered ? styles.buttonHover : {}),
       }}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}

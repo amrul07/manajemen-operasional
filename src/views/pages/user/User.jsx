@@ -254,7 +254,7 @@ export default function User() {
             <Autocomplete
               disablePortal
               id="combo-box-demo"
-              options={['Pimpinan', 'Staf', 'Karyawan - Pelapor', 'Karyawan - Biasa']}
+              options={['Pimpinan', 'Staf', 'Karyawan Pelapor', 'Karyawan Biasa']}
               size="small"
               sx={{
                 mt: '5px',
@@ -310,8 +310,12 @@ export default function User() {
         </Grid>
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} label={'Simpan'} />
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} label={'Batal'} />
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+            Simpan
+          </ButtonStyle>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+            Batal
+          </ButtonStyle>
         </Stack>
       </CustomModal>
       {/* modal succes */}
@@ -319,7 +323,7 @@ export default function User() {
         <Stack sx={{ alignItems: 'center', gap: 2 }}>
           <img src={Sukses} alt="sukses" style={{ width: '145px', height: '145px' }} />
           <Poppins sx={{ fontSize: '24px', fontWeight: 600 }}>Sukses!</Poppins>
-          <Poppins sx={{ fontWeight: 400 }}>Berhasil Menambahkan Data</Poppins>
+          <Poppins sx={{ fontWeight: 400 }}>Berhasil Menyimpan Data</Poppins>
           <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
             Kembali
           </ButtonStyle>
