@@ -15,6 +15,8 @@ import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import { Poppins } from '../typography/Poppins';
+import { IconUser } from '@tabler/icons-react';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -66,7 +68,8 @@ export default function TotalIncomeDarkCard({ isLoading }) {
                       color: 'common.white'
                     }}
                   >
-                    <TableChartOutlinedIcon fontSize="inherit" />
+                    <IconUser />
+                    {/* <TableChartOutlinedIcon fontSize="inherit" /> */}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -76,14 +79,14 @@ export default function TotalIncomeDarkCard({ isLoading }) {
                     mb: 0.45
                   }}
                   primary={
-                    <Typography variant="h4" sx={{ color: 'common.white' }}>
-                      $203k
-                    </Typography>
+                    <Poppins variant="h4" sx={{ color: 'common.white' }}>
+                      203
+                    </Poppins>
                   }
                   secondary={
-                    <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                      Total Income
-                    </Typography>
+                    <Poppins variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
+                      Total User
+                    </Poppins>
                   }
                 />
               </ListItem>

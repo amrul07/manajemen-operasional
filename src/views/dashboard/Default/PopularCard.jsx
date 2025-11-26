@@ -39,7 +39,7 @@ export default function PopularCard({ isLoading }) {
 
   return (
     <>
-      {/* {isLoading ? (
+      {isLoading ? (
         <SkeletonPopularCard />
       ) : (
         <MainCard content={false}>
@@ -218,7 +218,7 @@ export default function PopularCard({ isLoading }) {
             </Button>
           </CardActions>
         </MainCard>
-      )} */}
+      )}
     </>
   );
 }

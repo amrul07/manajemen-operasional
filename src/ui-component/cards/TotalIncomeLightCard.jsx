@@ -14,6 +14,9 @@ import Box from '@mui/material/Box';
 import MainCard from 'ui-component/cards/MainCard';
 import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 import { withAlpha } from 'utils/colorUtils';
+import { Poppins } from '../typography/Poppins';
+
+import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -63,16 +66,16 @@ export default function TotalIncomeLightCard({ isLoading, total, icon, label }) 
                       color: label === 'Meeting attends' ? 'error.dark' : 'warning.dark'
                     }}
                   >
-                    {icon}
+                    <StorefrontTwoToneIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   sx={{ py: 0, mt: 0.45, mb: 0.45 }}
-                  primary={<Typography variant="h4">${total}k</Typography>}
+                  primary={<Poppins variant="h4">3000</Poppins>}
                   secondary={
-                    <Typography variant="subtitle2" sx={{ color: 'grey.500', mt: 0.5 }}>
-                      {label}
-                    </Typography>
+                    <Poppins variant="subtitle2" sx={{ color: 'grey.500', mt: 0.5 }}>
+                      Total Barang
+                    </Poppins>
                   }
                 />
               </ListItem>

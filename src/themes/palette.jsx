@@ -3,6 +3,7 @@ import { extendPaletteWithChannels } from 'utils/colorUtils';
 
 // assets
 import defaultColor from 'assets/scss/_themes-vars.module.scss';
+import { color } from 'framer-motion';
 
 // ==============================|| DEFAULT THEME - PALETTE ||============================== //
 
@@ -43,6 +44,8 @@ export function buildPalette(presetColor) {
       light: colors.warningLight,
       main: colors.warningMain,
       dark: colors.warningDark,
+      200:colors.warning200,
+      800:colors.warning800,
       contrastText: colors.grey700
     },
     success: {

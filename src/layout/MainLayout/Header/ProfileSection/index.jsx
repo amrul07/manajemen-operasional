@@ -116,32 +116,6 @@ export default function ProfileSection() {
               <Paper>
                 {open && (
                   <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
-                    <Box sx={{ p: 2, pb: 0 }}>
-                      <Stack>
-                        <Stack direction="row" sx={{ alignItems: 'center', gap: 0.5 }}>
-                          <Typography variant="h4">Good Morning,</Typography>
-                          <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                            Johne Doe
-                          </Typography>
-                        </Stack>
-                        <Typography variant="subtitle2">Project Admin</Typography>
-                      </Stack>
-                      <OutlinedInput
-                        sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
-                        id="input-search-profile"
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        placeholder="Search profile options"
-                        startAdornment={
-                          <InputAdornment position="start">
-                            <IconSearch stroke={1.5} size="16px" />
-                          </InputAdornment>
-                        }
-                        aria-describedby="search-helper-text"
-                        slotProps={{ input: { 'aria-label': 'weight' } }}
-                      />
-                      <Divider />
-                    </Box>
                     <Box
                       sx={{
                         p: 2,
@@ -152,22 +126,6 @@ export default function ProfileSection() {
                         '&::-webkit-scrollbar': { width: 5 }
                       }}
                     >
-                      <UpgradePlanCard />
-                      <Divider />
-                      <Card sx={{ bgcolor: 'primary.light', my: 2 }}>
-                        <CardContent>
-                          <Stack sx={{ gap: 3 }}>
-                            <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                              <Typography variant="subtitle1">Start DND Mode</Typography>
-                              <Switch color="primary" checked={sdm} onChange={(e) => setSdm(e.target.checked)} name="sdm" size="small" />
-                            </Stack>
-                            <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                              <Typography variant="subtitle1">Allow Notifications</Typography>
-                              <Switch checked={notification} onChange={(e) => setNotification(e.target.checked)} name="sdm" size="small" />
-                            </Stack>
-                          </Stack>
-                        </CardContent>
-                      </Card>
                       <Divider />
                       <List
                         component="nav"
@@ -183,7 +141,7 @@ export default function ProfileSection() {
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="20px" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                          <ListItemText primary={<Typography variant="body2">Alif Ramadhan</Typography>} />
                         </ListItemButton>
                         <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
                           <ListItemIcon>

@@ -21,6 +21,8 @@ import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 // assets
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import {Poppins} from  "../../../ui-component/typography/Poppins"
+import { IconClipboardText } from '@tabler/icons-react';
 
 // data
 const monthlyData = [{ data: [45, 66, 41, 89, 25, 44, 9, 54] }];
@@ -93,9 +95,9 @@ export default function TotalOrderLineChartCard({ isLoading }) {
                   mt: 1
                 }}
               >
-                <LocalMallOutlinedIcon fontSize="inherit" />
+                <IconClipboardText fontSize="inherit" />
               </Avatar>
-              <Box>
+              {/* <Box>
                 <Button
                   disableElevation
                   variant={timeValue ? 'contained' : 'text'}
@@ -114,34 +116,35 @@ export default function TotalOrderLineChartCard({ isLoading }) {
                 >
                   Year
                 </Button>
-              </Box>
+              </Box> */}
             </Stack>
 
             <Grid sx={{ mb: 0.75 }}>
               <Grid container sx={{ alignItems: 'center' }}>
-                <Grid size={6}>
+                <Grid size={7}>
                   <Box>
                     <Stack direction="row" sx={{ alignItems: 'center' }}>
-                      <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        {timeValue ? '$108' : '$961'}
-                      </Typography>
+                      {/* total absen */}
+                      <Poppins sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                        50
+                      </Poppins>
                       <Avatar sx={{ ...theme.typography.smallAvatar, bgcolor: 'primary.200', color: 'primary.dark' }}>
-                        <ArrowDownwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
+                        {/* <ArrowDownwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} /> */}
                       </Avatar>
                     </Stack>
-                    <Typography
+                    <Poppins
                       sx={{
                         fontSize: '1rem',
                         fontWeight: 500,
                         color: 'primary.200'
                       }}
                     >
-                      Total Order
-                    </Typography>
+                      Total Absen Hari Ini
+                    </Poppins>
                   </Box>
                 </Grid>
                 <Grid
-                  size={6}
+                  size={5}
                   sx={{
                     '.apexcharts-tooltip.apexcharts-theme-light': {
                       color: theme.vars.palette.text.primary,
@@ -149,7 +152,7 @@ export default function TotalOrderLineChartCard({ isLoading }) {
                     }
                   }}
                 >
-                  <Chart options={chartOptions} series={series} type="line" height={90} />
+                  {/* <Chart options={chartOptions} series={series} type="line" height={90} /> */}
                 </Grid>
               </Grid>
             </Grid>

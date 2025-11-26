@@ -24,6 +24,9 @@ import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 
+import { Poppins } from '../../../ui-component/typography/Poppins';
+import { IconShoppingCartPlus } from '@tabler/icons-react';
+
 export default function EarningCard({ isLoading }) {
   const theme = useTheme();
 
@@ -46,7 +49,7 @@ export default function EarningCard({ isLoading }) {
           border={false}
           content={false}
           sx={{
-            bgcolor: 'secondary.dark',
+            bgcolor: 'warning.dark',
             color: '#fff',
             overflow: 'hidden',
             position: 'relative',
@@ -55,7 +58,7 @@ export default function EarningCard({ isLoading }) {
               position: 'absolute',
               width: 210,
               height: 210,
-              background: theme.vars.palette.secondary[800],
+              background: theme.vars.palette.warning[800],
               borderRadius: '50%',
               top: { xs: -85 },
               right: { xs: -95 }
@@ -65,7 +68,7 @@ export default function EarningCard({ isLoading }) {
               position: 'absolute',
               width: 210,
               height: 210,
-              background: theme.vars.palette.secondary[800],
+              background: theme.vars.palette.warning[800],
               borderRadius: '50%',
               top: { xs: -125 },
               right: { xs: -15 },
@@ -80,19 +83,20 @@ export default function EarningCard({ isLoading }) {
                 sx={{
                   ...theme.typography.largeAvatar,
                   borderRadius: 2,
-                  bgcolor: 'secondary.800',
+                  bgcolor: 'warning.800',
                   mt: 1
                 }}
               >
-                <CardMedia sx={{ width: 30, height: 30 }} component="img" src={EarningIcon} alt="Notification" />
+                <IconShoppingCartPlus color='#fff'/>
+                {/* <CardMedia sx={{ width: 30, height: 30 }} component="img" src={EarningIcon} alt="Notification" /> */}
               </Avatar>
-              <Avatar
+              {/* <Avatar
                 variant="rounded"
                 sx={{
                   ...theme.typography.commonAvatar,
                   ...theme.typography.mediumAvatar,
-                  bgcolor: 'secondary.dark',
-                  color: 'secondary.200',
+                  bgcolor: 'warning.dark',
+                  color: 'warning.200',
                   zIndex: 1
                 }}
                 aria-controls="menu-earning-card"
@@ -100,7 +104,7 @@ export default function EarningCard({ isLoading }) {
                 onClick={handleClick}
               >
                 <MoreHorizIcon fontSize="inherit" />
-              </Avatar>
+              </Avatar> */}
             </Stack>
             <Menu
               id="menu-earning-card"
@@ -132,21 +136,21 @@ export default function EarningCard({ isLoading }) {
               </MenuItem>
             </Menu>
             <Stack direction="row" sx={{ alignItems: 'center' }}>
-              <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
-              <Avatar sx={{ ...theme.typography.smallAvatar, bgcolor: 'secondary.200', color: 'secondary.dark' }}>
+              <Poppins sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>500.00</Poppins>
+              <Avatar sx={{ ...theme.typography.smallAvatar, bgcolor: 'warning.200', color: 'warning.dark' }}>
                 <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
               </Avatar>
             </Stack>
-            <Typography
+            <Poppins
               sx={{
                 mb: 1.25,
                 fontSize: '1rem',
                 fontWeight: 500,
-                color: 'secondary.200'
+                color: 'warning.200'
               }}
             >
-              Total Earning
-            </Typography>
+              Total Permintaan Barang
+            </Poppins>
           </Box>
         </MainCard>
       )}

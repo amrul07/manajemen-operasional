@@ -20,6 +20,7 @@ import { gridSpacing } from 'store/constant';
 
 // chart data
 import barChartOptions from './chart-data/total-growth-bar-chart';
+import { Poppins } from '../../../ui-component/typography/Poppins';
 
 const status = [
   { value: 'today', label: 'Today' },
@@ -28,10 +29,16 @@ const status = [
 ];
 
 const series = [
-  { name: 'Investment', data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75] },
-  { name: 'Loss', data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75] },
-  { name: 'Profit', data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10] },
-  { name: 'Maintenance', data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0] }
+  { name: 'Barang Masuk', data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75] },
+  { name: 'Barang Keluar', data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75] },
+  // { name: 'Profit', data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10] },
+  // { name: 'Maintenance', data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0] }
+
+
+  // { name: 'Investment', data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75] },
+  // { name: 'Loss', data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75] },
+  // { name: 'Profit', data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10] },
+  // { name: 'Maintenance', data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0] }
 ];
 
 export default function TotalGrowthBarChart({ isLoading }) {
@@ -52,18 +59,20 @@ export default function TotalGrowthBarChart({ isLoading }) {
   const secondaryMain = theme.vars.palette.secondary.main;
   const secondaryLight = theme.vars.palette.secondary.light;
 
+  const warningDark = theme.vars.palette.warning.dark;
+
   useEffect(() => {
     setChartOptions({
       ...barChartOptions,
-      chart: { ...barChartOptions.chart, fontFamily: fontFamily },
-      colors: [primary200, primaryDark, secondaryMain, secondaryLight],
+      chart: { ...barChartOptions.chart, fontFamily: `'Poppins', sans-serif` },
+      colors: [warningDark, primaryDark, secondaryMain, secondaryLight],
       xaxis: { ...barChartOptions.xaxis, labels: { style: { colors: textPrimary } } },
       yaxis: { ...barChartOptions.yaxis, labels: { style: { colors: textPrimary } } },
       grid: { borderColor: divider },
       tooltip: { theme: 'light' },
       legend: { ...(barChartOptions.legend ?? {}), labels: { ...(barChartOptions.legend?.labels ?? {}), colors: grey500 } }
     });
-  }, [fontFamily, primary200, primaryDark, secondaryMain, secondaryLight, textPrimary, grey500, divider]);
+  }, [fontFamily, warningDark, primaryDark, secondaryMain, secondaryLight, textPrimary, grey500, divider]);
 
   return (
     <>
@@ -74,16 +83,16 @@ export default function TotalGrowthBarChart({ isLoading }) {
           <Stack sx={{ gap: gridSpacing }}>
             <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
               <Stack sx={{ gap: 1 }}>
-                <Typography variant="subtitle2">Total Growth</Typography>
-                <Typography variant="h3">$2,324.00</Typography>
+                <Poppins variant="subtitle2">Total Barang Masuk & Keluar</Poppins>
+                {/* <Poppins variant="h3">$2,324.00</Poppins> */}
               </Stack>
-              <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
+              {/* <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
                 {status.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
             </Stack>
             <Box
               sx={{

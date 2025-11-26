@@ -16,6 +16,8 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -24,6 +26,7 @@ import NotificationList from './NotificationList';
 
 // assets
 import { IconBell } from '@tabler/icons-react';
+import { Poppins } from '../../../../ui-component/typography/Poppins';
 
 // notification status options
 const status = [
@@ -82,10 +85,18 @@ export default function NotificationSection() {
     event?.target.value && setValue(event?.target.value);
   };
 
+  // const CartBadge = styled(Badge)`
+  //   & .${badgeClasses.badge} {
+  //     top: -7px;
+  //     right: -16px;
+  //   }
+  // `;
+
   return (
     <>
       <Box sx={{ ml: 2 }}>
         <Avatar
+          sizes="large"
           variant="rounded"
           sx={{
             ...theme.typography.commonAvatar,
@@ -96,14 +107,18 @@ export default function NotificationSection() {
             '&:hover, &[aria-controls="menu-list-grow"]': {
               color: theme.vars.palette.warning.light,
               background: theme.vars.palette.warning.dark
-            }
+            },
+            width: 40,
+            height: 40
           }}
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <IconBell stroke={1.5} size="20px" />
+          <Badge sx={{}} badgeContent={1} color="primary" overlap="circular">
+            <IconBell stroke={1.5} size="20px" />
+          </Badge>
         </Avatar>
       </Box>
       <Popper
