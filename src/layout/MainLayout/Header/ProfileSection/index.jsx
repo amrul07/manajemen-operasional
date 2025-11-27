@@ -26,10 +26,11 @@ import UpgradePlanCard from './UpgradePlanCard';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import useConfig from 'hooks/useConfig';
+import { Poppins } from '../../../../ui-component/typography/Poppins';
 
 // assets
 import User1 from 'assets/images/users/user-round.svg';
-import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconBrandWhatsapp, IconBriefcase, IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -132,43 +133,37 @@ export default function ProfileSection() {
                         sx={{
                           width: '100%',
                           maxWidth: 350,
-                          minWidth: 300,
+                          minWidth: 100,
                           borderRadius: `${borderRadius}px`,
                           '& .MuiListItemButton-root': { mt: 0.5 }
                         }}
                       >
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
-                          <ListItemIcon>
-                            <IconSettings stroke={1.5} size="20px" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Alif Ramadhan</Typography>} />
-                        </ListItemButton>
+                        {/* nama */}
                         <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
                           <ListItemIcon>
                             <IconUser stroke={1.5} size="20px" />
                           </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Typography variant="body2">Social Profile</Typography>
-                                <Chip
-                                  slotProps={{
-                                    label: { sx: { mt: 0.25 } }
-                                  }}
-                                  label="02"
-                                  variant="filled"
-                                  size="small"
-                                  color="warning"
-                                />
-                              </Stack>
-                            }
-                          />
+                          <ListItemText primary={<Poppins variant="body2">Alif Ramadhan</Poppins>} />
+                        </ListItemButton>
+                        {/* jabatan */}
+                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                          <ListItemIcon>
+                            <IconBriefcase stroke={1.5} size="20px" />
+                          </ListItemIcon>
+                          <ListItemText primary={<Poppins variant="body2">Pimpinan</Poppins>} />
+                        </ListItemButton>
+                        {/* no hp */}
+                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                          <ListItemIcon>
+                            <IconBrandWhatsapp stroke={1.5} size="20px" />
+                          </ListItemIcon>
+                          <ListItemText primary={<Poppins variant="body2">085123456789</Poppins>} />
                         </ListItemButton>
                         <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="20px" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                          <ListItemText primary={<Poppins variant="body2">Logout</Poppins>} />
                         </ListItemButton>
                       </List>
                     </Box>

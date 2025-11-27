@@ -208,18 +208,32 @@ export default function BarangKeluar() {
           <Grid item size={12}>
             {/* kode barang */}
             <Poppins sx={{ fontWeight: 500 }}>* Kode Barang</Poppins>
-            <OutlinedInput
-              sx={{
-                mt: 1,
-                fontFamily: `'Poppins', sans-serif`,
-                width: '100%',
-                borderRadius: '12px'
-              }}
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={['12345', '6789', '101112', '131415']}
               size="small"
-              placeholder="Masukkan Kode Barang"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
-            ></OutlinedInput>
+              sx={{
+                mt: '5px',
+                borderRadius: '12px',
+                fontFamily: `'Poppins', sans-serif`
+              }}
+              // value={value.gender}
+              onChange={(event, v) => {
+                value.setGender(v);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { fontFamily: `'Poppins', sans-serif` }
+                  }}
+                  placeholder={'Pilih Kode Barang'}
+                />
+              )}
+            />
             {/* Nama Barang */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Nama Barang</Poppins>
             <OutlinedInput

@@ -20,6 +20,7 @@ import CustomFormControl from 'ui-component/extended/Form/CustomFormControl';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Poppins } from '../../../ui-component/typography/Poppins';
 
 // ===============================|| JWT - LOGIN ||=============================== //
 
@@ -38,17 +39,18 @@ export default function AuthLogin() {
   return (
     <>
       <CustomFormControl fullWidth>
-        <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
-        <OutlinedInput id="outlined-adornment-email-login" type="email" value="info@codedthemes.com" name="email" />
+        <InputLabel htmlFor="outlined-adornment-email-login" sx={{fontFamily: `'Poppins', sans-serif`}}>Nomor Wa</InputLabel>
+        <OutlinedInput id="outlined-adornment-email-login" type="email" value="" name="email" sx={{fontFamily: `'Poppins', sans-serif`}} />
       </CustomFormControl>
 
       <CustomFormControl fullWidth>
-        <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
+        <InputLabel htmlFor="outlined-adornment-password-login" sx={{fontFamily: `'Poppins', sans-serif`}}>Password</InputLabel>
         <OutlinedInput
           id="outlined-adornment-password-login"
           type={showPassword ? 'text' : 'password'}
           value="123456"
           name="password"
+          sx={{fontFamily: `'Poppins', sans-serif`}}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -68,20 +70,20 @@ export default function AuthLogin() {
 
       <Grid container sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Grid>
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
             label="Keep me logged in"
-          />
+          /> */}
         </Grid>
         <Grid>
-          <Typography variant="subtitle1" component={Link} to="#!" sx={{ textDecoration: 'none', color: 'secondary.main' }}>
+          <Poppins variant="subtitle1" component={Link} to="#!" sx={{ textDecoration: 'none', color: 'primary.main' }}>
             Forgot Password?
-          </Typography>
+          </Poppins>
         </Grid>
       </Grid>
       <Box sx={{ mt: 2 }}>
         <AnimateButton>
-          <Button color="secondary" fullWidth size="large" type="submit" variant="contained">
+          <Button color="primary" fullWidth size="large" type="submit" variant="contained" sx={{fontFamily: `'Poppins', sans-serif`}}>
             Sign In
           </Button>
         </AnimateButton>

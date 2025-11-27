@@ -14,6 +14,8 @@ import Logo from 'ui-component/Logo';
 import AuthFooter from 'ui-component/cards/AuthFooter';
 import AuthLogin from '../auth-forms/AuthLogin';
 
+import {Poppins} from "../../../ui-component/typography/Poppins"
+
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 export default function Login() {
@@ -26,34 +28,29 @@ export default function Login() {
           <Box sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
             <AuthCardWrapper>
               <Stack sx={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                <Box sx={{ mb: 3 }}>
-                  <Link to="#" aria-label="logo">
-                    <Logo />
-                  </Link>
-                </Box>
                 <Stack sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                  <Typography variant={downMD ? 'h3' : 'h2'} sx={{ color: 'secondary.main' }}>
-                    Hi, Welcome Back
-                  </Typography>
-                  <Typography variant="caption" sx={{ fontSize: '16px', textAlign: { xs: 'center', md: 'inherit' } }}>
+                  <Poppins variant={downMD ? 'h3' : 'h2'} sx={{ color: 'primary.main' }}>
+                    Hi, Selamat Datang
+                  </Poppins>
+                  <Poppins variant="caption" sx={{ fontSize: '16px', textAlign: { xs: 'center', md: 'inherit' } }}>
                     Enter your credentials to continue
-                  </Typography>
+                  </Poppins>
                 </Stack>
                 <Box sx={{ width: 1 }}>
                   <AuthLogin />
                 </Box>
                 <Divider sx={{ width: 1 }} />
-                <Stack sx={{ alignItems: 'center' }}>
+                {/* <Stack sx={{ alignItems: 'center' }}>
                   <Typography component={Link} to="/pages/register" variant="subtitle1" sx={{ textDecoration: 'none' }}>
                     Don&apos;t have an account?
                   </Typography>
-                </Stack>
+                </Stack> */}
               </Stack>
             </AuthCardWrapper>
           </Box>
         </Stack>
         <Box sx={{ px: 3, my: 3 }}>
-          <AuthFooter />
+          {/* <AuthFooter /> */}
         </Box>
       </Stack>
     </AuthWrapper1>
