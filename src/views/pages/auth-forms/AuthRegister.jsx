@@ -16,9 +16,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 // project imports
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import CustomFormControl from 'ui-component/extended/Form/CustomFormControl';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import AnimateButton from '../../../ui-component/extended/AnimateButton';
+import CustomFormControl from '../../../ui-component/extended/Form/CustomFormControl';
+import { strengthColor, strengthIndicator } from '../../../utils/password-strength';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';

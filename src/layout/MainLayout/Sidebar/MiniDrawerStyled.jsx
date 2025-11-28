@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Drawer from '@mui/material/Drawer';
 
 // project imports
-import { drawerWidth } from 'store/constant';
+import { drawerWidth } from '../../../store/constant';
 
 function openedMixin(theme) {
   return {

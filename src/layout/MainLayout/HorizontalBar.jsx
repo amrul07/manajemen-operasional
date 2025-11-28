@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 
 // project imports
 import MenuList from './MenuList';
-import useConfig from 'hooks/useConfig';
+import useConfig from '../../hooks/useConfig';
 
 function ElevationScroll({ children, window }) {
   const theme = useTheme();

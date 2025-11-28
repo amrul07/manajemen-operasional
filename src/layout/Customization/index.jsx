@@ -18,11 +18,11 @@ import Box from '@mui/material/Box';
 import FontFamily from './FontFamily';
 import BorderRadius from './BorderRadius';
 
-import { DEFAULT_THEME_MODE } from 'config';
-import MainCard from 'ui-component/cards/MainCard';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import SimpleBar from 'ui-component/third-party/SimpleBar';
-import useConfig from 'hooks/useConfig';
+import { DEFAULT_THEME_MODE } from '../../config';
+import MainCard from '../../ui-component/cards/MainCard';
+import AnimateButton from '../../ui-component/extended/AnimateButton';
+import SimpleBar from '../../ui-component/third-party/SimpleBar';
+import useConfig from '../../hooks/useConfig';
 
 // assets
 import { IconSettings, IconPlus } from '@tabler/icons-react';

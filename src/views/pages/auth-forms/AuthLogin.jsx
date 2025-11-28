@@ -14,8 +14,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 // project imports
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import CustomFormControl from 'ui-component/extended/Form/CustomFormControl';
+import AnimateButton from '../../../ui-component/extended/AnimateButton';
+import CustomFormControl from '../../../ui-component/extended/Form/CustomFormControl';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';

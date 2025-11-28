@@ -13,10 +13,10 @@ import Box from '@mui/material/Box';
 import Chart from 'react-apexcharts';
 
 // project imports
-import useConfig from 'hooks/useConfig';
-import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
-import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
+import useConfig from '../../../hooks/useConfig';
+import SkeletonTotalGrowthBarChart from '../../../ui-component/cards/Skeleton/TotalGrowthBarChart';
+import MainCard from '../../../ui-component/cards/MainCard';
+import { gridSpacing } from '../../../store/constant';
 
 // chart data
 import barChartOptions from './chart-data/total-growth-bar-chart';

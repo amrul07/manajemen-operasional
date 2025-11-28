@@ -21,7 +21,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 
 // project imports
-import Logo from 'ui-component/Logo';
+import Logo from '../../ui-component/Logo';
 
 // assets
 import { IconBook, IconCreditCard, IconDashboard, IconHome2 } from '@tabler/icons-react';

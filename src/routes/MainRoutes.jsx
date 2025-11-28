@@ -1,42 +1,42 @@
 import { lazy } from 'react';
 
 // project imports
-import MainLayout from 'layout/MainLayout';
-import Loadable from 'ui-component/Loadable';
+import MainLayout from '../layout/MainLayout';
+import Loadable from '../ui-component/Loadable';
 // import User from '../views/pages/user/User';
 // import AbsensiSaya from '../views/pages/absensi-saya/AbsensiSaya';
 // import DetailAbsensi from '../views/pages/data-absensi/DetailAbsensi';
 
 // dashboard routing  
-const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
+const DashboardDefault = Loadable(lazy(() => import('../views/dashboard/Default')));
 
 // pages routing
-const DataAbsensi = Loadable(lazy(() => import('views/pages/data-absensi/DataAbsensi')));
-const DetailAbsensi = Loadable(lazy(() => import('views/pages/data-absensi/detail/DetailAbsensi')));
-const CetakDataAbsensi = Loadable(lazy(() => import('views/pages/data-absensi/cetak/CetakLaporanAbsensi')));
-const DataStok = Loadable(lazy(() => import('views/pages/data-stok/DataStok')));
-const DetailStok = Loadable(lazy(() => import('views/pages/data-stok/detail/DetailStok')));
-const CetakDataStok = Loadable(lazy(() => import('views/pages/data-stok/cetak/CetakDataStok')));
-const PermintaanBarang = Loadable(lazy(() => import('views/pages/permintaan-barang/PermintaanBarang')));
-const CetakPermintaanBarang = Loadable(lazy(() => import('views/pages/permintaan-barang/cetak/CetakPermintaanBarang')));
-const BarangMasuk = Loadable(lazy(() => import('views/pages/barang-masuk/BarangMasuk')));
-const CetakBarangMasuk = Loadable(lazy(() => import('views/pages/barang-masuk/cetak/CetakBarangMasuk')));
-const BarangKeluar = Loadable(lazy(() => import('views/pages/barang-keluar/BarangKeluar')));
-const LaporanBarangMasuk = Loadable(lazy(() => import('views/pages/laporan-barang-masuk/LaporanBarangMasuk')));
-const CetakLaporanBarangMasuk = Loadable(lazy(() => import('views/pages/laporan-barang-masuk/cetak/CetakLaporanBarangMasuk')));
-const LaporanBarangKeluar = Loadable(lazy(() => import('views/pages/laporan-barang-keluar/LaporanBarangKeluar')));
-const CetakLaporanBarangKeluar = Loadable(lazy(() => import('views/pages/laporan-barang-keluar/cetak/CetakLaporanBarangKeluar')));
-const AbsensiSaya = Loadable(lazy(() => import('views/pages/absensi-saya/AbsensiSaya')));
-const User = Loadable(lazy(() => import('views/pages/user/User')));
+const DataAbsensi = Loadable(lazy(() => import('../views/pages/data-absensi/DataAbsensi')));
+const DetailAbsensi = Loadable(lazy(() => import('../views/pages/data-absensi/detail/DetailAbsensi')));
+const CetakDataAbsensi = Loadable(lazy(() => import('../views/pages/data-absensi/cetak/CetakLaporanAbsensi')));
+const DataStok = Loadable(lazy(() => import('../views/pages/data-stok/DataStok')));
+const DetailStok = Loadable(lazy(() => import('../views/pages/data-stok/detail/DetailStok')));
+const CetakDataStok = Loadable(lazy(() => import('../views/pages/data-stok/cetak/CetakDataStok')));
+const PermintaanBarang = Loadable(lazy(() => import('../views/pages/permintaan-barang/PermintaanBarang')));
+const CetakPermintaanBarang = Loadable(lazy(() => import('../views/pages/permintaan-barang/cetak/CetakPermintaanBarang')));
+const BarangMasuk = Loadable(lazy(() => import('../views/pages/barang-masuk/BarangMasuk')));
+const CetakBarangMasuk = Loadable(lazy(() => import('../views/pages/barang-masuk/cetak/CetakBarangMasuk')));
+const BarangKeluar = Loadable(lazy(() => import('../views/pages/barang-keluar/BarangKeluar')));
+const LaporanBarangMasuk = Loadable(lazy(() => import('../views/pages/laporan-barang-masuk/LaporanBarangMasuk')));
+const CetakLaporanBarangMasuk = Loadable(lazy(() => import('../views/pages/laporan-barang-masuk/cetak/CetakLaporanBarangMasuk')));
+const LaporanBarangKeluar = Loadable(lazy(() => import('../views/pages/laporan-barang-keluar/LaporanBarangKeluar')));
+const CetakLaporanBarangKeluar = Loadable(lazy(() => import('../views/pages/laporan-barang-keluar/cetak/CetakLaporanBarangKeluar')));
+const AbsensiSaya = Loadable(lazy(() => import('../views/pages/absensi-saya/AbsensiSaya')));
+const User = Loadable(lazy(() => import('../views/pages/user/User')));
 
 // utilities routing
-const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
-const UtilsTes = Loadable(lazy(() => import('views/utilities/Tes')));
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
+const UtilsTypography = Loadable(lazy(() => import('../views/utilities/Typography')));
+const UtilsTes = Loadable(lazy(() => import('../views/utilities/Tes')));
+const UtilsColor = Loadable(lazy(() => import('../views/utilities/Color')));
+const UtilsShadow = Loadable(lazy(() => import('../views/utilities/Shadow')));
 
 // sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
+const SamplePage = Loadable(lazy(() => import('../views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 

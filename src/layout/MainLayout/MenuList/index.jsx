@@ -7,9 +7,9 @@ import Box from '@mui/material/Box';
 // project imports
 import NavItem from './NavItem';
 import NavGroup from './NavGroup';
-import menuItems from 'menu-items';
+import menuItems from '../../../menu-items';
 
-import { useGetMenuMaster } from 'api/menu';
+import { useGetMenuMaster } from '../../../api/menu';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 

@@ -1,13 +1,18 @@
+import { registerSW } from "virtual:pwa-register";
+registerSW({ immediate: true });
+
+
+
 import { createRoot } from 'react-dom/client';
 
 // project imports
-import App from 'App';
-import * as serviceWorker from 'serviceWorker';
-import reportWebVitals from 'reportWebVitals';
-import { ConfigProvider } from 'contexts/ConfigContext';
+import App from './App.jsx';
+import reportWebVitals from './reportWebVitals.js';
+// import * as serviceWorker from 'serviceWorker';
+import { ConfigProvider } from './contexts/ConfigContext';
 
 // style + assets
-import 'assets/scss/style.scss';
+import './assets/scss/style.scss';
 
 // google-fonts
 import '@fontsource/roboto/400.css';
@@ -38,7 +43,7 @@ root.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// serviceWorker.unregister();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

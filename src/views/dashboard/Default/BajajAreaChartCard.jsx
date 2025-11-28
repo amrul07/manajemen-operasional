@@ -11,7 +11,7 @@ import Chart from 'react-apexcharts';
 
 // project imports
 import bajajChartOptions from './chart-data/bajaj-area-chart';
-import useConfig from 'hooks/useConfig';
+import useConfig from '../../../hooks/useConfig';
 
 // ===========================|| DASHBOARD DEFAULT - BAJAJ AREA CHART CARD ||=========================== //
 
