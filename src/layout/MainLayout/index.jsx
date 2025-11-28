@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 // material-ui
@@ -20,6 +20,8 @@ import Breadcrumbs from '../../ui-component/extended/Breadcrumbs';
 import useConfig from '../../hooks/useConfig';
 import { handlerDrawerOpen, useGetMenuMaster } from '../../api/menu';
 
+import { useLocation } from 'react-router-dom';
+
 // ==============================|| MAIN LAYOUT ||============================== //
 
 export default function MainLayout() {
@@ -31,6 +33,20 @@ export default function MainLayout() {
   } = useConfig();
   const { menuMaster, menuMasterLoading } = useGetMenuMaster();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
+
+  const [showFooter, setShowFooter] = useState(false);
+  const location = useLocation();
+  // Delay footer tampil
+  useEffect(() => {
+    // Saat halaman berubah, sembunyikan ulang footer
+    setShowFooter(false);
+
+    const timer = setTimeout(() => {
+      setShowFooter(true);
+    }, 500); // delay bisa kamu atur
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]); // jalan setiap pindah halaman
 
   useEffect(() => {
     handlerDrawerOpen(!miniDrawer);
@@ -62,7 +78,8 @@ export default function MainLayout() {
           {/* breadcrumb */}
           <Breadcrumbs />
           <Outlet />
-          <Footer />
+          {/* Footer tampil setelah delay */}
+          {showFooter && <Footer />}
         </Box>
       </MainContentStyled>
       {/* <Customization /> */}
