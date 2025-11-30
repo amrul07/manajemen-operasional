@@ -71,9 +71,13 @@ export default function TotalIncomeLightCard({ isLoading, total, icon, label }) 
                 </ListItemAvatar>
                 <ListItemText
                   sx={{ py: 0, mt: 0.45, mb: 0.45 }}
-                  primary={<Poppins variant="h4">3000</Poppins>}
+                  primary={
+                    <Poppins component="span" variant="h4">
+                      3000
+                    </Poppins>
+                  }
                   secondary={
-                    <Poppins variant="subtitle2" sx={{ color: 'grey.500', mt: 0.5 }}>
+                    <Poppins component="span" variant="subtitle2" sx={{ color: 'grey.500', mt: 0.5 }}>
                       Total Barang
                     </Poppins>
                   }

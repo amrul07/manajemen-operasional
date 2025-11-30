@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 // project imports
-import MainCard from '../cards/MainCard'; 
+import MainCard from '../cards/MainCard';
 import TotalIncomeCard from './Skeleton/TotalIncomeCard';
 
 // assets
@@ -79,12 +79,12 @@ export default function TotalIncomeDarkCard({ isLoading }) {
                     mb: 0.45
                   }}
                   primary={
-                    <Poppins variant="h4" sx={{ color: 'common.white' }}>
+                    <Poppins component="span" variant="h4" sx={{ color: 'common.white' }}>
                       203
                     </Poppins>
                   }
                   secondary={
-                    <Poppins variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
+                    <Poppins component="span" variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
                       Total User
                     </Poppins>
                   }

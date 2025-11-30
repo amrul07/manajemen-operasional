@@ -1,33 +1,47 @@
-import { Box, Card, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  InputBase,
+  OutlinedInput,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import CustomButton from '../../../../ui-component/button/CustomButton';
 import { dataBarangMasuk, dataCetakAbsensi, dataPermitaanBarang, dataStok } from '../../../../utils/constan';
 import { Poppins } from '../../../../ui-component/typography/Poppins';
 import html2pdf from 'html2pdf.js';
 import { StyledTableCellCetak, StyledTableRowCetak } from '../../../../ui-component/table/StyledTableCetak';
+import ButtonStyle from '../../../../ui-component/button/ButtonStyle';
+import { IconPrinter } from '@tabler/icons-react';
 
 export default function CetakBarangMasuk() {
-      useEffect(() => {
-      const timeout = setTimeout(() => {
-        const element = document.getElementById("print-content");
-        if (!element) return;
+  // ketika button di klik
+  const handlePrint = () => {
+    const element = document.getElementById('print-content');
+    if (!element) return;
 
-        const opt = {
-          margin:       10,
-          filename:     'barang masuk.pdf',
-          image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2 },
-          jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+    const opt = {
+      margin: 10,
+      filename: 'laporan barang masuk.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-        html2pdf().set(opt).from(element).save();
-      }, 1000); // delay biar UI sempat render
+    html2pdf().set(opt).from(element).save();
+  };
 
-      return () => clearTimeout(timeout);
-    }, []);
   return (
-    <div id="print-content">
-      <Card sx={{ p: 4 }}>
+    <Card sx={{ p: 4 }}>
+      <div id="print-content">
         <Stack>
           <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
           <Poppins sx={{ mt: 2 }}>Lapor Barang</Poppins>
@@ -68,22 +82,53 @@ export default function CetakBarangMasuk() {
         {/* alasan pelaporan barang */}
         <Stack mt={4} sx={{ p: 2, border: '2px solid #1e88e5', borderRadius: '12px' }}>
           <Poppins>Alasan Pelaporan Barang :</Poppins>
-          <Poppins>
-            Berikut kami sampaikan laporan barang masuk yang diterima pada tanggal 25 Desember 2025. Seluruh barang yang masuk telah dicatat
-            dan diperiksa secara menyeluruh oleh petugas gudang untuk memastikan kondisi barang sesuai dengan pesanan dan tidak mengalami
-            kerusakan. Laporan ini berisi informasi mulai dari kode barang, nama barang, harga, jumlah yang diterima, hingga kategori barang
-            untuk memudahkan proses identifikasi dan pengelompokkan
-          </Poppins>
+          <InputBase
+            maxRows={15}
+            // rows={4}
+            multiline
+            sx={{
+              mt: 1,
+              fontFamily: `'Poppins', sans-serif`,
+              width: '100%'
+            }}
+            size="small"
+            placeholder="Masukkan ALasan Pelaporan..."
+          ></InputBase>
         </Stack>
         {/* mengetahui */}
-        <Stack sx={{ mt: 12, height: '200px', width: '95%', justifySelf: "center", }}>
+        <Stack sx={{ mt: 12, height: '200px', width: '95%', justifySelf: 'center' }}>
           <Poppins>Mengetahui,</Poppins>
           <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Poppins>Staf</Poppins>
             <Poppins>Pimpinan</Poppins>
           </Stack>
         </Stack>
-      </Card>
-    </div>
+      </div>
+
+      {/* button cetak */}
+      <Stack sx={{ float: 'right' }}>
+        <Button
+          variant="contained"
+          sx={{
+            mt: '5px',
+            backgroundColor: '#1e88e5',
+            color: '#FFFFFF',
+            textTransform: 'none',
+            gap: 1,
+            px: 2,
+            // width: '20%',
+            height: '35px',
+            transition: 'background-color 0.3s',
+            '&:hover': {
+              opacity: 0.8
+            }
+          }}
+          onClick={handlePrint}
+        >
+          <IconPrinter />
+          <Poppins sx={{ fontWeight: 500 }}>Cetak </Poppins>
+        </Button>
+      </Stack>
+    </Card>
   );
 }
