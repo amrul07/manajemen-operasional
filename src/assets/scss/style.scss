@@ -61,9 +61,9 @@
 }
 
 // ==============================|| AUTOCOMPLITE||============================== //
-.MuiSelect-select {
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-rqu075 .MuiOutlinedInput-root {
   font-family: 'Poppins', sans-serif !important;
-  text-overflow: initial !important;
+  padding-right: 0 !important;
 }
 
 .css-s8oxlg-MuiInputBase-root-MuiOutlinedInput-root {
@@ -71,7 +71,7 @@
   padding-right: 0 !important;
 }
 
-.css-5kwl21-MuiAutocomplete-listbox .MuiAutocomplete-option{
+.css-5kwl21-MuiAutocomplete-listbox .MuiAutocomplete-option {
   font-family: 'Poppins', sans-serif !important;
 }
 
