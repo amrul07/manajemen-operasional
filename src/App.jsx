@@ -8,7 +8,6 @@ import NavigationScroll from './layout/NavigationScroll';
 
 import ThemeCustomization from './themes';
 
-import "./globals.css"
 
 // auth provider
 
