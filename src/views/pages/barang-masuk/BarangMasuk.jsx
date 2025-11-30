@@ -57,7 +57,7 @@ export default function BarangMasuk() {
                       mt: '5px',
                       borderRadius: '12px',
                       fontFamily: `'Poppins', sans-serif`,
-                      width: '180px'
+                      width: '200px'
                     }}
                     clearIcon={true}
                     // options={value.kabinet || []}
