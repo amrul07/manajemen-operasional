@@ -70,7 +70,7 @@
     "prettier": "3.6.2",
     "prettier-eslint-cli": "8.0.1",
     "sass": "1.93.2",
-    "vite-plugin-pwa": "^1.1.0"
+    "vite-plugin-pwa": "^1.2.0"
   },
   "packageManager": "yarn@4.10.3"
 }

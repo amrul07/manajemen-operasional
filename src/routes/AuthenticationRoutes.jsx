@@ -7,6 +7,7 @@ import MinimalLayout from '../layout/MinimalLayout';
 // maintenance routing
 const LoginPage = Loadable(lazy(() => import('../views/pages/authentication/Login')));
 const RegisterPage = Loadable(lazy(() => import('../views/pages/authentication/Register')));
+const LupaPasswordPage = Loadable(lazy(() => import('../views/pages/authentication/LupaPassword')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -21,7 +22,11 @@ const AuthenticationRoutes = {
     {
       path: '/register',
       element: <RegisterPage />
-    }
+    },
+    {
+      path: '/lupa-password',
+      element: <LupaPasswordPage />
+    },
   ]
 };
 
