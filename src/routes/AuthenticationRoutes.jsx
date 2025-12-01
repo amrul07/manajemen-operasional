@@ -7,7 +7,9 @@ import MinimalLayout from '../layout/MinimalLayout';
 // maintenance routing
 const LoginPage = Loadable(lazy(() => import('../views/pages/authentication/Login')));
 const RegisterPage = Loadable(lazy(() => import('../views/pages/authentication/Register')));
-const LupaPasswordPage = Loadable(lazy(() => import('../views/pages/authentication/LupaPassword')));
+const VerifikasiNoHpPage = Loadable(lazy(() => import('../views/pages/authentication/VerifikasiNoHp')));
+const VerifikasiOtpPage = Loadable(lazy(() => import('../views/pages/authentication/VerifikasiOtp')));
+const PerbaruiPasswordPage = Loadable(lazy(() => import('../views/pages/authentication/PerbaruiPassword')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -24,8 +26,16 @@ const AuthenticationRoutes = {
       element: <RegisterPage />
     },
     {
-      path: '/lupa-password',
-      element: <LupaPasswordPage />
+      path: '/Verifikasi-otp',
+      element: <VerifikasiOtpPage />
+    },
+    {
+      path: '/Verifikasi-noHp',
+      element: <VerifikasiNoHpPage />
+    },
+    {
+      path: '/perbarui-password',
+      element: <PerbaruiPasswordPage />
     },
   ]
 };

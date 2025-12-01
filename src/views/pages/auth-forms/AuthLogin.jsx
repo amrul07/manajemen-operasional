@@ -48,7 +48,7 @@ export default function AuthLogin() {
         <OutlinedInput
           id="outlined-adornment-password-login"
           type={showPassword ? 'text' : 'password'}
-          value="123456"
+          // value="123456"
           name="password"
           sx={{fontFamily: `'Poppins', sans-serif`}}
           endAdornment={
@@ -76,7 +76,7 @@ export default function AuthLogin() {
           /> */}
         </Grid>
         <Grid>
-          <Poppins variant="subtitle1" component={Link} to="#!" sx={{ textDecoration: 'none', color: 'primary.main' }}>
+          <Poppins variant="subtitle1" component={Link} to="/verifikasi-noHp" sx={{ textDecoration: 'none', color: 'primary.main' }}>
             Forgot Password?
           </Poppins>
         </Grid>
