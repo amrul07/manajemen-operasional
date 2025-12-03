@@ -1,8 +1,8 @@
-authentication : - ui
+authentication : - ui✅
                  - api
 
 appbar : - notifikasi
-         - profile         
+         - profile✅       
 
 pimpinan : - hak akses
 staf : - hak akses
@@ -44,6 +44,7 @@ karyawan biasa : - hak akses
                        - api
 -form tambah/edit : - ui✅
                     - api
+                    - edit : input kode_barang,nama,harga(disable)
 -fitur search
 
 6.laporan barang masuk :
@@ -61,16 +62,16 @@ karyawan biasa : - hak akses
 -filter data by tanggal
 
 8.user :
--fitur search(nama,no hp)
+-fitur search(nama,no hp)✅
 -tabel user : - ui✅
-              - api
+              - api✅
 -form tambah/edit : - ui✅
-                    - password hanya muncul ketika tambah data
-                    - api
+                    - password hanya muncul ketika tambah data✅
+                    - api✅
 
 9.absensi saya :
 -tabel absensi : - api
                  - validasi
 
-10.dashboard : - ui
+10.dashboard : - ui✅
                - api 

@@ -29,15 +29,6 @@ const CetakLaporanBarangKeluar = Loadable(lazy(() => import('../views/pages/lapo
 const AbsensiSaya = Loadable(lazy(() => import('../views/pages/absensi-saya/AbsensiSaya')));
 const User = Loadable(lazy(() => import('../views/pages/user/User')));
 
-// utilities routing
-const UtilsTypography = Loadable(lazy(() => import('../views/utilities/Typography')));
-const UtilsTes = Loadable(lazy(() => import('../views/utilities/Tes')));
-const UtilsColor = Loadable(lazy(() => import('../views/utilities/Color')));
-const UtilsShadow = Loadable(lazy(() => import('../views/utilities/Shadow')));
-
-// sample page routing
-const SamplePage = Loadable(lazy(() => import('../views/sample-page')));
-
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {

@@ -19,6 +19,7 @@ import Transitions from '../../../../ui-component/extended/Transitions';
 
 // assets
 import { IconAdjustmentsHorizontal, IconSearch, IconX } from '@tabler/icons-react';
+import useGlobalStore from '../../../../store/globalStore';
 
 function HeaderAvatar({ children, ref, ...others }) {
   const theme = useTheme();
@@ -30,11 +31,11 @@ function HeaderAvatar({ children, ref, ...others }) {
       sx={{
         ...theme.typography.commonAvatar,
         ...theme.typography.mediumAvatar,
-        color: theme.vars.palette.primary.dark,
-        background: theme.vars.palette.primary.light,
+        color: theme.vars.palette.warning.dark,
+        background: theme.vars.palette.warning.light,
         '&:hover': {
-          color: theme.vars.palette.primary.light,
-          background: theme.vars.palette.primary.dark
+          color: theme.vars.palette.warning.light,
+          background: theme.vars.palette.warning.dark
         }
       }}
       {...others}
@@ -55,7 +56,6 @@ function MobileSearch({ value, setValue, popupState }) {
       value={value}
       onChange={(e) => setValue(e.target.value)}
       placeholder="Search"
-      
       startAdornment={
         <InputAdornment position="start">
           <IconSearch stroke={1.5} size="16px" />
@@ -85,7 +85,7 @@ function MobileSearch({ value, setValue, popupState }) {
       }
       aria-describedby="search-helper-text"
       slotProps={{ input: { 'aria-label': 'weight', sx: { bgcolor: 'transparent', pl: 0.5 } } }}
-      sx={{ width: '100%', ml: 0.5, px: 2, bgcolor: 'background.paper',borderRadius: "8px" }}
+      sx={{ width: '100%', ml: 0.5, px: 2, bgcolor: 'background.paper', borderRadius: '8px' }}
     />
   );
 }
@@ -93,10 +93,13 @@ function MobileSearch({ value, setValue, popupState }) {
 // ==============================|| SEARCH INPUT ||============================== //
 
 export default function SearchSection() {
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
+  const searchQuery = useGlobalStore((state) => state.searchQuery);
+  const setSearchQuery = useGlobalStore((state) => state.setSearchQuery);
 
   return (
     <>
+      {/* search tampilan mobile */}
       <Box sx={{ display: { xs: 'block', md: 'none' } }}>
         <PopupState variant="popper" popupId="demo-popup-popper">
           {(popupState) => (
@@ -118,7 +121,7 @@ export default function SearchSection() {
                         <Box sx={{ p: 2 }}>
                           <Grid container sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
                             <Grid size="grow">
-                              <MobileSearch value={value} setValue={setValue} popupState={popupState} />
+                              <MobileSearch value={searchQuery} setValue={setSearchQuery} popupState={popupState} />
                             </Grid>
                           </Grid>
                         </Box>
@@ -131,28 +134,28 @@ export default function SearchSection() {
           )}
         </PopupState>
       </Box>
+      {/* search tampilan desktop */}
       <Box sx={{ display: { xs: 'none', md: 'block' } }}>
         <OutlinedInput
           id="input-search-header"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search"
-          
           startAdornment={
             <InputAdornment position="start">
               <IconSearch stroke={1.5} size="16px" />
             </InputAdornment>
           }
-          // endAdornment={
-          //   <InputAdornment position="end">
-          //     <HeaderAvatar>
-          //       <IconAdjustmentsHorizontal stroke={1.5} size="20px" />
-          //     </HeaderAvatar>
-          //   </InputAdornment>
-          // }
+          endAdornment={
+            <InputAdornment position="end">
+              <HeaderAvatar onClick={() => setSearchQuery('')}>
+                <IconX stroke={1.5} size="20px" />
+              </HeaderAvatar>
+            </InputAdornment>
+          }
           aria-describedby="search-helper-text"
           slotProps={{ input: { 'aria-label': 'weight', sx: { bgcolor: 'transparent', pl: 0.5 } } }}
-          sx={{ width: { md: 250, lg: 434 }, ml: 2, px: 2,borderRadius: "14px" }}
+          sx={{ width: { md: 250, lg: 434 }, ml: 2, px: 2, borderRadius: '14px' }}
         />
       </Box>
     </>
