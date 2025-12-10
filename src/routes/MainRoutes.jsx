@@ -3,11 +3,13 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
+// import DataAbsensi from '../views/pages/data-absensi/DataAbsensi'
+// import BarangKeluar from '../views/pages/barang-keluar/BarangKeluar';
 // import User from '../views/pages/user/User';
 // import AbsensiSaya from '../views/pages/absensi-saya/AbsensiSaya';
 // import DetailAbsensi from '../views/pages/data-absensi/DetailAbsensi';
 
-// dashboard routing  
+// dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('../views/dashboard/Default')));
 
 // pages routing
@@ -27,6 +29,7 @@ const CetakLaporanBarangMasuk = Loadable(lazy(() => import('../views/pages/lapor
 const LaporanBarangKeluar = Loadable(lazy(() => import('../views/pages/laporan-barang-keluar/LaporanBarangKeluar')));
 const CetakLaporanBarangKeluar = Loadable(lazy(() => import('../views/pages/laporan-barang-keluar/cetak/CetakLaporanBarangKeluar')));
 const AbsensiSaya = Loadable(lazy(() => import('../views/pages/absensi-saya/AbsensiSaya')));
+const RiwayatAbsensi = Loadable(lazy(() => import('../views/pages/absensi-saya/RiwayatAbsensi')));
 const User = Loadable(lazy(() => import('../views/pages/user/User')));
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -115,6 +118,10 @@ const MainRoutes = {
     {
       path: 'absensi-saya',
       element: <AbsensiSaya />
+    },
+    {
+      path: 'absensi-saya/riwayat-absensi',
+      element: <RiwayatAbsensi />
     }
 
     // {

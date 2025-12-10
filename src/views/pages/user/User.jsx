@@ -264,7 +264,7 @@ export default function User() {
                     ...params.InputProps,
                     sx: { fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }
                   }}
-                  placeholder={'Pilih Jenis Kelamin'}
+                  placeholder={'Pilih Jabatan'}
                 />
               )}
             />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { lazy } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -9,13 +10,14 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
 
 // project imports
-import Footer from './Footer';
+// import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import MainContentStyled from './MainContentStyled';
 import Customization from '../Customization';
 import Loader from '../../ui-component/Loader';
 import Breadcrumbs from '../../ui-component/extended/Breadcrumbs';
+import Loadable from '../../ui-component/Loadable';
 
 import useConfig from '../../hooks/useConfig';
 import { handlerDrawerOpen, useGetMenuMaster } from '../../api/menu';
@@ -25,6 +27,8 @@ import { useLocation } from 'react-router-dom';
 // ==============================|| MAIN LAYOUT ||============================== //
 
 export default function MainLayout() {
+  const Footer = Loadable(lazy(() => import('./Footer')));
+
   const theme = useTheme();
   const downMD = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -34,19 +38,6 @@ export default function MainLayout() {
   const { menuMaster, menuMasterLoading } = useGetMenuMaster();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
 
-  const [showFooter, setShowFooter] = useState(false);
-  const location = useLocation();
-  // Delay footer tampil
-  useEffect(() => {
-    // Saat halaman berubah, sembunyikan ulang footer
-    setShowFooter(false);
-
-    const timer = setTimeout(() => {
-      setShowFooter(true);
-    }, 500); // delay bisa kamu atur
-
-    return () => clearTimeout(timer);
-  }, [location.pathname]); // jalan setiap pindah halaman
 
   useEffect(() => {
     handlerDrawerOpen(!miniDrawer);
@@ -78,8 +69,7 @@ export default function MainLayout() {
           {/* breadcrumb */}
           <Breadcrumbs />
           <Outlet />
-          {/* Footer tampil setelah delay */}
-          {showFooter && <Footer />}
+          <Footer />
         </Box>
       </MainContentStyled>
       {/* <Customization /> */}

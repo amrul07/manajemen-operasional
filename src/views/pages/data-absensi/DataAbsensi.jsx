@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import Sukses from '../../../assets/sukses.svg';
+import CreateIcon from '@mui/icons-material/Create';
 
 export default function DataAbsensi() {
   const router = useNavigate();
@@ -150,23 +151,22 @@ export default function DataAbsensi() {
                           gap: { xs: 1, md: 0 }
                         }}
                       >
-                        {/* {loadingDetail === true &&
-                                value.selectedId === row.id ? (
-                                  <CircularProgress
-                                    size={"20px"}
-                                    sx={{
-                                      color: "#23176D",
-                                    }}
-                                  />
-                                ) : ( */}
+                        {/* button verifikasi */}
                         <CustomButton
                           bg={'#e3f2fd'}
                           hover={'#1e88e5'}
                           color={'#1e88e5'}
                           label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />}
-                          onClick={() => router(`/data-absensi/${row.id}`)}
+                          onClick={() => router(`/data-absensi/detail/${row.id}`)}
                         />
-                        {/* )} */}
+                        {/* button pemesanan */}
+                        <CustomButton
+                          bg={'#fff8e1'}
+                          color={'#ffc107'}
+                          hover={'#ffc107'}
+                          label={<CreateIcon style={{ fontSize: '18px' }} />}
+                          // onClick={() => func.handleEdit(row.id)}
+                        />
                       </Stack>
                     </StyledTableCell>
                   </StyledTableRow>
@@ -201,35 +201,89 @@ export default function DataAbsensi() {
           </ThemeProvider>
         </Stack>
       </Card>
-      {/* modal cetak laporan */}
-      <CustomModal open={false} handleClose={''}>
+      {/* modal edit */}
+      <CustomModal open={false}>
         <Grid container spacing={2}>
-          <Grid item size={12}>
-            {/* pilih bulan */}
-            <Poppins sx={{ fontWeight: 500 }}>* Pilih Bulan</Poppins>
+          <Grid size={12}>
+            <Poppins sx={{ fontWeight: 500 }}>* Pilih Status</Poppins>
             <Autocomplete
               disablePortal
               id="combo-box-demo"
-              options={['Izin', 'Sakit']}
+              options={['Hadir', 'Terlambat']}
               size="small"
               sx={{
                 mt: '5px',
                 borderRadius: '12px',
                 fontFamily: `'Poppins', sans-serif`
               }}
-              // value={value.gender}
-              onChange={(event, v) => {
-                value.setGender(v);
-              }}
+              // value={value.newData.jabatan || null}
+              // onChange={func.handleChangeJabatan}
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  name="jabatan"
                   sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
                   InputProps={{
                     ...params.InputProps,
-                    sx: { fontFamily: `'Poppins', sans-serif` }
+                    sx: { fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }
                   }}
-                  placeholder={'Masukkan Bulan'}
+                  placeholder={'Pilih Status'}
+                />
+              )}
+            />
+          </Grid>
+        </Grid>
+        {/* button */}
+        <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+            Simpan
+          </ButtonStyle>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+            Batal
+          </ButtonStyle>
+        </Stack>
+      </CustomModal>
+      {/* modal cetak laporan */}
+      <CustomModal open={false} handleClose={''}>
+        <Grid container spacing={2}>
+          <Grid size={12}>
+            {/* pilih bulan */}
+            <Poppins sx={{ fontWeight: 500 }}>* Pilih Bulan</Poppins>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={[
+                'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei',
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember'
+              ]}
+              size="small"
+              sx={{
+                mt: '5px',
+                borderRadius: '12px',
+                fontFamily: `'Poppins', sans-serif`
+              }}
+              // value={value.newData.jabatan || null}
+              // onChange={func.handleChangeJabatan}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  name="jabatan"
+                  sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }
+                  }}
+                  placeholder={'Pilih Bulan'}
                 />
               )}
             />
@@ -259,7 +313,6 @@ export default function DataAbsensi() {
           </ButtonStyle>
         </Stack>
       </CustomModal>
-      
     </Card>
   );
 }
