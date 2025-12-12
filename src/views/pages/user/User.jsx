@@ -194,12 +194,11 @@ export default function User() {
             }}
           >
             Menampilkan 1 - {value.itemsPerPage} dari {value.totalItems} Data
-            {/* Menampilkan 1 - 10 dari {value.totalItems} Data */}
           </Poppins>
           {/* pagination */}
           <ThemeProvider theme={themePagination}>
             <Pagination
-              sx={{ color: '#FFC400', order: { xs: 1, md: 2 }, alignSelf: 'center' }}
+              sx={{ order: { xs: 1, md: 2 }, alignSelf: 'center' }}
               count={Math.ceil(value.totalItems / value.itemsPerPage)}
               page={value.page}
               onChange={func.handleChangePage}
@@ -210,7 +209,7 @@ export default function User() {
       {/* modal tambah/edit data */}
       <CustomModal open={value.modal.data} handleClose={func.handleCloseModal}>
         <Grid container spacing={2}>
-          <Grid item size={12}>
+          <Grid size={12}>
             {/* nama */}
             <Poppins sx={{ fontWeight: 500 }}>* Nama Lengkap</Poppins>
             <OutlinedInput

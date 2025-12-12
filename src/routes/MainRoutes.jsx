@@ -72,7 +72,7 @@ const MainRoutes = {
       element: <DetailStok />
     },
     {
-      path: 'data-stok/cetak/:id',
+      path: 'data-stok/cetak',
       element: <CetakDataStok />
     },
     {

@@ -13,16 +13,65 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomButton from '../../../../ui-component/button/CustomButton';
-import { dataBarangMasuk, dataCetakAbsensi, dataPermitaanBarang, dataStok } from '../../../../utils/constan';
 import { Poppins } from '../../../../ui-component/typography/Poppins';
 import html2pdf from 'html2pdf.js';
 import { StyledTableCellCetak, StyledTableRowCetak } from '../../../../ui-component/table/StyledTableCetak';
 import ButtonStyle from '../../../../ui-component/button/ButtonStyle';
 import { IconPrinter } from '@tabler/icons-react';
+import { fetchData, postData } from '../../../../api/api';
+import { useParams } from 'react-router-dom';
+import { set, get } from 'idb-keyval';
 
 export default function CetakBarangMasuk() {
+  const [data, setData] = useState([]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // tanggal
+  const today = new Date().toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  // get data
+  const getData = async () => {
+    try {
+      if (navigator.onLine) {
+        // ONLINE → Ambil dari API
+        const res = await fetchData(`/admin/barangMasuk/${id}`);
+        const detail = res.data;
+
+        setData(detail);
+
+        // simpan ke IndexedDB
+        await set(`barangMasuk-${id}`, detail);
+      } else {
+        // OFFLINE → Ambil dari IndexedDB
+        const cached = await get(`barangMasuk-${id}`);
+
+        if (cached) {
+          setData(cached);
+        } else {
+          setData({ error: 'Data tidak tersedia offline' });
+        }
+      }
+    } catch (err) {
+      console.log('Error load:', err);
+
+      // Jika error API → coba fallback ke IndexedDB
+      const cached = await get(`barangMasuk-${id}`);
+      if (cached) {
+        setData(cached);
+      }
+    }
+  };
+
   // ketika button di klik
   const handlePrint = () => {
     const element = document.getElementById('print-content');
@@ -41,11 +90,14 @@ export default function CetakBarangMasuk() {
 
   return (
     <Card sx={{ p: 4 }}>
+      {!data && <Poppins>Loading...</Poppins>}
+
+      {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
       <div id="print-content">
         <Stack>
           <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
           <Poppins sx={{ mt: 2 }}>Lapor Barang</Poppins>
-          <Poppins sx={{ mt: 1 }}>Tanggal : 25 Desember 2025</Poppins>
+          <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>
         </Stack>
         {/* tabel data */}
         <TableContainer sx={{ fontFamily: "`'Poppins', sans-serif`", mt: 2 }} component={Paper}>
@@ -53,7 +105,7 @@ export default function CetakBarangMasuk() {
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`", backgroundColor: '#1e88e5', color: '#fff' }}>
               {/*  */}
               <TableRow sx={{}}>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>No</TableCell>
+                {/* <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>No</TableCell> */}
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Kode Barang</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nama Barang</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Harga </TableCell>
@@ -63,19 +115,17 @@ export default function CetakBarangMasuk() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {dataBarangMasuk.map((row) => {
-                return (
-                  <StyledTableRowCetak key={row.id}>
-                    <StyledTableCellCetak>{row.id}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.kode}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.nama}</StyledTableCellCetak>
-                    <StyledTableCellCetak>Rp.{row.harga}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.jumlah}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.kategori}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.tanggalMasuk}</StyledTableCellCetak>
-                  </StyledTableRowCetak>
-                );
-              })}
+              {data && !data.error && (
+                <StyledTableRowCetak key={data.id}>
+                  {/* <StyledTableCellCetak>{data.id}</StyledTableCellCetak> */}
+                  <StyledTableCellCetak>{data.kode_barang}</StyledTableCellCetak>
+                  <StyledTableCellCetak>{data.nama}</StyledTableCellCetak>
+                  <StyledTableCellCetak>Rp.{data.harga}</StyledTableCellCetak>
+                  <StyledTableCellCetak>{data.jumlah}</StyledTableCellCetak>
+                  <StyledTableCellCetak>{data.sub_kategori}</StyledTableCellCetak>
+                  <StyledTableCellCetak>{data.tanggal_masuk}</StyledTableCellCetak>
+                </StyledTableRowCetak>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

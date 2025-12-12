@@ -18,11 +18,11 @@ karyawan biasa : - hak akses
 -fitur search
 
 2.data stok : 
--tabel data stok : - api
--form pemesanan : -api
--halaman detail : - api
--cetak laporan : - api
--fitur search
+-tabel data stok : - api✅
+-form pemesanan : -api✅
+-halaman detail : - api✅
+-cetak laporan : - api✅
+-fitur search✅
 
 3.permintaan barang : 
 -tabel permintaan barang : - api
@@ -32,12 +32,12 @@ karyawan biasa : - hak akses
 
 4.barang masuk : 
 -tabel barang masuk : - ui✅
-                      - api
+                      - api✅
 -form tambah/edit : - ui✅
-                    - api
+                    - api✅
 -cetak lapor barang : - ui✅
-                      - api
--fitur search
+                      - api✅
+-fitur search✅
 
 5.barang keluar :
 -tabel barang keluar : - ui✅

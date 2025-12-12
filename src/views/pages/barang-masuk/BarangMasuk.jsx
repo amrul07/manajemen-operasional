@@ -1,13 +1,17 @@
 import {
+  Alert,
   Autocomplete,
   Button,
   Card,
   Checkbox,
   CircularProgress,
   Grid,
+  MenuItem,
   OutlinedInput,
   Pagination,
   Paper,
+  Select,
+  Snackbar,
   Stack,
   Table,
   TableBody,
@@ -22,7 +26,7 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import { dataAbsensi, dataBarangMasuk, dataPermitaanBarang, dataStok } from '../../../utils/constan';
+import { dataAbsensi, dataBarangMasuk, dataPermitaanBarang, dataStok, menuItem } from '../../../utils/constan';
 import CustomButton from '../../../ui-component/button/CustomButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateIcon from '@mui/icons-material/Create';
@@ -32,12 +36,19 @@ import { IconExclamationCircle, IconPrinter, IconShoppingCartPlus, IconTrash } f
 import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import BarangMasukLogic from './BarangMasukLogic';
+import Sukses from '../../../assets/sukses.svg';
 
 export default function BarangMasuk() {
+  const { value, func } = BarangMasukLogic();
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
-      <div id="print-content">
+      {value.loadingGet === true ? (
+        <Stack sx={{ alignItems: 'center', height: '100vh' }}>
+          <CircularProgress sx={{ margin: 'auto', color: '#1e88e5' }} size={'50px'} />
+        </Stack>
+      ) : (
         <TableContainer sx={{ px: 5, fontFamily: "`'Poppins', sans-serif`" }} component={Paper}>
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -49,48 +60,20 @@ export default function BarangMasuk() {
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
                 >
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
+                  <Select
                     size="small"
-                    sx={{
-                      mt: '5px',
-                      borderRadius: '12px',
-                      fontFamily: `'Poppins', sans-serif`,
-                      width: '180px'
-                    }}
-                    clearIcon={true}
-                    // options={value.kabinet || []}
-                    // value={
-                    //   (value.kabinet &&
-                    //     value.kabinet.find(
-                    //       (option) => option.id === value.cabinet
-                    //     )) ||
-                    //   value.cabinet
-                    value={'Tampilkan 10 data'}
-                    // }
-                    // onChange={(event, v) => {
-                    //   value.setCabinet(v ? v.id : "");
-                    // }}
-                    // getOptionLabel={(option) => option.name || value.cabinet}
-                    // isOptionEqualToValue={(option, value) =>
-                    //   option.id === value.id
-                    // }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          fontFamily: `'Poppins', sans-serif`,
-                          borderRadius: '12px'
-                        }}
-                        // InputProps={{
-                        //   ...params.InputProps,
-                        //   style: { fontFamily: `'Poppins', sans-serif` },
-                        // }}
-                        // placeholder={"Pilih Periode Kepengurusan"}
-                      />
-                    )}
-                  />
+                    value={value.itemsPerPage}
+                    onChange={(e) => func.handleChangeItemsPerPage(e.target.value)}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                    sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
+                  >
+                    {menuItem.map((res) => (
+                      <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
+                        {res.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </TableCell>
                 {/* button tambah */}
                 <TableCell
@@ -115,7 +98,7 @@ export default function BarangMasuk() {
                         opacity: 0.8
                       }
                     }}
-                    // onClick={onClick}
+                    onClick={func.handleModal}
                   >
                     <AddBoxIcon />
                     <Poppins sx={{ fontWeight: 500 }}>Tambah Data</Poppins>
@@ -135,63 +118,67 @@ export default function BarangMasuk() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {dataBarangMasuk.map((row) => {
-                return (
-                  <StyledTableRow key={row.id}>
-                    <StyledTableCell>{row.id}</StyledTableCell>
-                    <StyledTableCell>{row.kode}</StyledTableCell>
-                    <StyledTableCell>{row.nama}</StyledTableCell>
-                    <StyledTableCell>Rp.{row.harga}</StyledTableCell>
-                    <StyledTableCell>{row.jumlah}</StyledTableCell>
-                    <StyledTableCell>{row.kategori}</StyledTableCell>
-                    <StyledTableCell>{row.tanggalMasuk}</StyledTableCell>
-                    {/* <StyledTableCell>{row.stok}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.stokAwal}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.tanggalMasuk}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.tanggalUpdate}</StyledTableCell> */}
-                    <StyledTableCell>
-                      <Stack
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-around',
-                          gap: { xs: 1, md: 0 },
-                          alignItems: 'center'
-                        }}
-                      >
-                        {/* lapor */}
-                        <CustomButton
-                          bg={'#e3f2fd'}
-                          color={'#1e88e5'}
-                          hover={'#1e88e5'}
-                          label={<IconPrinter size={18} />}
-                          // onClick={() => func.openModalDelete(row.id)}
-                        />
-                        {/* button edit */}
-                        <CustomButton
-                          bg={'#fff8e1'}
-                          color={'#ffc107'}
-                          hover={'#ffc107'}
-                          label={<CreateIcon style={{ fontSize: '18px' }} />}
-                          // onClick={() => func.handleEdit(row.id)}
-                        />
-                        {/* hapus */}
-                        <CustomButton
-                          bg={'#FFD5CC'}
-                          color={'red'}
-                          hover={'red'}
-                          label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />}
-                          // onClick={() => func.openModalDelete(row.id)}
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
+              {value.loadingPagination ? (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={5}>Loading...</StyledTableCell>
+                </StyledTableRow>
+              ) : (
+                value.data &&
+                value.data.map((row, i) => {
+                  return (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell>{(value.page - 1) * value.itemsPerPage + i + 1}</StyledTableCell>
+                      <StyledTableCell>{row.kode_barang}</StyledTableCell>
+                      <StyledTableCell>{row.nama}</StyledTableCell>
+                      <StyledTableCell>Rp.{row.harga}</StyledTableCell>
+                      <StyledTableCell>{row.jumlah}</StyledTableCell>
+                      <StyledTableCell>{row.sub_kategori}</StyledTableCell>
+                      <StyledTableCell>{row.tanggal_masuk}</StyledTableCell>
+                      <StyledTableCell>
+                        <Stack
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            gap: { xs: 1, md: 0 },
+                            alignItems: 'center'
+                          }}
+                        >
+                          {/* lapor */}
+                          <CustomButton
+                            bg={'#e3f2fd'}
+                            color={'#1e88e5'}
+                            hover={'#1e88e5'}
+                            label={<IconPrinter size={18} />}
+                            onClick={() => func.handlePrint(row.id)}
+                          />
+                          {/* button edit */}
+                          <CustomButton
+                            bg={'#fff8e1'}
+                            color={'#ffc107'}
+                            hover={'#ffc107'}
+                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            onClick={() => func.handleEdit(row.id)}
+                          />
+                          {/* hapus */}
+                          <CustomButton
+                            bg={'#FFD5CC'}
+                            color={'red'}
+                            hover={'red'}
+                            label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />}
+                            onClick={() => func.openModalDelete(row.id)}
+                          />
+                        </Stack>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      )}
+
       <Card sx={{ px: { xs: 2, md: 4 }, py: { xs: 2, md: 4 } }}>
         <Stack sx={{ justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
           <Poppins
@@ -201,25 +188,23 @@ export default function BarangMasuk() {
               textAlign: 'center'
             }}
           >
-            Menampilkan 1 - 10 dari 10 Data
-            {/* Menampilkan 1 - 10 dari {value.totalItems} Data */}
+            Menampilkan 1 - {value.itemsPerPage} dari {value.totalItems} Data
           </Poppins>
           {/* pagination */}
           <ThemeProvider theme={themePagination}>
             <Pagination
               sx={{ order: { xs: 1, md: 2 }, alignSelf: 'center' }}
-              count={Math.ceil(50 / 10)}
-              // count={Math.ceil(value.totalItems / 10)}
-              // page={value.page}
-              // onChange={func.handleChangePage}
+              count={Math.ceil(value.totalItems / value.itemsPerPage)}
+              page={value.page}
+              onChange={func.handleChangePage}
             />
           </ThemeProvider>
         </Stack>
       </Card>
       {/* modal tambah/edit */}
-      <CustomModal open={false} handleClose={''}>
+      <CustomModal open={value.modal.data} handleClose={func.handleCloseModal}>
         <Grid container spacing={2}>
-          <Grid item size={12}>
+          <Grid size={12}>
             {/* kode barang */}
             <Poppins sx={{ fontWeight: 500 }}>* Kode Barang</Poppins>
             <OutlinedInput
@@ -231,8 +216,9 @@ export default function BarangMasuk() {
               }}
               size="small"
               placeholder="Masukkan Kode Barang"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="kode_barang"
+              value={value.newData.kode_barang}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Nama Barang */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Nama Barang</Poppins>
@@ -245,8 +231,9 @@ export default function BarangMasuk() {
               }}
               size="small"
               placeholder="Masukkan Nama Barang"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="nama"
+              value={value.newData.nama}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Harga */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Harga</Poppins>
@@ -258,9 +245,11 @@ export default function BarangMasuk() {
                 borderRadius: '12px'
               }}
               size="small"
+              // type='number'
               placeholder="Masukkan Harga"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="harga"
+              value={value.newData.harga}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Jumlah Barang */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Jumlah Barang</Poppins>
@@ -273,8 +262,9 @@ export default function BarangMasuk() {
               }}
               size="small"
               placeholder="Masukkan Jumlah Barang"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="jumlah"
+              value={value.newData.jumlah}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Sub Kategori */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Sub Kategori</Poppins>
@@ -287,8 +277,9 @@ export default function BarangMasuk() {
               }}
               size="small"
               placeholder="Masukkan Sub Kategori"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="sub_kategori"
+              value={value.newData.sub_kategori}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Tanggal Masuk */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Tanggal Masuk</Poppins>
@@ -301,23 +292,46 @@ export default function BarangMasuk() {
               }}
               size="small"
               placeholder="Masukkan Tanggal Masuk"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="tanggal_masuk"
+              value={value.newData.tanggal_masuk}
+              onChange={func.handleChange}
             ></OutlinedInput>
           </Grid>
         </Grid>
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleSave}>
             Simpan
+            {value.loading === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  position: 'absolute',
+                  mt: '5px',
+                  ml: '5px'
+                }}
+              />
+            )}
           </ButtonStyle>
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} onClick={func.handleCloseModal}>
             Batal
           </ButtonStyle>
         </Stack>
       </CustomModal>
+      {/* modal succes */}
+      <CustomModal open={value.modal.succes} handleClose={func.handleCloseModal}>
+        <Stack sx={{ alignItems: 'center', gap: 2 }}>
+          <img src={Sukses} alt="sukses" style={{ width: '145px', height: '145px' }} />
+          <Poppins sx={{ fontSize: '24px', fontWeight: 600 }}>Sukses!</Poppins>
+          <Poppins sx={{ fontWeight: 400 }}>Berhasil Menyimpan Data</Poppins>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleCloseModal}>
+            Kembali
+          </ButtonStyle>
+        </Stack>
+      </CustomModal>
       {/* modal hapus */}
-      <CustomModal open={false} handleClose={''}>
+      <CustomModal open={value.modal.delete} handleClose={func.handleCloseModal}>
         <Stack sx={{ alignItems: 'center', gap: 2 }}>
           <Stack
             sx={{
@@ -335,14 +349,36 @@ export default function BarangMasuk() {
         </Stack>
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleDelete}>
             Iya
+            {value.loading === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  position: 'absolute',
+                  mt: '5px',
+                  ml: '5px'
+                }}
+              />
+            )}
           </ButtonStyle>
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} onClick={func.handleCloseModal}>
             Batal
           </ButtonStyle>
         </Stack>
       </CustomModal>
+      {/* Snackbar */}
+      <Snackbar
+        open={value.snackbar.open}
+        // autoHideDuration={5000}
+        onClose={func.closeSnackbar}
+        // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}>
+          {value.snackbar.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 }

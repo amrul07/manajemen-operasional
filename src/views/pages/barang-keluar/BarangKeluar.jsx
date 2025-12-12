@@ -5,9 +5,11 @@ import {
   Checkbox,
   CircularProgress,
   Grid,
+  MenuItem,
   OutlinedInput,
   Pagination,
   Paper,
+  Select,
   Stack,
   Table,
   TableBody,
@@ -22,7 +24,7 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import { dataAbsensi, dataBarangKeluar, dataBarangMasuk, dataPermitaanBarang, dataStok } from '../../../utils/constan';
+import { dataAbsensi, dataBarangKeluar, dataBarangMasuk, dataPermitaanBarang, dataStok, menuItem } from '../../../utils/constan';
 import CustomButton from '../../../ui-component/button/CustomButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateIcon from '@mui/icons-material/Create';
@@ -32,8 +34,10 @@ import { IconExclamationCircle, IconPrinter, IconShoppingCartPlus, IconTrash } f
 import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import BarangKeluarLogic from './BarangKeluarLogic';
 
 export default function BarangKeluar() {
+  const { value, func } = BarangKeluarLogic();
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
@@ -49,48 +53,20 @@ export default function BarangKeluar() {
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
                 >
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
+                  <Select
                     size="small"
-                    sx={{
-                      mt: '5px',
-                      borderRadius: '12px',
-                      fontFamily: `'Poppins', sans-serif`,
-                      width: '180px'
-                    }}
-                    clearIcon={true}
-                    // options={value.kabinet || []}
-                    // value={
-                    //   (value.kabinet &&
-                    //     value.kabinet.find(
-                    //       (option) => option.id === value.cabinet
-                    //     )) ||
-                    //   value.cabinet
-                    value={'Tampilkan 10 data'}
-                    // }
-                    // onChange={(event, v) => {
-                    //   value.setCabinet(v ? v.id : "");
-                    // }}
-                    // getOptionLabel={(option) => option.name || value.cabinet}
-                    // isOptionEqualToValue={(option, value) =>
-                    //   option.id === value.id
-                    // }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          fontFamily: `'Poppins', sans-serif`,
-                          borderRadius: '12px'
-                        }}
-                        // InputProps={{
-                        //   ...params.InputProps,
-                        //   style: { fontFamily: `'Poppins', sans-serif` },
-                        // }}
-                        // placeholder={"Pilih Periode Kepengurusan"}
-                      />
-                    )}
-                  />
+                    value={value.itemsPerPage}
+                    onChange={(e) => func.handleChangeItemsPerPage(e.target.value)}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                    sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
+                  >
+                    {menuItem.map((res) => (
+                      <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
+                        {res.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </TableCell>
                 {/* button tambah */}
                 <TableCell
@@ -136,44 +112,51 @@ export default function BarangKeluar() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {dataBarangKeluar.map((row) => {
-                return (
-                  <StyledTableRow key={row.id}>
-                    <StyledTableCell>{row.id}</StyledTableCell>
-                    <StyledTableCell>{row.kode}</StyledTableCell>
-                    <StyledTableCell>{row.nama}</StyledTableCell>
-                    <StyledTableCell>Rp.{row.harga}</StyledTableCell>
-                    <StyledTableCell>{row.tanggalKeluar}</StyledTableCell>
-                    <StyledTableCell>{row.kategori}</StyledTableCell>
-                    <StyledTableCell>{row.tokoTujuan}</StyledTableCell>
-                    <StyledTableCell>{row.jumlah}</StyledTableCell>
-                    {/* <StyledTableCell>{row.stok}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.stokAwal}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.tanggalMasuk}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.tanggalUpdate}</StyledTableCell> */}
-                    <StyledTableCell>
-                      <Stack
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-around',
-                          gap: { xs: 1, md: 0 },
-                          alignItems: 'center'
-                        }}
-                      >
-                        {/* button edit */}
-                        <CustomButton
-                          bg={'#fff8e1'}
-                          color={'#ffc107'}
-                          hover={'#ffc107'}
-                          label={<CreateIcon style={{ fontSize: '18px' }} />}
-                          // onClick={() => func.handleEdit(row.id)}
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
+              {value.loadingPagination ? (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={5}>Loading...</StyledTableCell>
+                </StyledTableRow>
+              ) : (
+                value.data &&
+                value.data.map((row) => {
+                  return (
+                    <StyledTableRow key={row.barang_id}>
+                      <StyledTableCell>{(value.page - 1) * value.itemsPerPage + i + 1}</StyledTableCell>
+                      <StyledTableCell>{row.kode_barang}</StyledTableCell>
+                      <StyledTableCell>{row.nama}</StyledTableCell>
+                      <StyledTableCell>Rp.{row.harga}</StyledTableCell>
+                      <StyledTableCell>{row.tanggal_keluar}</StyledTableCell>
+                      <StyledTableCell>{row.kategori}</StyledTableCell>
+                      <StyledTableCell>{row.toko_tujuan}</StyledTableCell>
+                      <StyledTableCell>{row.jumlah}</StyledTableCell>
+                      {/* <StyledTableCell>{row.stok}</StyledTableCell> */}
+                      {/* <StyledTableCell>{row.stokAwal}</StyledTableCell> */}
+                      {/* <StyledTableCell>{row.tanggalMasuk}</StyledTableCell> */}
+                      {/* <StyledTableCell>{row.tanggalUpdate}</StyledTableCell> */}
+                      <StyledTableCell>
+                        <Stack
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            gap: { xs: 1, md: 0 },
+                            alignItems: 'center'
+                          }}
+                        >
+                          {/* button edit */}
+                          <CustomButton
+                            bg={'#fff8e1'}
+                            color={'#ffc107'}
+                            hover={'#ffc107'}
+                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            onClick={() => func.handleEdit(row.barang_id)}
+                          />
+                        </Stack>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </TableContainer>

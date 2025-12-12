@@ -3,18 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { deleteData, fetchData, postData } from '../../../api/api';
 import useGlobalStore from '../../../store/globalStore';
 import { get, set } from 'idb-keyval'; // idb-keyval untuk IndexedDB ringan
+import { useNavigate } from 'react-router-dom';
 
 // --------------------
 // Offline storage keys
 // --------------------
-const OFFLINE_USERS = 'offline-users'; // cache data users
+const OFFLINE_BARANGMASUK = 'offline-barang-masuk'; // cache data barang masuk
 const OFFLINE_QUEUE = 'offline-queue'; // antrian operasi (create/update/delete) saat offline
 
 // --------------------
 // Helper IndexedDB (idb-keyval)
 // --------------------
-const getOfflineUsers = async () => (await get(OFFLINE_USERS)) || []; // ambil cached users
-const saveOfflineUsers = async (users) => await set(OFFLINE_USERS, users || []); // simpan cached users
+const getOfflineBarangMasuk = async () => (await get(OFFLINE_BARANGMASUK)) || []; // ambil cached barang masuk
+const saveOfflineBarangMasuk = async (barangMasuk) => await set(OFFLINE_BARANGMASUK, barangMasuk || []); // simpan cached barang masuk
 const getQueue = async () => (await get(OFFLINE_QUEUE)) || []; // ambil queue
 const saveQueue = async (q) => await set(OFFLINE_QUEUE, q || []); // simpan queue
 const removeQueueItemByLocalId = async (localId) => {
@@ -27,7 +28,9 @@ const removeQueueItemByLocalId = async (localId) => {
 // --------------------
 // Main hook / logic
 // --------------------
-export default function UserLogic() {
+export default function BarangMasukLogic() {
+  const router = useNavigate();
+
   // UI / pagination state
   const [data, setData] = useState([]); // data yang ditampilkan di tabel
   const searchQuery = useGlobalStore((state) => state.searchQuery); // global search
@@ -37,14 +40,23 @@ export default function UserLogic() {
   const [totalItems, setTotalItems] = useState(0); // total items
 
   // form / modal state
-  const [newData, setNewData] = useState({ name: '', noHp: '', jabatan: '', password: '' }); // form
+  const [newData, setNewData] = useState({
+    kode_barang: '',
+    nama: '',
+    harga: '',
+    jumlah: '',
+    sub_kategori: '',
+    tanggal_masuk: '',
+    jumlah: '',
+    sub_kategori: '',
+    tanggal_masuk: ''
+  }); // form
   const [modal, setModal] = useState({ data: false, delete: false, succes: false }); // modal flags
   const [deleteId, setDeleteId] = useState(null); // id untuk delete
   const [editingId, setEditingId] = useState(null); // id yang sedang diedit
   const [editMode, setEditMode] = useState(false); // mode edit true/false
 
   // misc UI
-  const [showPassword, setShowPassword] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
   const [loading, setLoading] = useState(false);
   const [loadingGet, setLoadingGet] = useState(true);
@@ -52,7 +64,7 @@ export default function UserLogic() {
 
   // offline related state
   const [isOnline, setIsOnline] = useState(navigator.onLine); // online status
-  const [offlineUsers, setOfflineUsersState] = useState([]); // cached users array
+  const [offlineBarangMasuk, setOfflineBarangMasukState] = useState([]); // cached barang masuk array
 
   // --------------------
   // Utility: sort newest first
@@ -74,11 +86,11 @@ export default function UserLogic() {
     let mounted = true;
 
     const init = async () => {
-      // load cached users dulu (jika ada)
+      // load cached barang masuk dulu (jika ada)
       try {
-        const cached = await getOfflineUsers(); // baca dari IndexedDB
+        const cached = await getOfflineBarangMasuk(); // baca dari IndexedDB
         if (!mounted) return;
-        setOfflineUsersState(cached); // simpan di state offline
+        setOfflineBarangMasukState(cached); // simpan di state offline
         // show cached data immediately (so UX shows something)
         if (!navigator.onLine) {
           setData(sortNewestFirst(cached)); // tampilkan cache saat offline
@@ -136,8 +148,8 @@ export default function UserLogic() {
     setIsOnline(false);
     // show cached data if any
     (async () => {
-      const cached = await getOfflineUsers();
-      setOfflineUsersState(cached);
+      const cached = await getOfflineBarangMasuk();
+      setOfflineBarangMasukState(cached);
       setData(sortNewestFirst(cached));
       setPage(1);
       setTotalItems(cached.length);
@@ -149,11 +161,11 @@ export default function UserLogic() {
   // getData: ambil data (online) atau fallback ke IndexedDB (offline)
   // --------------------
   const getData = async () => {
-    // offline fallback: tampilkan cached users
+    // offline fallback: tampilkan cached barang masuk
     if (!isOnline) {
       setLoadingGet(false);
-      const cached = await getOfflineUsers();
-      setOfflineUsersState(cached);
+      const cached = await getOfflineBarangMasuk();
+      setOfflineBarangMasukState(cached);
       setData(sortNewestFirst(cached));
       setPage(1);
       setTotalItems(cached.length);
@@ -164,13 +176,13 @@ export default function UserLogic() {
     // online: ambil dari API
     try {
       setLoadingPagination(true);
-      const res = await fetchData(`/admin/users?perpage=${itemsPerPage}&page=${page}&search=${searchQuery}`);
+      const res = await fetchData(`/admin/barangMasuk?perpage=${itemsPerPage}&page=${page}&search=${searchQuery}`);
       const serverData = res?.data || [];
       const sorted = sortNewestFirst(serverData); // urut terbaru dulu
       // setData(sorted); // tampilkan di UI
       setData(res.data); // tampilkan di UI
-      setOfflineUsersState(sorted); // keep cached copy in memory
-      await saveOfflineUsers(sorted); // simpan ke IndexedDB agar offline bisa pakai
+      setOfflineBarangMasukState(sorted); // keep cached copy in memory
+      await saveOfflineBarangMasuk(sorted); // simpan ke IndexedDB agar offline bisa pakai
 
       // update pagination meta dari server
       setPage(res.meta?.page ?? 1);
@@ -179,8 +191,8 @@ export default function UserLogic() {
     } catch (err) {
       console.error('getData error', err);
       // fallback ke cached kalau fetch gagal
-      const cached = await getOfflineUsers();
-      setOfflineUsersState(cached);
+      const cached = await getOfflineBarangMasuk();
+      setOfflineBarangMasukState(cached);
       setData(sortNewestFirst(cached));
       setPage(1);
       setTotalItems(cached.length);
@@ -211,15 +223,15 @@ export default function UserLogic() {
 
           // NOTE: many backends expect multipart/form-data for file uploads.
           // If your backend requires FormData for creation, change this to send FormData.
-          await postData('/admin/users', payload); // kirim ke server (JSON)
+          await postData('/admin/barangMasuk', payload); // kirim ke server (JSON)
         } else if (qItem.action === 'update') {
           const payload = { ...qItem.data }; // payload harus mengandung id (server id jika ada)
           const formData = new FormData();
           Object.entries(payload).forEach(([k, v]) => formData.append(k, v));
           formData.append('_method', 'PUT');
-          await postData(`/admin/users/${payload.id}`, formData);
+          await postData(`/admin/barangMasuk/${payload.id}`, formData);
         } else if (qItem.action === 'delete') {
-          await deleteData(`/admin/users/${qItem.id}`);
+          await deleteData(`/admin/barangMasuk/${qItem.id}`);
         }
 
         // success -> hapus dari queue
@@ -243,18 +255,26 @@ export default function UserLogic() {
       if (!isOnline) {
         try {
           // baca data offline terbaru dari IndexedDB (hindari stale state)
-          const current = await getOfflineUsers();
+          const current = await getOfflineBarangMasuk();
 
-          // update offlineUsers array (jadikan field sesuai format response: name, no_hp, jabatan)
+          // update offlineBarangMasuk array
           const updated = current.map((item) => {
             if (item.id === editingId) {
-              return { ...item, name: newData.name, no_hp: newData.noHp, jabatan: newData.jabatan };
+              return {
+                ...item,
+                kode_barang: newData.kode_barang,
+                nama: newData.nama,
+                harga: newData.harga,
+                jumlah: newData.jumlah,
+                sub_kategori: newData.sub_kategori,
+                tanggal_masuk: newData.tanggal_masuk
+              };
             }
             return item;
           });
 
-          await saveOfflineUsers(updated); // simpan ke IndexedDB
-          setOfflineUsersState(updated); // update state offline
+          await saveOfflineBarangMasuk(updated); // simpan ke IndexedDB
+          setOfflineBarangMasukState(updated); // update state offline
           setData(sortNewestFirst(updated)); // tampilkan update di UI
 
           // push update ke queue (localId agar bisa dihapus nanti)
@@ -263,7 +283,15 @@ export default function UserLogic() {
           queue.push({
             localId,
             action: 'update',
-            data: { id: editingId, name: newData.name, no_hp: newData.noHp, jabatan: newData.jabatan },
+            data: {
+              id: editingId,
+              kode_barang: newData.kode_barang,
+              nama: newData.nama,
+              harga: newData.harga,
+              jumlah: newData.jumlah,
+              sub_kategori: newData.sub_kategori,
+              tanggal_masuk: newData.tanggal_masuk
+            },
             timestamp: Date.now()
           });
           await saveQueue(queue);
@@ -277,7 +305,17 @@ export default function UserLogic() {
           // reset form state
           setEditMode(false);
           setEditingId(null);
-          setNewData({ name: '', noHp: '', jabatan: '', password: '' });
+          setNewData({
+            kode_barang: '',
+            nama: '',
+            harga: '',
+            jumlah: '',
+            sub_kategori: '',
+            tanggal_masuk: '',
+            jumlah: '',
+            sub_kategori: '',
+            tanggal_masuk: ''
+          });
           setLoading(false);
         }
         return;
@@ -286,11 +324,14 @@ export default function UserLogic() {
       // ------------ ONLINE: kirim update ke server ------------
       try {
         const formData = new FormData();
-        formData.append('name', newData.name);
-        formData.append('no_hp', newData.noHp);
-        formData.append('jabatan', newData.jabatan);
+        formData.append('kode_barang', newData.kode_barang);
+        formData.append('nama', newData.nama);
+        formData.append('harga', newData.harga);
+        formData.append('jumlah', newData.jumlah);
+        formData.append('sub_kategori', newData.sub_kategori);
+        formData.append('tanggal_masuk', newData.tanggal_masuk);
         formData.append('_method', 'PUT');
-        await postData(`/admin/users/${editingId}`, formData); // post dengan method override
+        await postData(`/admin/barangMasuk/${editingId}`, formData); // post dengan method override
         await getData(); // refresh dari server
         setModal((prev) => ({ ...prev, succes: true }));
       } catch (error) {
@@ -301,7 +342,17 @@ export default function UserLogic() {
       } finally {
         setEditMode(false);
         setEditingId(null);
-        setNewData({ name: '', noHp: '', jabatan: '', password: '' });
+        setNewData({
+          kode_barang: '',
+          nama: '',
+          harga: '',
+          jumlah: '',
+          sub_kategori: '',
+          tanggal_masuk: '',
+          jumlah: '',
+          sub_kategori: '',
+          tanggal_masuk: ''
+        });
         setModal((prev) => ({ ...prev, data: false }));
         setLoading(false);
       }
@@ -313,21 +364,30 @@ export default function UserLogic() {
     if (!isOnline) {
       // offline create: buat object local dengan id besar (timestamp) + isOffline flag
       try {
-        // baca current cached users (hindari stale closure)
-        const current = await getOfflineUsers();
+        // baca current cached barang masuk (hindari stale closure)
+        const current = await getOfflineBarangMasuk();
 
         const localId = Date.now(); // local unique id
-        const newUser = { id: localId, name: newData.name, no_hp: newData.noHp, jabatan: newData.jabatan, isOffline: true };
+        const newBarangMasuk = {
+          id: localId,
+          kode_barang: newData.kode_barang,
+          nama: newData.nama,
+          harga: newData.harga,
+          jumlah: newData.jumlah,
+          sub_kategori: newData.sub_kategori,
+          tanggal_masuk: newData.tanggal_masuk,
+          isOffline: true
+        };
 
         // simpan di cache offline: prepend supaya muncul paling atas (terbaru dulu)
-        const updated = [newUser, ...current];
-        await saveOfflineUsers(updated); // simpan ke IndexedDB
-        setOfflineUsersState(updated); // update local state
+        const updated = [newBarangMasuk, ...current];
+        await saveOfflineBarangMasuk(updated); // simpan ke IndexedDB
+        setOfflineBarangMasukState(updated); // update local state
         setData(sortNewestFirst(updated)); // tampilkan terbaru dulu
 
         // push create ke queue untuk disync nanti
         const queue = await getQueue();
-        queue.push({ localId, action: 'create', data: newUser, timestamp: Date.now() });
+        queue.push({ localId, action: 'create', data: newBarangMasuk, timestamp: Date.now() });
         await saveQueue(queue);
 
         // feedback & close modal
@@ -336,7 +396,7 @@ export default function UserLogic() {
         console.error('Gagal menambahkan data offline', err);
         setSnackbar({ open: true, message: 'Gagal menambahkan data (offline).' });
       } finally {
-        setNewData({ name: '', noHp: '', jabatan: '', password: '' });
+        setNewData({ kode_barang: '', nama: '', harga: '', jumlah: '', sub_kategori: '', tanggal_masuk: '' });
         setLoading(false);
       }
       return;
@@ -345,11 +405,13 @@ export default function UserLogic() {
     // ------------ ONLINE create normal ------------
     try {
       const formDataPost = new FormData();
-      formDataPost.append('name', newData.name);
-      formDataPost.append('no_hp', newData.noHp);
-      formDataPost.append('jabatan', newData.jabatan);
-      formDataPost.append('password', newData.password);
-      await postData(`/admin/users`, formDataPost); // kirim ke server
+      formDataPost.append('kode_barang', newData.kode_barang);
+      formDataPost.append('nama', newData.nama);
+      formDataPost.append('harga', newData.harga);
+      formDataPost.append('jumlah', newData.jumlah);
+      formDataPost.append('sub_kategori', newData.sub_kategori);
+      formDataPost.append('tanggal_masuk', newData.tanggal_masuk);
+      await postData(`/admin/barangMasuk`, formDataPost); // kirim ke server
       await getData(); // refresh
       setModal((prev) => ({ ...prev, succes: true }));
     } catch (error) {
@@ -358,7 +420,7 @@ export default function UserLogic() {
       if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
       setSnackbar({ open: true, message: pesanError });
     } finally {
-      setNewData({ name: '', noHp: '', jabatan: '', password: '' });
+      setNewData({ kode_barang: '', nama: '', harga: '', jumlah: '', sub_kategori: '', tanggal_masuk: '' });
       setModal((prev) => ({ ...prev, data: false }));
       setLoading(false);
     }
@@ -373,10 +435,10 @@ export default function UserLogic() {
     if (!isOnline) {
       try {
         // hapus dari cached array (filter)
-        const current = await getOfflineUsers();
+        const current = await getOfflineBarangMasuk();
         const filtered = current.filter((item) => item.id !== deleteId);
-        await saveOfflineUsers(filtered);
-        setOfflineUsersState(filtered);
+        await saveOfflineBarangMasuk(filtered);
+        setOfflineBarangMasukState(filtered);
         setData(sortNewestFirst(filtered));
 
         // push delete ke queue
@@ -397,7 +459,7 @@ export default function UserLogic() {
 
     // online delete normal
     try {
-      await deleteData(`/admin/users/${deleteId}`);
+      await deleteData(`/admin/barangMasuk/${deleteId}`);
       await getData();
     } catch (error) {
       console.error('Gagal menghapus data:', error);
@@ -424,34 +486,53 @@ export default function UserLogic() {
     setModal({ data: false, delete: false, succes: false });
     setEditMode(false);
     setEditingId(null);
-    setNewData({ name: '', noHp: '', jabatan: '', password: '' });
+    setNewData({
+      kode_barang: '',
+      nama: '',
+      harga: '',
+      jumlah: '',
+      sub_kategori: '',
+      tanggal_masuk: '',
+      jumlah: '',
+      sub_kategori: '',
+      tanggal_masuk: ''
+    });
   };
 
+  //   print data
+  const handlePrint = (id) => {
+    router(`/barang-masuk/cetak/${id}`);
+  };
+
+  //   edit data
   const handleEdit = (id) => {
     // prepare data untuk edit modal
     setEditingId(id);
-    const selectedItem = data.find((item) => item.id === id) || offlineUsers.find((item) => item.id === id);
+    const selectedItem = data.find((item) => item.id === id) || offlineBarangMasuk.find((item) => item.id === id);
     if (!selectedItem) return;
-    setNewData({ name: selectedItem?.name || '', noHp: selectedItem?.no_hp || '', jabatan: selectedItem?.jabatan || '', password: '' });
+    setNewData({
+      kode_barang: selectedItem?.kode_barang || '',
+      nama: selectedItem?.nama || '',
+      harga: selectedItem?.harga || '',
+      jumlah: selectedItem?.jumlah || '',
+      sub_kategori: selectedItem?.sub_kategori || '',
+      tanggal_masuk: selectedItem?.tanggal_masuk || ''
+    });
     setModal((prev) => ({ ...prev, data: true }));
     setEditMode(true);
   };
 
   const handleChange = (e) => setNewData({ ...newData, [e.target.name]: e.target.value }); // input change
-  const handleChangeJabatan = (event, newValue) => setNewData((prev) => ({ ...prev, jabatan: newValue ?? '' })); // autocomplete change
+  const handleChangeharga = (event, newValue) => setNewData((prev) => ({ ...prev, harga: newValue ?? '' })); // autocomplete change
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;
     setSnackbar({ open: false, message: '' });
   }; // snackbar close
-  const handleShowPassword = () => setShowPassword(!showPassword); // toggle pwd show
-  const handleMouseDownPassword = (event) => event.preventDefault(); // prevent focus loss on icon
   const handleChangePage = (event, newPage) => setPage(newPage); // pagination
   const handleChangeItemsPerPage = (value) => {
     setItemsPerPage(value);
     setPage(1);
   }; // change perpage resets to page 1
-
-
 
   // --------------------
   // return API untuk komponen
@@ -469,7 +550,6 @@ export default function UserLogic() {
       deleteId,
       editMode,
       editingId,
-      showPassword,
       snackbar,
       loading,
       loadingGet,
@@ -478,18 +558,17 @@ export default function UserLogic() {
     },
     func: {
       handleChange,
-      handleChangeJabatan,
+      handleChangeharga,
       handleModal,
       handleCloseModal,
       openModalDelete,
       handleEdit,
       closeSnackbar,
-      handleShowPassword,
-      handleMouseDownPassword,
       handleChangePage,
       handleChangeItemsPerPage,
       handleSave,
-      handleDelete
+      handleDelete,
+      handlePrint
     }
   };
 }
