@@ -16,6 +16,7 @@
     "axios": "^1.13.2",
     "framer-motion": "12.23.22",
     "html2pdf.js": "^0.12.1",
+    "idb-keyval": "^6.2.2",
     "lodash-es": "4.17.21",
     "material-ui-popup-state": "5.3.6",
     "react": "19.2.0",

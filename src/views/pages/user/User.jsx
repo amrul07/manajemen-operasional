@@ -377,7 +377,7 @@ export default function User() {
         onClose={func.closeSnackbar}
         // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: 'myFont' }}>
+        <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}>
           {value.snackbar.message}
         </Alert>
       </Snackbar>
