@@ -1,7 +1,7 @@
 import { Checkbox, Stack } from '@mui/material';
 import React from 'react';
 
-export default function CustomCheckBox({}) {
+export default function CustomCheckBox({ onChange, checked }) {
   return (
     <Stack
       sx={{
@@ -14,6 +14,8 @@ export default function CustomCheckBox({}) {
       }}
     >
       <Checkbox
+        checked={checked}
+        onChange={onChange}
         sx={{
           '& .MuiSvgIcon-root': { fontSize: 28 },
           color: '#1e88e5',

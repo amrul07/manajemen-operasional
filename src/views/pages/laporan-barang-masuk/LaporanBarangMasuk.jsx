@@ -1,13 +1,17 @@
 import {
+  Alert,
   Autocomplete,
   Button,
   Card,
   Checkbox,
   CircularProgress,
   Grid,
+  MenuItem,
   OutlinedInput,
   Pagination,
   Paper,
+  Select,
+  Snackbar,
   Stack,
   Table,
   TableBody,
@@ -22,23 +26,21 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import { dataAbsensi, dataLaporanBarangMasuk, dataPermitaanBarang, dataStok } from '../../../utils/constan';
-import CustomButton from '../../../ui-component/button/CustomButton';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import CreateIcon from '@mui/icons-material/Create';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import { menuItem } from '../../../utils/constan';
 import { IconExclamationCircle, IconPrinter, IconShoppingCartPlus, IconTrash } from '@tabler/icons-react';
-import CustomModal from '../../../ui-component/modal/CustomModal';
-import ButtonStyle from '../../../ui-component/button/ButtonStyle';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CustomCheckBox from '../../../ui-component/checkbox/CustomCheckBox';
+import LaporanBarangMasukLogic from './LaporanBarangMasukLogic';
 
 export default function LaporanBarangMasuk() {
+  const { value, func } = LaporanBarangMasukLogic();
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
-      <div id="print-content">
+      {value.loadingGet === true ? (
+        <Stack sx={{ alignItems: 'center', height: '100vh' }}>
+          <CircularProgress sx={{ margin: 'auto', color: '#1e88e5' }} size={'50px'} />
+        </Stack>
+      ) : (
         <TableContainer sx={{ px: 5, fontFamily: "`'Poppins', sans-serif`" }} component={Paper}>
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -50,48 +52,20 @@ export default function LaporanBarangMasuk() {
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
                 >
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
+                  <Select
                     size="small"
-                    sx={{
-                      mt: '5px',
-                      borderRadius: '12px',
-                      fontFamily: `'Poppins', sans-serif`,
-                      width: '180px'
-                    }}
-                    clearIcon={true}
-                    // options={value.kabinet || []}
-                    // value={
-                    //   (value.kabinet &&
-                    //     value.kabinet.find(
-                    //       (option) => option.id === value.cabinet
-                    //     )) ||
-                    //   value.cabinet
-                    value={'Tampilkan 10 data'}
-                    // }
-                    // onChange={(event, v) => {
-                    //   value.setCabinet(v ? v.id : "");
-                    // }}
-                    // getOptionLabel={(option) => option.name || value.cabinet}
-                    // isOptionEqualToValue={(option, value) =>
-                    //   option.id === value.id
-                    // }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          fontFamily: `'Poppins', sans-serif`,
-                          borderRadius: '12px'
-                        }}
-                        // InputProps={{
-                        //   ...params.InputProps,
-                        //   style: { fontFamily: `'Poppins', sans-serif` },
-                        // }}
-                        // placeholder={"Pilih Periode Kepengurusan"}
-                      />
-                    )}
-                  />
+                    value={value.itemsPerPage}
+                    onChange={(e) => func.handleChangeItemsPerPage(e.target.value)}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                    sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
+                  >
+                    {menuItem.map((res) => (
+                      <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
+                        {res.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </TableCell>
                 {/* button cetak */}
                 <TableCell
@@ -101,7 +75,7 @@ export default function LaporanBarangMasuk() {
                     textAlign: 'end'
                   }}
                 >
-                   <Button
+                  <Button
                     variant="contained"
                     sx={{
                       mt: '5px',
@@ -116,10 +90,18 @@ export default function LaporanBarangMasuk() {
                         opacity: 0.8
                       }
                     }}
-                    // onClick={onClick}
+                    onClick={func.handlePrint}
                   >
                     <IconPrinter />
                     <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
+                    {value.loading === true && (
+                      <CircularProgress
+                        size={18}
+                        sx={{
+                          color: '#FFF'
+                        }}
+                      />
+                    )}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -136,41 +118,45 @@ export default function LaporanBarangMasuk() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {dataLaporanBarangMasuk.map((row) => {
-                return (
-                  <StyledTableRow key={row.id}>
-                    <StyledTableCell>{row.id}</StyledTableCell>
-                    <StyledTableCell>{row.kode}</StyledTableCell>
-                    <StyledTableCell>{row.nama}</StyledTableCell>
-                    <StyledTableCell>Rp.{row.harga}</StyledTableCell>
-                    <StyledTableCell>{row.jumlah}</StyledTableCell>
-                    <StyledTableCell>{row.kategori}</StyledTableCell>
-                    <StyledTableCell>{row.tanggalMasuk}</StyledTableCell>
-                    {/* <StyledTableCell>{row.stok}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.stokAwal}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.tanggalMasuk}</StyledTableCell> */}
-                    {/* <StyledTableCell>{row.tanggalUpdate}</StyledTableCell> */}
-                    <StyledTableCell>
-                      <Stack
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-around',
-                          gap: { xs: 1, md: 0 },
-                          alignItems: 'center'
-                        }}
-                      >
-                        {/* buttom ceklis */}
-                        <CustomCheckBox />
-                      </Stack>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
+              {value.loadingPagination ? (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={5}>Loading...</StyledTableCell>
+                </StyledTableRow>
+              ) : (
+                value.data &&
+                value.data.map((row, i) => {
+                  return (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell>{(value.page - 1) * value.itemsPerPage + i + 1}</StyledTableCell>
+                      <StyledTableCell>{row.kode_barang}</StyledTableCell>
+                      <StyledTableCell>{row.nama}</StyledTableCell>
+                      <StyledTableCell>Rp.{row.harga}</StyledTableCell>
+                      <StyledTableCell>{row.jumlah}</StyledTableCell>
+                      <StyledTableCell>{row.sub_kategori}</StyledTableCell>
+                      <StyledTableCell>{row.tanggal_masuk}</StyledTableCell>
+                      <StyledTableCell>
+                        <Stack
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            gap: { xs: 1, md: 0 },
+                            alignItems: 'center'
+                          }}
+                        >
+                          {/* buttom ceklis */}
+                          <CustomCheckBox onChange={() => func.handleCeklis(row.id)} checked={value.idPrint.includes(row.id)} />
+                        </Stack>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      )}
+
       <Card sx={{ px: { xs: 2, md: 4 }, py: { xs: 2, md: 4 } }}>
         <Stack sx={{ justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
           <Poppins
@@ -180,21 +166,30 @@ export default function LaporanBarangMasuk() {
               textAlign: 'center'
             }}
           >
-            Menampilkan 1 - 10 dari 10 Data
-            {/* Menampilkan 1 - 10 dari {value.totalItems} Data */}
+            Menampilkan 1 - {value.itemsPerPage} dari {value.totalItems} Data
           </Poppins>
           {/* pagination */}
           <ThemeProvider theme={themePagination}>
             <Pagination
               sx={{ order: { xs: 1, md: 2 }, alignSelf: 'center' }}
-              count={Math.ceil(50 / 10)}
-              // count={Math.ceil(value.totalItems / 10)}
-              // page={value.page}
-              // onChange={func.handleChangePage}
+              count={Math.ceil(value.totalItems / value.itemsPerPage)}
+              page={value.page}
+              onChange={func.handleChangePage}
             />
           </ThemeProvider>
         </Stack>
       </Card>
+      {/* Snackbar */}
+      <Snackbar
+        open={value.snackbar.open}
+        // autoHideDuration={5000}
+        onClose={func.closeSnackbar}
+        // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}>
+          {value.snackbar.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 }

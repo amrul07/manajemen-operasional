@@ -35,8 +35,6 @@ export default function CetakDataStok() {
 
         // DELAY KECIL AGAR RENDER SEBELUM CETAK
         setTimeout(() => generatePDF(), 800);
-
-        console.log(res);
       } else {
         // OFFLINE → IndexedDB
         const cached = await get('cetak-stok');

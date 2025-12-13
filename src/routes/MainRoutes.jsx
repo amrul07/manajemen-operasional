@@ -100,7 +100,7 @@ const MainRoutes = {
       element: <LaporanBarangMasuk />
     },
     {
-      path: 'laporan-barang-masuk/cetak/:id',
+      path: 'laporan-barang-masuk/cetak',
       element: <CetakLaporanBarangMasuk />
     },
     {
@@ -108,7 +108,7 @@ const MainRoutes = {
       element: <LaporanBarangKeluar />
     },
     {
-      path: 'laporan-barang-keluar/cetak/:id',
+      path: 'laporan-barang-keluar/cetak',
       element: <CetakLaporanBarangKeluar />
     },
     {

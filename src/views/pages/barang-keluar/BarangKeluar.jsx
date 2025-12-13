@@ -118,7 +118,7 @@ export default function BarangKeluar() {
                 </StyledTableRow>
               ) : (
                 value.data &&
-                value.data.map((row) => {
+                value.data.map((row, i) => {
                   return (
                     <StyledTableRow key={row.barang_id}>
                       <StyledTableCell>{(value.page - 1) * value.itemsPerPage + i + 1}</StyledTableCell>
@@ -126,13 +126,9 @@ export default function BarangKeluar() {
                       <StyledTableCell>{row.nama}</StyledTableCell>
                       <StyledTableCell>Rp.{row.harga}</StyledTableCell>
                       <StyledTableCell>{row.tanggal_keluar}</StyledTableCell>
-                      <StyledTableCell>{row.kategori}</StyledTableCell>
+                      <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.toko_tujuan}</StyledTableCell>
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
-                      {/* <StyledTableCell>{row.stok}</StyledTableCell> */}
-                      {/* <StyledTableCell>{row.stokAwal}</StyledTableCell> */}
-                      {/* <StyledTableCell>{row.tanggalMasuk}</StyledTableCell> */}
-                      {/* <StyledTableCell>{row.tanggalUpdate}</StyledTableCell> */}
                       <StyledTableCell>
                         <Stack
                           sx={{
@@ -149,7 +145,7 @@ export default function BarangKeluar() {
                             color={'#ffc107'}
                             hover={'#ffc107'}
                             label={<CreateIcon style={{ fontSize: '18px' }} />}
-                            onClick={() => func.handleEdit(row.barang_id)}
+                            onClick={() => func.handleEdit(row.id)}
                           />
                         </Stack>
                       </StyledTableCell>
@@ -170,53 +166,39 @@ export default function BarangKeluar() {
               textAlign: 'center'
             }}
           >
-            Menampilkan 1 - 10 dari 10 Data
-            {/* Menampilkan 1 - 10 dari {value.totalItems} Data */}
+            Menampilkan 1 - {value.itemsPerPage} dari {value.totalItems} Data
           </Poppins>
           {/* pagination */}
           <ThemeProvider theme={themePagination}>
             <Pagination
               sx={{ order: { xs: 1, md: 2 }, alignSelf: 'center' }}
-              count={Math.ceil(50 / 10)}
-              // count={Math.ceil(value.totalItems / 10)}
-              // page={value.page}
-              // onChange={func.handleChangePage}
+              count={Math.ceil(value.totalItems / value.itemsPerPage)}
+              page={value.page}
+              onChange={func.handleChangePage}
             />
           </ThemeProvider>
         </Stack>
       </Card>
       {/* modal tambah/edit */}
-      <CustomModal open={false} handleClose={''}>
+      <CustomModal open={value.modal.data} handleClose={func.handleCloseModal}>
         <Grid container spacing={2}>
           <Grid item size={12}>
             {/* kode barang */}
             <Poppins sx={{ fontWeight: 500 }}>* Kode Barang</Poppins>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={['12345', '6789', '101112', '131415']}
+            <Select
               size="small"
-              sx={{
-                mt: '5px',
-                borderRadius: '12px',
-                fontFamily: `'Poppins', sans-serif`
-              }}
-              // value={value.gender}
-              onChange={(event, v) => {
-                value.setGender(v);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
-                  InputProps={{
-                    ...params.InputProps,
-                    sx: { fontFamily: `'Poppins', sans-serif` }
-                  }}
-                  placeholder={'Pilih Kode Barang'}
-                />
-              )}
-            />
+              value={value.itemsPerPage}
+              onChange={(e) => func.handleChangeItemsPerPage(e.target.value)}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
+            >
+              {menuItem.map((res) => (
+                <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
+                  {res.label}
+                </MenuItem>
+              ))}
+            </Select>
             {/* Nama Barang */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Nama Barang</Poppins>
             <OutlinedInput

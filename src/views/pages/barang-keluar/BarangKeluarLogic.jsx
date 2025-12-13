@@ -30,6 +30,7 @@ const removeQueueItemByLocalId = async (localId) => {
 export default function BarangKeluarLogic() {
   // UI / pagination state
   const [data, setData] = useState([]); // data yang ditampilkan di tabel
+  const [dataStock, setDataStock] = useState([]); // data dropdown
   const searchQuery = useGlobalStore((state) => state.searchQuery); // global search
   const [itemsPerPage, setItemsPerPage] = useState(10); // items per page
   const [page, setPage] = useState(1); // current page
@@ -37,7 +38,7 @@ export default function BarangKeluarLogic() {
   const [totalItems, setTotalItems] = useState(0); // total items
 
   // form / modal state
-  const [newData, setNewData] = useState({ toko_tujuan: '', toko_tujuan: '', jumlah: '' }); // form
+  const [newData, setNewData] = useState({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' }); // form
   const [modal, setModal] = useState({ data: false, succes: false }); // modal flags
   const [editingId, setEditingId] = useState(null); // id yang sedang diedit
   const [editMode, setEditMode] = useState(false); // mode edit true/false
@@ -114,6 +115,7 @@ export default function BarangKeluarLogic() {
   useEffect(() => {
     // whenever page/itemsPerPage/search changes, re-get data
     getData();
+    getDataStok();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsPerPage, page, searchQuery]);
 
@@ -188,6 +190,15 @@ export default function BarangKeluarLogic() {
     }
   };
 
+  // data dropdown
+  const getDataStok = async () => {
+    const res = await fetchData(`/admin/allStok`);
+    setDataStock(res.data);
+    console.log(res);
+  };
+
+  console.log(dataStock);
+
   // --------------------
   // syncOfflineQueue: proses antrian saat kembali online
   // Struktur item queue: { localId, action: 'create'|'update' data?, id?, timestamp }
@@ -240,10 +251,16 @@ export default function BarangKeluarLogic() {
           // baca data offline terbaru dari IndexedDB (hindari stale state)
           const current = await getOfflineBarangKeluar();
 
-          // update offlineBarangKeluar array (jadikan field sesuai format response: toko_tujuan, no_hp, jumlah)
+          // update offlineBarangKeluar array (jadikan field sesuai format response: barang_id, no_hp, jumlah)
           const updated = current.map((item) => {
             if (item.id === editingId) {
-              return { ...item, toko_tujuan: newData.toko_tujuan, no_hp: newData.toko_tujuan, jumlah: newData.jumlah };
+              return {
+                ...item,
+                barang_id: newData.barang_id,
+                tanggal_keluar: newData.tanggal_keluar,
+                toko_tujuan: newData.toko_tujuan,
+                jumlah: newData.jumlah
+              };
             }
             return item;
           });
@@ -258,7 +275,13 @@ export default function BarangKeluarLogic() {
           queue.push({
             localId,
             action: 'update',
-            data: { id: editingId, toko_tujuan: newData.toko_tujuan, no_hp: newData.toko_tujuan, jumlah: newData.jumlah },
+            data: {
+              id: editingId,
+              barang_id: newData.barang_id,
+              tanggal_keluar: newData.tanggal_keluar,
+              toko_tujuan: newData.toko_tujuan,
+              jumlah: newData.jumlah
+            },
             timestamp: Date.now()
           });
           await saveQueue(queue);
@@ -272,7 +295,7 @@ export default function BarangKeluarLogic() {
           // reset form state
           setEditMode(false);
           setEditingId(null);
-          setNewData({ toko_tujuan: '', toko_tujuan: '', jumlah: '' });
+          setNewData({ barang_id: '', barang_id: '', jumlah: '' });
           setLoading(false);
         }
         return;
@@ -281,8 +304,9 @@ export default function BarangKeluarLogic() {
       // ------------ ONLINE: kirim update ke server ------------
       try {
         const formData = new FormData();
+        formData.append('barang_id', newData.barang_id);
+        formData.append('tanggal_keluar', newData.tanggal_keluar);
         formData.append('toko_tujuan', newData.toko_tujuan);
-        formData.append('no_hp', newData.toko_tujuan);
         formData.append('jumlah', newData.jumlah);
         formData.append('_method', 'PUT');
         await postData(`/admin/barangKeluar/${editingId}`, formData); // post dengan method override
@@ -296,7 +320,7 @@ export default function BarangKeluarLogic() {
       } finally {
         setEditMode(false);
         setEditingId(null);
-        setNewData({ toko_tujuan: '', toko_tujuan: '', jumlah: '' });
+        setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
         setModal((prev) => ({ ...prev, data: false }));
         setLoading(false);
       }
@@ -314,8 +338,9 @@ export default function BarangKeluarLogic() {
         const localId = Date.now(); // local unique id
         const newUser = {
           id: localId,
+          barang_id: newData.barang_id,
+          tanggal_keluar: newData.tanggal_keluar,
           toko_tujuan: newData.toko_tujuan,
-          no_hp: newData.toko_tujuan,
           jumlah: newData.jumlah,
           isOffline: true
         };
@@ -337,7 +362,7 @@ export default function BarangKeluarLogic() {
         console.error('Gagal menambahkan data offline', err);
         setSnackbar({ open: true, message: 'Gagal menambahkan data (offline).' });
       } finally {
-        setNewData({ toko_tujuan: '', toko_tujuan: '', jumlah: '' });
+        setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
         setLoading(false);
       }
       return;
@@ -346,8 +371,9 @@ export default function BarangKeluarLogic() {
     // ------------ ONLINE create normal ------------
     try {
       const formDataPost = new FormData();
+      formDataPost.append('barang_id', newData.barang_id);
+      formDataPost.append('tanggal_keluar', newData.tanggal_keluar);
       formDataPost.append('toko_tujuan', newData.toko_tujuan);
-      formDataPost.append('no_hp', newData.toko_tujuan);
       formDataPost.append('jumlah', newData.jumlah);
       await postData(`/admin/barangKeluar`, formDataPost); // kirim ke server
       await getData(); // refresh
@@ -358,7 +384,7 @@ export default function BarangKeluarLogic() {
       if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
       setSnackbar({ open: true, message: pesanError });
     } finally {
-      setNewData({ toko_tujuan: '', toko_tujuan: '', jumlah: '' });
+      setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
       setModal((prev) => ({ ...prev, data: false }));
       setLoading(false);
     }
@@ -373,7 +399,7 @@ export default function BarangKeluarLogic() {
     setModal({ data: false, succes: false });
     setEditMode(false);
     setEditingId(null);
-    setNewData({ toko_tujuan: '', toko_tujuan: '', jumlah: '' });
+    setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
   };
 
   const handleEdit = (id) => {
@@ -382,8 +408,9 @@ export default function BarangKeluarLogic() {
     const selectedItem = data.find((item) => item.id === id) || offlineBarangKeluar.find((item) => item.id === id);
     if (!selectedItem) return;
     setNewData({
+      barang_id: selectedItem?.barang_id || '',
+      tanggal_keluar: selectedItem?.tanggal_keluar || '',
       toko_tujuan: selectedItem?.toko_tujuan || '',
-      toko_tujuan: selectedItem?.no_hp || '',
       jumlah: selectedItem?.jumlah || ''
     });
     setModal((prev) => ({ ...prev, data: true }));

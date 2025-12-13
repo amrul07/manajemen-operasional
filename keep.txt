@@ -17,7 +17,7 @@ karyawan biasa : - hak akses
 -cetak laporan absensi karyawan selama 1 bulan 
 -fitur search
 
-2.data stok : 
+2.data stok :✅
 -tabel data stok : - api✅
 -form pemesanan : -api✅
 -halaman detail : - api✅
@@ -30,7 +30,7 @@ karyawan biasa : - hak akses
 -cetak permintaan barang : - api
 -fitur search
 
-4.barang masuk : 
+4.barang masuk :✅
 -tabel barang masuk : - ui✅
                       - api✅
 -form tambah/edit : - ui✅
@@ -47,21 +47,20 @@ karyawan biasa : - hak akses
                     - edit : input kode_barang,nama,harga(disable)
 -fitur search
 
-6.laporan barang masuk :
+6.laporan barang masuk :✅
 -tabel barang masuk : - ui✅
-                      - api
+                      - api✅
 -cetak laporan : - ui✅
-                 - api
--filter data by tanggal
+                 - api✅
 
-7.laporan barang keluar :
+
+7.laporan barang keluar :✅
 -tabel barang keluar : - ui✅
-                       - api
+                       - api✅
 -cetak laporan : - ui✅
                  - api
--filter data by tanggal
 
-8.user :
+8.user :✅
 -fitur search(nama,no hp)✅
 -tabel user : - ui✅
               - api✅
