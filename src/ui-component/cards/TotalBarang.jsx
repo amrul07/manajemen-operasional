@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
+
 // material-ui
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -10,18 +11,16 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 // project imports
-import MainCard from '../cards/MainCard';
+import MainCard from './MainCard';
 import TotalIncomeCard from './Skeleton/TotalIncomeCard';
-
-// assets
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import { withAlpha } from '../../utils/colorUtils';
 import { Poppins } from '../typography/Poppins';
-import { IconUser } from '@tabler/icons-react';
+
+import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+import DashboardLogic from '../../views/dashboard/Default/DashboardLogic';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.vars.palette.primary.dark,
-  color: theme.vars.palette.primary.light,
   overflow: 'hidden',
   position: 'relative',
   '&:after': {
@@ -29,7 +28,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: `linear-gradient(210.04deg, ${theme.vars.palette.primary[200]} -50.94%, rgba(144, 202, 249, 0) 83.49%)`,
+    background: `linear-gradient(210.04deg, ${theme.vars.palette.warning.dark} -50.94%, rgba(144, 202, 249, 0) 83.49%)`,
     borderRadius: '50%',
     top: -30,
     right: -180
@@ -39,19 +38,20 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: `linear-gradient(140.9deg, ${theme.vars.palette.primary[200]} -14.02%, rgba(144, 202, 249, 0) 77.58%)`,
+    background: `linear-gradient(140.9deg, ${theme.vars.palette.warning.dark} -14.02%, rgba(144, 202, 249, 0) 70.50%)`,
     borderRadius: '50%',
     top: -160,
     right: -130
   }
 }));
 
-export default function TotalIncomeDarkCard({ isLoading }) {
+export default function TotalBarang({ isLoading, total, icon, label }) {
+  const { value } = DashboardLogic();
   const theme = useTheme();
 
   return (
     <>
-      {isLoading ? (
+      {value.loadingGet ? (
         <TotalIncomeCard />
       ) : (
         <CardWrapper border={false} content={false}>
@@ -64,28 +64,23 @@ export default function TotalIncomeDarkCard({ isLoading }) {
                     sx={{
                       ...theme.typography.largeAvatar,
                       borderRadius: 2,
-                      bgcolor: 'primary.800',
-                      color: 'common.white'
+                      bgcolor: label === 'Meeting attends' ? withAlpha(theme.vars.palette.error.light, 0.25) : 'warning.light',
+                      color: label === 'Meeting attends' ? 'error.dark' : 'warning.dark'
                     }}
                   >
-                    <IconUser />
-                    {/* <TableChartOutlinedIcon fontSize="inherit" /> */}
+                    <StorefrontTwoToneIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                  sx={{
-                    py: 0,
-                    mt: 0.45,
-                    mb: 0.45
-                  }}
+                  sx={{ py: 0, mt: 0.45, mb: 0.45 }}
                   primary={
-                    <Poppins component="span" variant="h4" sx={{ color: 'common.white' }}>
-                      203
+                    <Poppins component="span" variant="h4">
+                      {value?.data.totalBarang}
                     </Poppins>
                   }
                   secondary={
-                    <Poppins component="span" variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                      Total User
+                    <Poppins component="span" variant="subtitle2" sx={{ color: 'grey.500', mt: 0.5 }}>
+                      Total Barang
                     </Poppins>
                   }
                 />
@@ -98,4 +93,4 @@ export default function TotalIncomeDarkCard({ isLoading }) {
   );
 }
 
-TotalIncomeDarkCard.propTypes = { isLoading: PropTypes.bool };
+TotalBarang.propTypes = { isLoading: PropTypes.bool, total: PropTypes.number, icon: PropTypes.node, label: PropTypes.string };

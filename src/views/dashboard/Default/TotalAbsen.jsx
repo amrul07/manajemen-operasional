@@ -21,14 +21,16 @@ import SkeletonTotalOrderCard from '../../../ui-component/cards/Skeleton/Earning
 // assets
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import {Poppins} from  "../../../ui-component/typography/Poppins"
+import { Poppins } from '../../../ui-component/typography/Poppins';
 import { IconClipboardText } from '@tabler/icons-react';
+import DashboardLogic from './DashboardLogic';
 
 // data
 const monthlyData = [{ data: [45, 66, 41, 89, 25, 44, 9, 54] }];
 const yearlyData = [{ data: [35, 44, 9, 54, 45, 66, 41, 69] }];
 
-export default function TotalOrderLineChartCard({ isLoading }) {
+export default function TotalAbsen({ isLoading }) {
+  const { value, func } = DashboardLogic();
   const theme = useTheme();
 
   const [timeValue, setTimeValue] = React.useState(false);
@@ -45,7 +47,7 @@ export default function TotalOrderLineChartCard({ isLoading }) {
 
   return (
     <>
-      {isLoading ? (
+      {value.loadingGet ? (
         <SkeletonTotalOrderCard />
       ) : (
         <MainCard
@@ -126,7 +128,7 @@ export default function TotalOrderLineChartCard({ isLoading }) {
                     <Stack direction="row" sx={{ alignItems: 'center' }}>
                       {/* total absen */}
                       <Poppins sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                        50
+                        {value?.data.totalAbsensiHariIni}
                       </Poppins>
                       <Avatar sx={{ ...theme.typography.smallAvatar, bgcolor: 'primary.200', color: 'primary.dark' }}>
                         {/* <ArrowDownwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} /> */}
@@ -163,4 +165,4 @@ export default function TotalOrderLineChartCard({ isLoading }) {
   );
 }
 
-TotalOrderLineChartCard.propTypes = { isLoading: PropTypes.bool };
+TotalAbsen.propTypes = { isLoading: PropTypes.bool };

@@ -20,13 +20,20 @@ export default function CetakPermintaanBarang() {
     setData([]); // ⬅️ RESET DATA LAMA
     setLoading(true); // ⬅️ RESET LOADING
 
-    if (ids.length > 0) {
-      getData();
-    }
-  }, [ids]);
+    // if (ids.length > 0) {
+    //   getData();
+    // }
+
+    getData()
+  // }, [ids]);
+  }, []);
 
   useEffect(() => {
-    if (!loading && data.length > 0 && !printedRef.current) {
+    // if (!loading && data.length > 0 && !printedRef.current) {
+    //   printedRef.current = true;
+    //   generatePDF();
+    // }
+    if (!loading && data.length > 0 ) {
       printedRef.current = true;
       generatePDF();
     }
@@ -48,8 +55,8 @@ export default function CetakPermintaanBarang() {
         const formData = new FormData();
         formData.append('ids', JSON.stringify(ids));
 
-        const res = await postData('/admin/cetakPermintaanBarang', formData);
-
+        const res = await fetchData('/admin/cetakPermintaanBarang');
+        // const res = await postData('/admin/cetakPermintaanBarang', formData);
         setData(res.data);
 
         // simpan ke IndexedDB
@@ -131,11 +138,11 @@ export default function CetakPermintaanBarang() {
                       return (
                         <StyledTableRowCetak key={row.id}>
                           <StyledTableCellCetak>{i + 1}</StyledTableCellCetak>
-                          <StyledTableCellCetak>{row.nama}</StyledTableCellCetak>
-                          <StyledTableCellCetak>{row.jumlah}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.nama_barang}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.jumlah_permintaan}</StyledTableCellCetak>
                           <StyledTableCellCetak>{row.tanggal_permintaan}</StyledTableCellCetak>
                           <StyledTableCellCetak>{row.modal}</StyledTableCellCetak>
-                          <StyledTableCellCetak>{row.no}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.nomor_npwp}</StyledTableCellCetak>
                         </StyledTableRowCetak>
                       );
                     })

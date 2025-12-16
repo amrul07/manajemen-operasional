@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { lazy } from 'react';
+import { Suspense } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -29,6 +30,9 @@ import { useLocation } from 'react-router-dom';
 export default function MainLayout() {
   const Footer = Loadable(lazy(() => import('./Footer')));
 
+  const [showFooter, setShowFooter] = useState(false);
+  const location = useLocation();
+
   const theme = useTheme();
   const downMD = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -45,6 +49,16 @@ export default function MainLayout() {
   useEffect(() => {
     downMD && handlerDrawerOpen(false);
   }, [downMD]);
+
+  useEffect(() => {
+    setShowFooter(false);
+
+    const timer = setTimeout(() => {
+      setShowFooter(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   // horizontal menu-list bar : drawer
 
@@ -67,8 +81,15 @@ export default function MainLayout() {
         <Box sx={{ ...{ px: { xs: 0 } }, minHeight: 'calc(100vh - 128px)', display: 'flex', flexDirection: 'column' }}>
           {/* breadcrumb */}
           <Breadcrumbs />
-          <Outlet />
-          <Footer />
+          {/* CONTENT */}
+          <Suspense fallback={<Loader />}>
+            <Box sx={{ flex: 1 }}>
+              <Outlet />
+            </Box>
+          </Suspense>
+
+          {/* FOOTER */}
+          {showFooter && <Footer />}
         </Box>
       </MainContentStyled>
       {/* <Customization /> */}

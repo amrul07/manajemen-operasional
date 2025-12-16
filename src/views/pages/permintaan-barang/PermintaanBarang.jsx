@@ -154,7 +154,7 @@ export default function PermintaanBarang() {
                           }}
                         >
                           {/* buttom ceklis */}
-                          <CustomCheckBox onChange={() => func.handleCeklis(row.id)} checked={value.idPrint.includes(row.id)} />
+                          {/* <CustomCheckBox onChange={() => func.handleCeklis(row.id)} checked={value.idPrint.includes(row.id)} /> */}
                           {/* button pemesanan */}
                           <CustomButton
                             bg={'#fff8e1'}

@@ -26,8 +26,10 @@ import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { IconShoppingCartPlus } from '@tabler/icons-react';
+import DashboardLogic from './DashboardLogic';
 
-export default function EarningCard({ isLoading }) {
+export default function TotalPermintaanBarang({ isLoading }) {
+  const { value } = DashboardLogic();
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -42,7 +44,7 @@ export default function EarningCard({ isLoading }) {
 
   return (
     <>
-      {isLoading ? (
+      {value.loadingGet ? (
         <SkeletonEarningCard />
       ) : (
         <MainCard
@@ -87,7 +89,7 @@ export default function EarningCard({ isLoading }) {
                   mt: 1
                 }}
               >
-                <IconShoppingCartPlus color='#fff'/>
+                <IconShoppingCartPlus color="#fff" />
                 {/* <CardMedia sx={{ width: 30, height: 30 }} component="img" src={EarningIcon} alt="Notification" /> */}
               </Avatar>
               {/* <Avatar
@@ -136,7 +138,10 @@ export default function EarningCard({ isLoading }) {
               </MenuItem>
             </Menu>
             <Stack direction="row" sx={{ alignItems: 'center' }}>
-              <Poppins sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>500.00</Poppins>
+              {/* title total permintaan barang */}
+              <Poppins sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                {value?.data.totalPermintaanBarang}
+              </Poppins>
               <Avatar sx={{ ...theme.typography.smallAvatar, bgcolor: 'warning.200', color: 'warning.dark' }}>
                 <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
               </Avatar>
@@ -158,4 +163,4 @@ export default function EarningCard({ isLoading }) {
   );
 }
 
-EarningCard.propTypes = { isLoading: PropTypes.bool };
+TotalPermintaanBarang.propTypes = { isLoading: PropTypes.bool };

@@ -21,6 +21,7 @@ import { gridSpacing } from '../../../store/constant';
 // chart data
 import barChartOptions from './chart-data/total-growth-bar-chart';
 import { Poppins } from '../../../ui-component/typography/Poppins';
+import DashboardLogic from './DashboardLogic';
 
 const status = [
   { value: 'today', label: 'Today' },
@@ -28,26 +29,14 @@ const status = [
   { value: 'year', label: 'This Year' }
 ];
 
-const series = [
-  { name: 'Barang Masuk', data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75] },
-  { name: 'Barang Keluar', data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75] },
-  // { name: 'Profit', data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10] },
-  // { name: 'Maintenance', data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0] }
-
-
-  // { name: 'Investment', data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75] },
-  // { name: 'Loss', data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75] },
-  // { name: 'Profit', data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10] },
-  // { name: 'Maintenance', data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0] }
-];
-
-export default function TotalGrowthBarChart({ isLoading }) {
+export default function TotalBarangMasukKeluar({ isLoading }) {
+  const { value } = DashboardLogic();
   const theme = useTheme();
   const {
     state: { fontFamily }
   } = useConfig();
 
-  const [value, setValue] = useState('today');
+  // const [value, setValue] = useState('today');
   const [chartOptions, setChartOptions] = useState(barChartOptions);
 
   const textPrimary = theme.vars.palette.text.primary;
@@ -74,9 +63,11 @@ export default function TotalGrowthBarChart({ isLoading }) {
     });
   }, [fontFamily, warningDark, primaryDark, secondaryMain, secondaryLight, textPrimary, grey500, divider]);
 
+  const series = Array.isArray(value?.dataChart) ? value.dataChart : [];
+
   return (
     <>
-      {isLoading ? (
+      {value.loadingGet ? (
         <SkeletonTotalGrowthBarChart />
       ) : (
         <MainCard>
@@ -104,7 +95,7 @@ export default function TotalGrowthBarChart({ isLoading }) {
                 })
               }}
             >
-              <Chart options={chartOptions} series={series} type="bar" height={480} />
+              {series.length > 0 && <Chart options={chartOptions} series={series} type="bar" height={480} />}
             </Box>
           </Stack>
         </MainCard>
@@ -113,4 +104,4 @@ export default function TotalGrowthBarChart({ isLoading }) {
   );
 }
 
-TotalGrowthBarChart.propTypes = { isLoading: PropTypes.bool };
+TotalBarangMasukKeluar.propTypes = { isLoading: PropTypes.bool };

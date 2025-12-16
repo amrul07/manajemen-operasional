@@ -51,7 +51,11 @@ export default function LaporanBarangKeluar() {
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
-      <div id="print-content">
+      {value.loadingGet === true ? (
+        <Stack sx={{ alignItems: 'center', height: '100vh' }}>
+          <CircularProgress sx={{ margin: 'auto', color: '#1e88e5' }} size={'50px'} />
+        </Stack>
+      ) : (
         <TableContainer sx={{ px: 5, fontFamily: "`'Poppins', sans-serif`" }} component={Paper}>
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -168,7 +172,8 @@ export default function LaporanBarangKeluar() {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      )}
+
       <Card sx={{ px: { xs: 2, md: 4 }, py: { xs: 2, md: 4 } }}>
         <Stack sx={{ justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
           <Poppins

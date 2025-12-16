@@ -31,7 +31,7 @@ const removeQueueItemByLocalId = async (localId) => {
 // Main hook / logic
 // --------------------
 export default function PermintaanBarangLogic() {
-     const router = useNavigate();
+  const router = useNavigate();
   // UI / pagination state
   const [data, setData] = useState([]); // data yang ditampilkan di tabel
   const searchQuery = useGlobalStore((state) => state.searchQuery); // global search
@@ -232,11 +232,11 @@ export default function PermintaanBarangLogic() {
           await postData(`/admin/permintaanBarang/${payload.id}`, formData);
         } else if (qItem.action === 'delete') {
           await deleteData(`/admin/permintaanBarang/${qItem.id}`);
-        } else if (qItem.type === 'PRINT_LAPORAN_BARANG_MASUK') {
+        } else if (qItem.type === 'PRINT_PERMINTAAN_BARANG') {
           const formData = new FormData();
           qItem.payload.ids.forEach((id) => formData.append('ids[]', id));
 
-          await postData('/admin/cetakLaporanBarangKeluar', formData);
+          await postData('/admin/cetakPermintaanBarang', formData);
         }
 
         // hapus dari queue jika sukses
@@ -410,69 +410,75 @@ export default function PermintaanBarangLogic() {
     }
   };
 
-   //   print data
-    const handlePrint = async () => {
-      setLoading(true);
-      if (idPrint.length === 0) {
-        setSnackbar({ open: true, message: 'Pilih data terlebih dahulu' });
-        setLoading(false);
-        return;
+  //   print data
+  const handlePrint = async () => {
+    setLoading(true);
+    //   if (idPrint.length === 0) {
+    //     setSnackbar({ open: true, message: 'Pilih data terlebih dahulu' });
+    //     setLoading(false);
+    //     return;
+    //   }
+
+    //   // ===== JIKA OFFLINE =====
+    //   if (!isOnline) {
+    //     const queue = await getQueue();
+
+    //     //   queue.push({
+    //     //     localId: Date.now(),
+    //     //     type: 'PRINT_PERMINTAAN_BARANG',
+    //     //     payload: {
+    //     //       ids: idPrint
+    //     //     }
+    //     //   });
+
+    //     //   await saveQueue(queue);
+
+    //     //   setSnackbar({
+    //     //     open: true,
+    //     //     message: 'Offline: Data disimpan & akan dikirim saat online'
+    //     //   });
+
+    //     //   return;
+    //     router('/permintaan-barang/cetak', {
+    //       state: { ids: idPrint }
+    //     });
+    //   }
+
+    //   // jika online
+    //   try {
+    //     await postData(`/admin/cetakPermintaanBarang`, { ids: JSON.stringify(idPrint) });
+    //   } catch (error) {
+    //     console.log('FULL ERROR:', error.response);
+    //     console.log('ERROR DATA:', error.response?.data);
+    //     console.error('Gagal menambahkan data:', error);
+    //     let pesanError = 'Terjadi kesalahan saat menambah data';
+    //     if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+    //     setSnackbar({ open: true, message: pesanError });
+    //     setLoading(false);
+    //   } finally {
+    //     router('/permintaan-barang/cetak', {
+    //       state: { ids: idPrint }
+    //     });
+    //     setIdPrint([]);
+    //     setLoading(false);
+    //   }
+
+    try {
+      router(`/permintaan-barang/cetak`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //   ketika tombol ceklis d klik
+  const handleCeklis = (id) => {
+    setIdPrint((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((item) => item !== id); // uncheck
       }
-  
-      // ===== JIKA OFFLINE =====
-      if (!isOnline) {
-        const queue = await getQueue();
-  
-        //   queue.push({
-        //     localId: Date.now(),
-        //     type: 'PRINT_LAPORAN_BARANG_MASUK',
-        //     payload: {
-        //       ids: idPrint
-        //     }
-        //   });
-  
-        //   await saveQueue(queue);
-  
-        //   setSnackbar({
-        //     open: true,
-        //     message: 'Offline: Data disimpan & akan dikirim saat online'
-        //   });
-  
-        //   return;
-        router('/permintaan-barang/cetak', {
-          state: { ids: idPrint }
-        });
-      }
-  
-      // jika online
-      try {
-        await postData(`/admin/cetakPermintaanBarang`, { ids: JSON.stringify(idPrint) });
-      } catch (error) {
-        console.log('FULL ERROR:', error.response);
-        console.log('ERROR DATA:', error.response?.data);
-        console.error('Gagal menambahkan data:', error);
-        let pesanError = 'Terjadi kesalahan saat menambah data';
-        if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
-        setSnackbar({ open: true, message: pesanError });
-        setLoading(false);
-      } finally {
-        router('/permintaan-barang/cetak', {
-          state: { ids: idPrint }
-        });
-        setIdPrint([]);
-        setLoading(false);
-      }
-    };
-  
-    //   ketika tombol ceklis d klik
-    const handleCeklis = (id) => {
-      setIdPrint((prev) => {
-        if (prev.includes(id)) {
-          return prev.filter((item) => item !== id); // uncheck
-        }
-        return [...prev, id]; // check
-      });
-    };
+      return [...prev, id]; // check
+    });
+  };
 
   // --------------------
   // handleDelete: offline-aware delete
@@ -589,9 +595,8 @@ export default function PermintaanBarangLogic() {
       loading,
       loadingGet,
       loadingPagination,
-      isOnline ,// expose status bila perlu di UI
+      isOnline, // expose status bila perlu di UI
       idPrint
-
     },
     func: {
       handleChange,
