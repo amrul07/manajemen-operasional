@@ -1,76 +1,158 @@
 import { Box, Card, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomButton from '../../../../ui-component/button/CustomButton';
 import { dataCetakAbsensi, dataPermitaanBarang, dataStok } from '../../../../utils/constan';
 import { Poppins } from '../../../../ui-component/typography/Poppins';
 import html2pdf from 'html2pdf.js';
 import { StyledTableCellCetak, StyledTableRowCetak } from '../../../../ui-component/table/StyledTableCetak';
+import { set, get } from 'idb-keyval';
+import { fetchData, postData } from '../../../../api/api';
+import { useLocation } from 'react-router-dom';
 
 export default function CetakPermintaanBarang() {
-    useEffect(() => {
-    const timeout = setTimeout(() => {
-      const element = document.getElementById("print-content");
-      if (!element) return;
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const printedRef = useRef(false);
+  const ids = location.state?.ids || [];
 
-      const opt = {
-        margin:       10,
-        filename:     'permintaan barang.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+  useEffect(() => {
+    setData([]); // ⬅️ RESET DATA LAMA
+    setLoading(true); // ⬅️ RESET LOADING
 
-      html2pdf().set(opt).from(element).save();
-    }, 1000); // delay biar UI sempat render
+    if (ids.length > 0) {
+      getData();
+    }
+  }, [ids]);
 
-    return () => clearTimeout(timeout);
-  }, []);
+  useEffect(() => {
+    if (!loading && data.length > 0 && !printedRef.current) {
+      printedRef.current = true;
+      generatePDF();
+    }
+  }, [loading, data]);
+
+  // tanggal
+  const today = new Date().toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  // get data
+  const getData = async () => {
+    try {
+      if (navigator.onLine) {
+        // ONLINE → Ambil dari API
+
+        const formData = new FormData();
+        formData.append('ids', JSON.stringify(ids));
+
+        const res = await postData('/admin/cetakPermintaanBarang', formData);
+
+        setData(res.data);
+
+        // simpan ke IndexedDB
+        const cacheKey = `permintaanBarang-${ids.join('-')}`;
+        await set(cacheKey, res.data);
+      } else {
+        // OFFLINE → Ambil dari IndexedDB
+        const cacheKey = `permintaanBarang-${ids.join('-')}`;
+        const cached = await get(cacheKey);
+
+        if (cached) {
+          setData(cached);
+        } else {
+          setData({ error: 'Data tidak tersedia offline' });
+        }
+      }
+    } catch (err) {
+      console.log('Error load:', err);
+
+      // Jika error API → coba fallback ke IndexedDB
+      const cacheKey = `permintaanBarang-${ids.join('-')}`;
+      const cached = await get(cacheKey);
+      if (cached) {
+        setData(cached);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ketika button di klik
+  const generatePDF = () => {
+    const element = document.getElementById('print-content');
+    if (!element) return;
+
+    const opt = {
+      margin: 10,
+      filename: 'permintaan barang.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
   return (
     <div id="print-content">
       <Card sx={{ p: 4 }}>
-        <Stack>
-          <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
-          <Poppins sx={{ mt: 2 }}>Permintaan Barang</Poppins>
-          <Poppins sx={{ mt: 1 }}>Tanggal : 25 Desember 2025</Poppins>
-        </Stack>
-        {/* tabel data */}
-        <TableContainer sx={{ fontFamily: "`'Poppins', sans-serif`", mt: 2 }} component={Paper}>
-          <Table>
-            <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`", backgroundColor: '#1e88e5', color: '#fff' }}>
-              {/*  */}
-              <TableRow sx={{}}>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>No</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nama Barang</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Jumlah Permintaan </TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Tanggal Permintaan</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Modal</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nomor Npwp  Gudang</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {dataPermitaanBarang.map((row) => {
-                return (
-                  <StyledTableRowCetak key={row.id}>
-                    <StyledTableCellCetak>{row.id}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.nama}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.jumlah}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.tanggalPermintaan}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.modal}</StyledTableCellCetak>
-                    <StyledTableCellCetak>{row.no}</StyledTableCellCetak>
-                  </StyledTableRowCetak>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* mengetahui */}
-        <Stack sx={{ mt: 12, height: '200px', width: '95%', justifySelf: "center", }}>
-          <Poppins>Mengetahui,</Poppins>
-          <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Poppins>Staf</Poppins>
-            <Poppins>Pimpinan</Poppins>
-          </Stack>
-        </Stack>
+        {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
+        {data && !data.error && (
+          <>
+            <Stack>
+              <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
+              <Poppins sx={{ mt: 2 }}>Permintaan Barang</Poppins>
+              <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>
+            </Stack>
+            {/* tabel data */}
+            <TableContainer sx={{ fontFamily: "`'Poppins', sans-serif`", mt: 2 }} component={Paper}>
+              <Table>
+                <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`", backgroundColor: '#1e88e5', color: '#fff' }}>
+                  {/*  */}
+                  <TableRow sx={{}}>
+                    <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>No</TableCell>
+                    <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nama Barang</TableCell>
+                    <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Jumlah Permintaan </TableCell>
+                    <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Tanggal Permintaan</TableCell>
+                    <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Modal</TableCell>
+                    <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", color: '#fff' }}>Nomor Npwp Gudang</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
+                  {loading ? (
+                    <StyledTableRowCetak>
+                      <StyledTableCellCetak colSpan={5}>Loading...</StyledTableCellCetak>
+                    </StyledTableRowCetak>
+                  ) : (
+                    Array.isArray(data) &&
+                    data.map((row, i) => {
+                      return (
+                        <StyledTableRowCetak key={row.id}>
+                          <StyledTableCellCetak>{i + 1}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.nama}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.jumlah}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.tanggal_permintaan}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.modal}</StyledTableCellCetak>
+                          <StyledTableCellCetak>{row.no}</StyledTableCellCetak>
+                        </StyledTableRowCetak>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {/* mengetahui */}
+            <Stack sx={{ mt: 12, height: '200px', width: '95%', justifySelf: 'center' }}>
+              <Poppins>Mengetahui,</Poppins>
+              <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Poppins>Staf</Poppins>
+                <Poppins>Pimpinan</Poppins>
+              </Stack>
+            </Stack>
+          </>
+        )}
       </Card>
     </div>
   );

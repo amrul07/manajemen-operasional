@@ -1,4 +1,5 @@
 import {
+  Alert,
   Autocomplete,
   Button,
   Card,
@@ -10,6 +11,7 @@ import {
   Pagination,
   Paper,
   Select,
+  Snackbar,
   Stack,
   Table,
   TableBody,
@@ -91,7 +93,7 @@ export default function BarangKeluar() {
                         opacity: 0.8
                       }
                     }}
-                    // onClick={onClick}
+                    onClick={func.handleModal}
                   >
                     <AddBoxIcon />
                     <Poppins sx={{ fontWeight: 500 }}>Tambah Data</Poppins>
@@ -120,7 +122,7 @@ export default function BarangKeluar() {
                 value.data &&
                 value.data.map((row, i) => {
                   return (
-                    <StyledTableRow key={row.barang_id}>
+                    <StyledTableRow key={row.id}>
                       <StyledTableCell>{(value.page - 1) * value.itemsPerPage + i + 1}</StyledTableCell>
                       <StyledTableCell>{row.kode_barang}</StyledTableCell>
                       <StyledTableCell>{row.nama}</StyledTableCell>
@@ -182,22 +184,29 @@ export default function BarangKeluar() {
       {/* modal tambah/edit */}
       <CustomModal open={value.modal.data} handleClose={func.handleCloseModal}>
         <Grid container spacing={2}>
-          <Grid item size={12}>
+          <Grid size={12}>
             {/* kode barang */}
             <Poppins sx={{ fontWeight: 500 }}>* Kode Barang</Poppins>
             <Select
               size="small"
-              value={value.itemsPerPage}
-              onChange={(e) => func.handleChangeItemsPerPage(e.target.value)}
+              value={value.dataDropdown?.barang_id || ''}
+              onChange={func.handleChangeDropdown}
               displayEmpty
               inputProps={{ 'aria-label': 'Without label' }}
-              sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
+              sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif` }}
+              fullWidth
+              disabled={value.editMode ? true : false}
             >
-              {menuItem.map((res) => (
-                <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
-                  {res.label}
-                </MenuItem>
-              ))}
+              {/* placeholder */}
+              <MenuItem value="" disabled sx={{ fontFamily: `'Poppins', sans-serif` }}>
+                Silahkan pilih kode barang
+              </MenuItem>
+              {value.dataStock &&
+                value.dataStock.map((res) => (
+                  <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.id}>
+                    {res.nama} - {res.kode_barang}
+                  </MenuItem>
+                ))}
             </Select>
             {/* Nama Barang */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Nama Barang</Poppins>
@@ -210,8 +219,10 @@ export default function BarangKeluar() {
               }}
               size="small"
               placeholder="Masukkan Nama Barang"
-              // value={value.name}
+              // name=''
+              value={value.dataDropdown?.nama || ''}
               // onChange={(e) => value.setName(e.target.value)}
+              disabled
             ></OutlinedInput>
             {/* Harga */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Harga Barang</Poppins>
@@ -224,8 +235,9 @@ export default function BarangKeluar() {
               }}
               size="small"
               placeholder="Masukkan Harga"
-              // value={value.name}
+              value={value.dataDropdown?.harga || ''}
               // onChange={(e) => value.setName(e.target.value)}
+              disabled
             ></OutlinedInput>
             {/* Tanggal Keluar */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Tanggal Keluar</Poppins>
@@ -238,22 +250,9 @@ export default function BarangKeluar() {
               }}
               size="small"
               placeholder="Masukkan Tanggal Keluar"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
-            ></OutlinedInput>
-            {/* Sub Kategori */}
-            <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Sub Kategori</Poppins>
-            <OutlinedInput
-              sx={{
-                mt: 1,
-                fontFamily: `'Poppins', sans-serif`,
-                width: '100%',
-                borderRadius: '12px'
-              }}
-              size="small"
-              placeholder="Masukkan Sub Kategori"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="tanggal_keluar"
+              value={value.newData.tanggal_keluar}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Toko Tujuan */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Toko Tujuan</Poppins>
@@ -266,8 +265,9 @@ export default function BarangKeluar() {
               }}
               size="small"
               placeholder="Masukkan Toko Tujuan"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="toko_tujuan"
+              value={value.newData.toko_tujuan}
+              onChange={func.handleChange}
             ></OutlinedInput>
             {/* Jumlah Barang */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Jumlah Barang</Poppins>
@@ -280,48 +280,44 @@ export default function BarangKeluar() {
               }}
               size="small"
               placeholder="Masukkan Jumlah Barang"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="jumlah"
+              value={value.newData.jumlah}
+              onChange={func.handleChange}
             ></OutlinedInput>
           </Grid>
         </Grid>
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleSave}>
             Simpan
+            {value.loading === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  position: 'absolute',
+                  mt: '5px',
+                  ml: '5px'
+                }}
+              />
+            )}
           </ButtonStyle>
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} onClick={func.handleCloseModal}>
             Batal
           </ButtonStyle>
         </Stack>
       </CustomModal>
-      {/* modal hapus */}
-      <CustomModal open={false} handleClose={''}>
-        <Stack sx={{ alignItems: 'center', gap: 2 }}>
-          <Stack
-            sx={{
-              backgroundColor: 'red',
-              borderRadius: '50%',
-              width: '145px',
-              height: '145px'
-              // alignSelf: 'center'
-            }}
-          >
-            <IconExclamationCircle size={100} color="#fff" style={{ margin: 'auto' }} />
-          </Stack>
-          {/* <Poppins sx={{ fontSize: '24px', fontWeight: 600 }}>Sukses!</Poppins> */}
-          <Poppins sx={{ fontWeight: 400 }}>Anda Yakin Ingin Menghapus?</Poppins>
-        </Stack>
-        {/* button */}
-        <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
-            Iya
-          </ButtonStyle>
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
-            Batal
-          </ButtonStyle>
-        </Stack>
-      </CustomModal>
+      {/* Snackbar */}
+      <Snackbar
+        open={value.snackbar.open}
+        // autoHideDuration={5000}
+        onClose={func.closeSnackbar}
+        // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}>
+          {value.snackbar.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 }

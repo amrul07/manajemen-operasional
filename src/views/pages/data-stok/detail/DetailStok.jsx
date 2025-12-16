@@ -101,13 +101,6 @@ export default function DetailStok() {
             <Grid size={6}>
               <Poppins>: {data.tanggal_update}</Poppins>
             </Grid>
-            {/* Supplier */}
-            <Grid size={6}>
-              <Poppins>Supplier</Poppins>
-            </Grid>
-            <Grid size={6}>
-              <Poppins>: {data.supplier}</Poppins>
-            </Grid>
             {/* Jenis Barang */}
             <Grid size={6}>
               <Poppins>Jenis Barang</Poppins>

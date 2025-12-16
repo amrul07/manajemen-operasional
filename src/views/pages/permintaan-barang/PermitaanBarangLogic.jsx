@@ -1,23 +1,23 @@
-// src/path/to/UserLogic.jsx
 import React, { useEffect, useState } from 'react';
-import { fetchData, postData } from '../../../api/api';
+import { deleteData, fetchData, postData } from '../../../api/api';
 import useGlobalStore from '../../../store/globalStore';
 import { get, set } from 'idb-keyval'; // idb-keyval untuk IndexedDB ringan
+import { useNavigate } from 'react-router-dom';
 
 // --------------------
 // Offline storage keys
 // --------------------
-const OFFLINE_BARANG_KELUAR = 'offline-barang-keluar'; // cache data barang keluar
-const OFFLINE_STOK = 'offline-stok'; // cache data dropdown
-const OFFLINE_QUEUE = 'offline-queue'; // antrian operasi (create/update) saat offline
+const OFFLINE_PERMINTAAN_BARANG = 'offline-permintaan-barang'; // cache data permintaan barang
+const OFFLINE_QUEUE = 'offline-queue'; // antrian operasi (create/update/delete) saat offline
+const OFFLINE_PRINT_IDS = 'offline-print-ids';
 
 // --------------------
 // Helper IndexedDB (idb-keyval)
 // --------------------
-const getOfflineBarangKeluar = async () => (await get(OFFLINE_BARANG_KELUAR)) || []; // ambil cached barang keluar
-const saveOfflineBarangKeluar = async (barangKeluar) => await set(OFFLINE_BARANG_KELUAR, barangKeluar || []); // simpan cached barang keluar
-const getOfflineStok = async () => (await get(OFFLINE_STOK)) || []; // ambil cached data dropdown
-const saveOfflineStok = async (stok) => await set(OFFLINE_STOK, stok || []); // simpan cached data dropdown
+const getOfflinePermintaanBarang = async () => (await get(OFFLINE_PERMINTAAN_BARANG)) || []; // ambil cached permintaan barang
+const saveOfflinePermintaanBarang = async (permintaanBarang) => await set(OFFLINE_PERMINTAAN_BARANG, permintaanBarang || []); // simpan cached permintaan barang
+const getOfflinePrintIds = async () => (await get(OFFLINE_PRINT_IDS)) || []; //ambil id print permintaan barang
+const saveOfflinePrintIds = async (ids) => await set(OFFLINE_PRINT_IDS, ids || []); //simpan id print permintaan barang
 const getQueue = async () => (await get(OFFLINE_QUEUE)) || []; // ambil queue
 const saveQueue = async (q) => await set(OFFLINE_QUEUE, q || []); // simpan queue
 const removeQueueItemByLocalId = async (localId) => {
@@ -30,11 +30,10 @@ const removeQueueItemByLocalId = async (localId) => {
 // --------------------
 // Main hook / logic
 // --------------------
-export default function BarangKeluarLogic() {
+export default function PermintaanBarangLogic() {
+     const router = useNavigate();
   // UI / pagination state
   const [data, setData] = useState([]); // data yang ditampilkan di tabel
-  const [dataStock, setDataStock] = useState([]); // data dropdown
-  const [dataDropdown, setDataDropdown] = useState(null); // data dropdown
   const searchQuery = useGlobalStore((state) => state.searchQuery); // global search
   const [itemsPerPage, setItemsPerPage] = useState(10); // items per page
   const [page, setPage] = useState(1); // current page
@@ -42,12 +41,15 @@ export default function BarangKeluarLogic() {
   const [totalItems, setTotalItems] = useState(0); // total items
 
   // form / modal state
-  const [newData, setNewData] = useState({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' }); // form
-  const [modal, setModal] = useState({ data: false, succes: false }); // modal flags
+  const [newData, setNewData] = useState({ nama_barang: '', tanggal_permintaan: '', jumlah_permintaan: '', modal: '', nomor_npwp: '' }); // form
+  const [modal, setModal] = useState({ data: false, delete: false, succes: false }); // modal flags
+  const [deleteId, setDeleteId] = useState(null); // id untuk delete
   const [editingId, setEditingId] = useState(null); // id yang sedang diedit
   const [editMode, setEditMode] = useState(false); // mode edit true/false
+  const [idPrint, setIdPrint] = useState([]);
 
   // misc UI
+  const [showmodal, setShowmodal] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
   const [loading, setLoading] = useState(false);
   const [loadingGet, setLoadingGet] = useState(true);
@@ -55,7 +57,7 @@ export default function BarangKeluarLogic() {
 
   // offline related state
   const [isOnline, setIsOnline] = useState(navigator.onLine); // online status
-  const [offlineBarangKeluar, setOfflineBarangKeluarState] = useState([]); // cached barang keluar array
+  const [offlinePermintaanBarang, setOfflinePermintaanBarangState] = useState([]); // cached permintaan barang array
 
   // --------------------
   // Utility: sort newest first
@@ -77,14 +79,13 @@ export default function BarangKeluarLogic() {
     let mounted = true;
 
     const init = async () => {
-      // load stok dulu (biar dropdown langsung ada)
-      const cachedStok = await getOfflineStok();
-      setDataStock(cachedStok);
-      // load cached barang keluar dulu (jika ada)
+      // load cached permintaan barang dulu (jika ada)
       try {
-        const cached = await getOfflineBarangKeluar(); // baca dari IndexedDB
+        const cached = await getOfflinePermintaanBarang(); // baca dari IndexedDB
+        const savedPrintIds = await getOfflinePrintIds();
+        setIdPrint(savedPrintIds);
         if (!mounted) return;
-        setOfflineBarangKeluarState(cached); // simpan di state offline
+        setOfflinePermintaanBarangState(cached); // simpan di state offline
         // show cached data immediately (so UX shows something)
         if (!navigator.onLine) {
           setData(sortNewestFirst(cached)); // tampilkan cache saat offline
@@ -122,16 +123,12 @@ export default function BarangKeluarLogic() {
   useEffect(() => {
     // whenever page/itemsPerPage/search changes, re-get data
     getData();
-    getDataStok();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsPerPage, page, searchQuery]);
 
   useEffect(() => {
-    if (editMode && newData.barang_id && dataStock.length > 0) {
-      const stok = data.find((item) => item.barang_id === newData.barang_id);
-      setDataDropdown(stok || null);
-    }
-  }, [editMode, newData.barang_id, dataStock]);
+    saveOfflinePrintIds(idPrint);
+  }, [idPrint]);
 
   // --------------------
   // Online/offline handlers
@@ -150,8 +147,8 @@ export default function BarangKeluarLogic() {
     setIsOnline(false);
     // show cached data if any
     (async () => {
-      const cached = await getOfflineBarangKeluar();
-      setOfflineBarangKeluarState(cached);
+      const cached = await getOfflinePermintaanBarang();
+      setOfflinePermintaanBarangState(cached);
       setData(sortNewestFirst(cached));
       setPage(1);
       setTotalItems(cached.length);
@@ -163,11 +160,11 @@ export default function BarangKeluarLogic() {
   // getData: ambil data (online) atau fallback ke IndexedDB (offline)
   // --------------------
   const getData = async () => {
-    // offline fallback: tampilkan cached barang keluar
+    // offline fallback: tampilkan cached permintaan barang
     if (!isOnline) {
       setLoadingGet(false);
-      const cached = await getOfflineBarangKeluar();
-      setOfflineBarangKeluarState(cached);
+      const cached = await getOfflinePermintaanBarang();
+      setOfflinePermintaanBarangState(cached);
       setData(sortNewestFirst(cached));
       setPage(1);
       setTotalItems(cached.length);
@@ -178,22 +175,24 @@ export default function BarangKeluarLogic() {
     // online: ambil dari API
     try {
       setLoadingPagination(true);
-      const res = await fetchData(`/admin/barangKeluar?perpage=${itemsPerPage}&page=${page}&search=${searchQuery}`);
+      const res = await fetchData(`/admin/permintaanBarang?perpage=${itemsPerPage}&page=${page}&search=${searchQuery}`);
       const serverData = res?.data || [];
       const sorted = sortNewestFirst(serverData); // urut terbaru dulu
-      setData(sorted); // tampilkan di UI
-      setOfflineBarangKeluarState(sorted); // keep cached copy in memory
-      await saveOfflineBarangKeluar(sorted); // simpan ke IndexedDB agar offline bisa pakai
+      // setData(sorted); // tampilkan di UI
+      setData(res.data); // tampilkan di UI
+      setOfflinePermintaanBarangState(sorted); // keep cached copy in memory
+      await saveOfflinePermintaanBarang(sorted); // simpan ke IndexedDB agar offline bisa pakai
 
       // update pagination meta dari server
       setPage(res.meta?.page ?? 1);
+      setItemsPerPage(res.meta?.perpage ?? 10);
       setTotalPages(res.meta?.total_page ?? 1);
       setTotalItems(res.meta?.total_item ?? sorted.length);
     } catch (err) {
       console.error('getData error', err);
       // fallback ke cached kalau fetch gagal
-      const cached = await getOfflineBarangKeluar();
-      setOfflineBarangKeluarState(cached);
+      const cached = await getOfflinePermintaanBarang();
+      setOfflinePermintaanBarangState(cached);
       setData(sortNewestFirst(cached));
       setPage(1);
       setTotalItems(cached.length);
@@ -204,43 +203,9 @@ export default function BarangKeluarLogic() {
     }
   };
 
-  // data dropdown
-  const getDataStok = async () => {
-    // ---------- OFFLINE ----------
-    if (!isOnline) {
-      const cachedStok = await getOfflineStok();
-      setDataStock(cachedStok);
-      return;
-    }
-
-    // ---------- ONLINE ----------
-    try {
-      const res = await fetchData(`/admin/allStok`);
-      const stok = res?.data || [];
-
-      setDataStock(stok); // tampilkan di UI
-      await saveOfflineStok(stok); // simpan ke IndexedDB
-    } catch (err) {
-      console.error('getDataStok error', err);
-
-      // fallback ke cache kalau fetch gagal
-      const cachedStok = await getOfflineStok();
-      setDataStock(cachedStok);
-    }
-  };
-
-  // ketika data dropdown di pilih
-  const handleChangeDropdown = (event) => {
-    const id = event.target.value;
-    const selectedItem = dataStock.find((item) => item.id === id);
-    if (!selectedItem) return;
-    setDataDropdown(selectedItem);
-    setNewData((prev) => ({ ...prev, barang_id: id }));
-  };
-
   // --------------------
   // syncOfflineQueue: proses antrian saat kembali online
-  // Struktur item queue: { localId, action: 'create'|'update' data?, id?, timestamp }
+  // Struktur item queue: { localId, action: 'create'|'update'|'delete', data?, id?, timestamp }
   // --------------------
   const syncOfflineQueue = async () => {
     const queue = await getQueue();
@@ -258,14 +223,25 @@ export default function BarangKeluarLogic() {
 
           // NOTE: many backends expect multipart/form-data for file uploads.
           // If your backend requires FormData for creation, change this to send FormData.
-          await postData('/admin/barangKeluar', payload); // kirim ke server (JSON)
+          await postData('/admin/permintaanBarang', payload); // kirim ke server (JSON)
         } else if (qItem.action === 'update') {
           const payload = { ...qItem.data }; // payload harus mengandung id (server id jika ada)
           const formData = new FormData();
           Object.entries(payload).forEach(([k, v]) => formData.append(k, v));
           formData.append('_method', 'PUT');
-          await postData(`/admin/barangKeluar/${payload.id}`, formData);
+          await postData(`/admin/permintaanBarang/${payload.id}`, formData);
+        } else if (qItem.action === 'delete') {
+          await deleteData(`/admin/permintaanBarang/${qItem.id}`);
+        } else if (qItem.type === 'PRINT_LAPORAN_BARANG_MASUK') {
+          const formData = new FormData();
+          qItem.payload.ids.forEach((id) => formData.append('ids[]', id));
+
+          await postData('/admin/cetakLaporanBarangKeluar', formData);
         }
+
+        // hapus dari queue jika sukses
+        await removeQueueItemByLocalId(item.localId);
+        await saveOfflinePrintIds([]);
 
         // success -> hapus dari queue
         await removeQueueItemByLocalId(qItem.localId);
@@ -288,24 +264,25 @@ export default function BarangKeluarLogic() {
       if (!isOnline) {
         try {
           // baca data offline terbaru dari IndexedDB (hindari stale state)
-          const current = await getOfflineBarangKeluar();
+          const current = await getOfflinePermintaanBarang();
 
-          // update offlineBarangKeluar array (jadikan field sesuai format response: barang_id, no_hp, jumlah)
+          // update offlinePermintaanBarang array (jadikan field sesuai format response: nama_barang, no_hp, jumlah_permintaan)
           const updated = current.map((item) => {
             if (item.id === editingId) {
               return {
                 ...item,
-                barang_id: newData.barang_id,
-                tanggal_keluar: newData.tanggal_keluar,
-                toko_tujuan: newData.toko_tujuan,
-                jumlah: newData.jumlah
+                nama_barang: newData.nama_barang,
+                tanggal_permintaan: newData.tanggal_permintaan,
+                jumlah_permintaan: newData.jumlah_permintaan,
+                modal: newData.modal,
+                nomor_npwp: newData.nomor_npwp
               };
             }
             return item;
           });
 
-          await saveOfflineBarangKeluar(updated); // simpan ke IndexedDB
-          setOfflineBarangKeluarState(updated); // update state offline
+          await saveOfflinePermintaanBarang(updated); // simpan ke IndexedDB
+          setOfflinePermintaanBarangState(updated); // update state offline
           setData(sortNewestFirst(updated)); // tampilkan update di UI
 
           // push update ke queue (localId agar bisa dihapus nanti)
@@ -316,10 +293,11 @@ export default function BarangKeluarLogic() {
             action: 'update',
             data: {
               id: editingId,
-              barang_id: newData.barang_id,
-              tanggal_keluar: newData.tanggal_keluar,
-              toko_tujuan: newData.toko_tujuan,
-              jumlah: newData.jumlah
+              nama_barang: newData.nama_barang,
+              tanggal_permintaan: newData.tanggal_permintaan,
+              jumlah_permintaan: newData.jumlah_permintaan,
+              modal: newData.modal,
+              nomor_npwp: newData.nomor_npwp
             },
             timestamp: Date.now()
           });
@@ -334,9 +312,8 @@ export default function BarangKeluarLogic() {
           // reset form state
           setEditMode(false);
           setEditingId(null);
-          setNewData({ barang_id: '', barang_id: '', jumlah: '' });
+          setNewData({ nama_barang: '', tanggal_permintaan: '', jumlah_permintaan: '', modal: '', nomor_npwp: '' });
           setLoading(false);
-          setDataDropdown(null);
         }
         return;
       }
@@ -344,12 +321,13 @@ export default function BarangKeluarLogic() {
       // ------------ ONLINE: kirim update ke server ------------
       try {
         const formData = new FormData();
-        formData.append('barang_id', newData.barang_id);
-        formData.append('tanggal_keluar', newData.tanggal_keluar);
-        formData.append('toko_tujuan', newData.toko_tujuan);
-        formData.append('jumlah', newData.jumlah);
-        formData.append('_method', 'PATCH');
-        await postData(`/admin/barangKeluar/${editingId}`, formData); // post dengan method override
+        formData.append('nama_barang', newData.nama_barang);
+        formData.append('tanggal_permintaan', newData.tanggal_permintaan);
+        formData.append('jumlah_permintaan', newData.jumlah_permintaan);
+        formData.append('modal', newData.modal);
+        formData.append('nomor_npwp', newData.nomor_npwp);
+        formData.append('_method', 'PUT');
+        await postData(`/admin/permintaanBarang/${editingId}`, formData); // post dengan method override
         await getData(); // refresh dari server
         setModal((prev) => ({ ...prev, succes: true }));
       } catch (error) {
@@ -360,10 +338,9 @@ export default function BarangKeluarLogic() {
       } finally {
         setEditMode(false);
         setEditingId(null);
-        setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
+        setNewData({ nama_barang: '', tanggal_permintaan: '', jumlah_permintaan: '', modal: '', nomor_npwp: '' });
         setModal((prev) => ({ ...prev, data: false }));
         setLoading(false);
-        setDataDropdown(null);
       }
 
       return;
@@ -373,28 +350,29 @@ export default function BarangKeluarLogic() {
     if (!isOnline) {
       // offline create: buat object local dengan id besar (timestamp) + isOffline flag
       try {
-        // baca current cached barang keluar (hindari stale closure)
-        const current = await getOfflineBarangKeluar();
+        // baca current cached permintaan barang (hindari stale closure)
+        const current = await getOfflinePermintaanBarang();
 
         const localId = Date.now(); // local unique id
-        const newUser = {
+        const newPermintaanBarang = {
           id: localId,
-          barang_id: newData.barang_id,
-          tanggal_keluar: newData.tanggal_keluar,
-          toko_tujuan: newData.toko_tujuan,
-          jumlah: newData.jumlah,
+          nama_barang: newData.nama_barang,
+          tanggal_permintaan: newData.tanggal_permintaan,
+          jumlah_permintaan: newData.jumlah_permintaan,
+          modal: newData.modal,
+          nomor_npwp: newData.nomor_npwp,
           isOffline: true
         };
 
         // simpan di cache offline: prepend supaya muncul paling atas (terbaru dulu)
-        const updated = [newUser, ...current];
-        await saveOfflineBarangKeluar(updated); // simpan ke IndexedDB
-        setOfflineBarangKeluarState(updated); // update local state
+        const updated = [newPermintaanBarang, ...current];
+        await saveOfflinePermintaanBarang(updated); // simpan ke IndexedDB
+        setOfflinePermintaanBarangState(updated); // update local state
         setData(sortNewestFirst(updated)); // tampilkan terbaru dulu
 
         // push create ke queue untuk disync nanti
         const queue = await getQueue();
-        queue.push({ localId, action: 'create', data: newUser, timestamp: Date.now() });
+        queue.push({ localId, action: 'create', data: newPermintaanBarang, timestamp: Date.now() });
         await saveQueue(queue);
 
         // feedback & close modal
@@ -403,9 +381,8 @@ export default function BarangKeluarLogic() {
         console.error('Gagal menambahkan data offline', err);
         setSnackbar({ open: true, message: 'Gagal menambahkan data (offline).' });
       } finally {
-        setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
+        setNewData({ nama_barang: '', tanggal_permintaan: '', jumlah_permintaan: '', modal: '', nomor_npwp: '' });
         setLoading(false);
-        setDataDropdown(null);
       }
       return;
     }
@@ -413,11 +390,12 @@ export default function BarangKeluarLogic() {
     // ------------ ONLINE create normal ------------
     try {
       const formDataPost = new FormData();
-      formDataPost.append('barang_id', newData.barang_id);
-      formDataPost.append('tanggal_keluar', newData.tanggal_keluar);
-      formDataPost.append('toko_tujuan', newData.toko_tujuan);
-      formDataPost.append('jumlah', newData.jumlah);
-      await postData(`/admin/barangKeluar`, formDataPost); // kirim ke server
+      formDataPost.append('nama_barang', newData.nama_barang);
+      formDataPost.append('tanggal_permintaan', newData.tanggal_permintaan);
+      formDataPost.append('jumlah_permintaan', newData.jumlah_permintaan);
+      formDataPost.append('modal', newData.modal);
+      formDataPost.append('nomor_npwp', newData.nomor_npwp);
+      await postData(`/admin/permintaanBarang`, formDataPost); // kirim ke server
       await getData(); // refresh
       setModal((prev) => ({ ...prev, succes: true }));
     } catch (error) {
@@ -426,10 +404,120 @@ export default function BarangKeluarLogic() {
       if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
       setSnackbar({ open: true, message: pesanError });
     } finally {
-      setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
+      setNewData({ nama_barang: '', tanggal_permintaan: '', jumlah_permintaan: '', modal: '', nomor_npwp: '' });
       setModal((prev) => ({ ...prev, data: false }));
       setLoading(false);
-      setDataDropdown(null);
+    }
+  };
+
+   //   print data
+    const handlePrint = async () => {
+      setLoading(true);
+      if (idPrint.length === 0) {
+        setSnackbar({ open: true, message: 'Pilih data terlebih dahulu' });
+        setLoading(false);
+        return;
+      }
+  
+      // ===== JIKA OFFLINE =====
+      if (!isOnline) {
+        const queue = await getQueue();
+  
+        //   queue.push({
+        //     localId: Date.now(),
+        //     type: 'PRINT_LAPORAN_BARANG_MASUK',
+        //     payload: {
+        //       ids: idPrint
+        //     }
+        //   });
+  
+        //   await saveQueue(queue);
+  
+        //   setSnackbar({
+        //     open: true,
+        //     message: 'Offline: Data disimpan & akan dikirim saat online'
+        //   });
+  
+        //   return;
+        router('/permintaan-barang/cetak', {
+          state: { ids: idPrint }
+        });
+      }
+  
+      // jika online
+      try {
+        await postData(`/admin/cetakPermintaanBarang`, { ids: JSON.stringify(idPrint) });
+      } catch (error) {
+        console.log('FULL ERROR:', error.response);
+        console.log('ERROR DATA:', error.response?.data);
+        console.error('Gagal menambahkan data:', error);
+        let pesanError = 'Terjadi kesalahan saat menambah data';
+        if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+        setSnackbar({ open: true, message: pesanError });
+        setLoading(false);
+      } finally {
+        router('/permintaan-barang/cetak', {
+          state: { ids: idPrint }
+        });
+        setIdPrint([]);
+        setLoading(false);
+      }
+    };
+  
+    //   ketika tombol ceklis d klik
+    const handleCeklis = (id) => {
+      setIdPrint((prev) => {
+        if (prev.includes(id)) {
+          return prev.filter((item) => item !== id); // uncheck
+        }
+        return [...prev, id]; // check
+      });
+    };
+
+  // --------------------
+  // handleDelete: offline-aware delete
+  // --------------------
+  const handleDelete = async () => {
+    setLoading(true);
+
+    if (!isOnline) {
+      try {
+        // hapus dari cached array (filter)
+        const current = await getOfflinePermintaanBarang();
+        const filtered = current.filter((item) => item.id !== deleteId);
+        await saveOfflinePermintaanBarang(filtered);
+        setOfflinePermintaanBarangState(filtered);
+        setData(sortNewestFirst(filtered));
+
+        // push delete ke queue
+        const localId = Date.now();
+        const queue = await getQueue();
+        queue.push({ localId, action: 'delete', id: deleteId, timestamp: Date.now() });
+        await saveQueue(queue);
+      } catch (err) {
+        console.error('Gagal menghapus data offline', err);
+        setSnackbar({ open: true, message: 'Gagal menghapus data (offline).' });
+      } finally {
+        setDeleteId(null);
+        setModal((prev) => ({ ...prev, delete: false }));
+        setLoading(false);
+      }
+      return;
+    }
+
+    // online delete normal
+    try {
+      await deleteData(`/admin/permintaanBarang/${deleteId}`);
+      await getData();
+    } catch (error) {
+      console.error('Gagal menghapus data:', error);
+      let pesanError = 'Terjadi kesalahan saat menghapus data';
+      if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+      setSnackbar({ open: true, message: pesanError });
+    } finally {
+      setDeleteId(null);
+      setModal((prev) => ({ ...prev, delete: false }));
+      setLoading(false);
     }
   };
 
@@ -437,40 +525,43 @@ export default function BarangKeluarLogic() {
   // modal / form helpers (UI)
   // --------------------
   const handleModal = () => setModal((prev) => ({ ...prev, data: true })); // buka modal add/edit
+  const openModalDelete = (id) => {
+    setModal((prev) => ({ ...prev, delete: true }));
+    setDeleteId(id);
+  }; // buka modal delete
   const handleCloseModal = () => {
     // tutup modal dan reset form
-    setModal({ data: false, succes: false });
+    setModal({ data: false, delete: false, succes: false });
     setEditMode(false);
     setEditingId(null);
-    setNewData({ barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: '' });
-    setDataDropdown(null);
+    setNewData({ nama_barang: '', tanggal_permintaan: '', jumlah_permintaan: '', modal: '', nomor_npwp: '' });
   };
 
   const handleEdit = (id) => {
     // prepare data untuk edit modal
     setEditingId(id);
-    const selectedItem = data.find((item) => item.barang_id === id) || offlineBarangKeluar.find((item) => item.id === id);
-    // const selectedDataStock = dataStock.find((item) => item.id === selectedItem.id);
-
+    const selectedItem = data.find((item) => item.id === id) || offlinePermintaanBarang.find((item) => item.id === id);
     if (!selectedItem) return;
     setNewData({
-      barang_id: selectedItem?.barang_id || '',
-      tanggal_keluar: selectedItem?.tanggal_keluar || '',
-      toko_tujuan: selectedItem?.toko_tujuan || '',
-      jumlah: selectedItem?.jumlah || ''
+      nama_barang: selectedItem?.nama_barang || '',
+      tanggal_permintaan: selectedItem?.tanggal_permintaan || '',
+      jumlah_permintaan: selectedItem?.jumlah_permintaan || '',
+      modal: selectedItem?.modal || '',
+      nomor_npwp: selectedItem?.nomor_npwp || ''
     });
-
     setModal((prev) => ({ ...prev, data: true }));
     setEditMode(true);
   };
 
+  console.log({ newData });
 
   const handleChange = (e) => setNewData({ ...newData, [e.target.name]: e.target.value }); // input change
-  // const handleChangejumlah = (event, newValue) => setNewData((prev) => ({ ...prev, jumlah: newValue ?? '' })); // autocomplete change
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;
     setSnackbar({ open: false, message: '' });
   }; // snackbar close
+  const handleShowmodal = () => setShowmodal(!showmodal); // toggle pwd show
+  const handleMouseDownmodal = (event) => event.preventDefault(); // prevent focus loss on icon
   const handleChangePage = (event, newPage) => setPage(newPage); // pagination
   const handleChangeItemsPerPage = (value) => {
     setItemsPerPage(value);
@@ -490,27 +581,33 @@ export default function BarangKeluarLogic() {
       newData,
       setNewData,
       modal,
+      deleteId,
       editMode,
       editingId,
+      showmodal,
       snackbar,
       loading,
       loadingGet,
       loadingPagination,
-      isOnline, // expose status bila perlu di UI
-      dataStock,
-      dataDropdown
+      isOnline ,// expose status bila perlu di UI
+      idPrint
+
     },
     func: {
       handleChange,
-      // handleChangejumlah,
       handleModal,
       handleCloseModal,
+      openModalDelete,
       handleEdit,
       closeSnackbar,
+      handleShowmodal,
+      handleMouseDownmodal,
       handleChangePage,
       handleChangeItemsPerPage,
       handleSave,
-      handleChangeDropdown
+      handleDelete,
+      handleCeklis,
+      handlePrint
     }
   };
 }

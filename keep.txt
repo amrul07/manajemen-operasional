@@ -41,10 +41,10 @@ karyawan biasa : - hak akses
 
 5.barang keluar :
 -tabel barang keluar : - ui✅
-                       - api
+                       - api✅
 -form tambah/edit : - ui✅
-                    - api
-                    - edit : input kode_barang,nama,harga(disable)
+                    - api✅
+                    - input kode_barang,nama,harga(disable)✅
 -fitur search
 
 6.laporan barang masuk :✅
@@ -58,7 +58,7 @@ karyawan biasa : - hak akses
 -tabel barang keluar : - ui✅
                        - api✅
 -cetak laporan : - ui✅
-                 - api
+                 - api✅
 
 8.user :✅
 -fitur search(nama,no hp)✅

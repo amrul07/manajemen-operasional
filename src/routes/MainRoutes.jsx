@@ -80,7 +80,7 @@ const MainRoutes = {
       element: <PermintaanBarang />
     },
     {
-      path: 'permintaan-barang/cetak/:id',
+      path: 'permintaan-barang/cetak/',
       element: <CetakPermintaanBarang />
     },
     {
