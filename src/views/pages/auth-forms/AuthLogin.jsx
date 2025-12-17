@@ -21,46 +21,50 @@ import CustomFormControl from '../../../ui-component/extended/Form/CustomFormCon
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Poppins } from '../../../ui-component/typography/Poppins';
+import AuthenticationLogic from '../authentication/AuthenticationLogic';
+import { CircularProgress } from '@mui/material';
 
 // ===============================|| JWT - LOGIN ||=============================== //
 
 export default function AuthLogin() {
-  const [checked, setChecked] = useState(true);
-
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const { value, func } = AuthenticationLogic();
 
   return (
     <>
       <CustomFormControl fullWidth>
-        <InputLabel htmlFor="outlined-adornment-email-login" sx={{fontFamily: `'Poppins', sans-serif`}}>Nomor Wa</InputLabel>
-        <OutlinedInput id="outlined-adornment-email-login" type="email" value="" name="email" sx={{fontFamily: `'Poppins', sans-serif`}} />
+        <InputLabel htmlFor="outlined-adornment-email-login" sx={{ fontFamily: `'Poppins', sans-serif` }}>
+          Nomor Wa
+        </InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-email-login"
+          name="wa"
+          value={value.data.wa}
+          onChange={func.handleChange}
+          sx={{ fontFamily: `'Poppins', sans-serif` }}
+        />
       </CustomFormControl>
 
       <CustomFormControl fullWidth>
-        <InputLabel htmlFor="outlined-adornment-password-login" sx={{fontFamily: `'Poppins', sans-serif`}}>Password</InputLabel>
+        <InputLabel htmlFor="outlined-adornment-password-login" sx={{ fontFamily: `'Poppins', sans-serif` }}>
+          Password
+        </InputLabel>
         <OutlinedInput
           id="outlined-adornment-password-login"
-          type={showPassword ? 'text' : 'password'}
-          // value="123456"
+          type={value.showPassword ? 'text' : 'password'}
+          value={value.data.password}
+          onChange={func.handleChange}
           name="password"
-          sx={{fontFamily: `'Poppins', sans-serif`}}
+          sx={{ fontFamily: `'Poppins', sans-serif` }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
+                onClick={func.handleShowPassword}
+                onMouseDown={func.handleMouseDownPassword}
                 edge="end"
                 size="large"
               >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
+                {value.showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           }
@@ -83,8 +87,25 @@ export default function AuthLogin() {
       </Grid>
       <Box sx={{ mt: 2 }}>
         <AnimateButton>
-          <Button color="primary" fullWidth size="large" type="submit" variant="contained" sx={{fontFamily: `'Poppins', sans-serif`}}>
+          <Button
+            color="primary"
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            sx={{ fontFamily: `'Poppins', sans-serif` }}
+            onClick={func.loginHandler}
+          >
             Sign In
+            {value.loading === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  ml: '5px'
+                }}
+              />
+            )}
           </Button>
         </AnimateButton>
       </Box>

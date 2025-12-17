@@ -14,11 +14,14 @@ import Logo from '../../../ui-component/Logo';
 import AuthFooter from '../../../ui-component/cards/AuthFooter';
 import AuthLogin from '../auth-forms/AuthLogin';
 
-import {Poppins} from "../../../ui-component/typography/Poppins"
+import { Poppins } from '../../../ui-component/typography/Poppins';
+import AuthenticationLogic from './AuthenticationLogic';
+import { Alert, Snackbar } from '@mui/material';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 export default function Login() {
+  const { value, func } = AuthenticationLogic();
   const downMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   return (
@@ -49,9 +52,18 @@ export default function Login() {
             </AuthCardWrapper>
           </Box>
         </Stack>
-        <Box sx={{ px: 3, my: 3 }}>
-          {/* <AuthFooter /> */}
-        </Box>
+        <Box sx={{ px: 3, my: 3 }}>{/* <AuthFooter /> */}</Box>
+        {/* snackbar */}
+        <Snackbar
+          open={value.snackbar.open}
+          // autoHideDuration={5000}
+          onClose={func.closeSnackbar}
+          // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}>
+            {value.snackbar.message}
+          </Alert>
+        </Snackbar>
       </Stack>
     </AuthWrapper1>
   );

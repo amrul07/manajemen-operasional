@@ -116,6 +116,7 @@ export default function DataStockLogic() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // hanya sekali saat mount
 
+
   // --------------------
   // EFFECT: refetch on pagination / search change
   // --------------------
@@ -330,8 +331,8 @@ export default function DataStockLogic() {
 
   //   cetak
   const handleCetak = () => {
-    router(`/data-stok/cetak`)
-  }
+    router(`/data-stok/cetak`);
+  };
 
   //   pemesanan
   const handlePemesanan = (id) => {
