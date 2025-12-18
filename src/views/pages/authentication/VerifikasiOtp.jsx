@@ -66,14 +66,14 @@ export default function VerifikasiOtp({ length = 6 }) {
                   Verifikasi OTP
                 </Poppins>
                 <Poppins variant="body2" color="text.secondary">
-                  Kode dikirim ke {value.verifikasi.whatsapp}
+                  Kode dikirim ke {value.verifikasi_no_hp}
                 </Poppins>
               </Box>
             </Box>
 
             {/* Timer */}
             <Poppins variant="body2" color="text.secondary">
-              Kode akan kedaluwarsa dalam <b>{value.timer}s</b>
+              Kode akan kedaluwarsa dalam <b>{func.formatTime(value.timer)}s</b>
             </Poppins>
 
             {/* OTP Boxes */}
@@ -124,7 +124,7 @@ export default function VerifikasiOtp({ length = 6 }) {
               disabled={!value.canResend}
               sx={{ borderRadius: 2, fontFamily: `'Poppins', sans-serif` }}
             >
-              {value.canResend ? 'Kirim Ulang Kode' : `Kirim ulang (${value.timer}s)`}
+              {value.canResend ? 'Kirim Ulang Kode' : `Kirim ulang (${func.formatTime(value.timer)}s)`}
             </Button>
 
             <Fade in={value.succesOtp}>

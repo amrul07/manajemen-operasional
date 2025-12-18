@@ -100,9 +100,9 @@ export default function Login() {
                         // component={Link}
                         // to="/verifikasi-noHp"
                         onClick={func.handleLupaPassword}
-                        sx={{ textDecoration: 'none', color: 'primary.main' }}
+                        sx={{ textDecoration: 'none', color: 'primary.main',cursor: 'pointer' }}
                       >
-                        Forgot Password?
+                        Lupa Password?
                       </Poppins>
                     </Grid>
                   </Grid>

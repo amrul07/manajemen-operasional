@@ -240,7 +240,7 @@ export default function PermintaanBarangLogic() {
         }
 
         // hapus dari queue jika sukses
-        await removeQueueItemByLocalId(item.localId);
+        await removeQueueItemByLocalId(qItem.localId);
         await saveOfflinePrintIds([]);
 
         // success -> hapus dari queue
@@ -558,8 +558,6 @@ export default function PermintaanBarangLogic() {
     setModal((prev) => ({ ...prev, data: true }));
     setEditMode(true);
   };
-
-  console.log({ newData });
 
   const handleChange = (e) => setNewData({ ...newData, [e.target.name]: e.target.value }); // input change
   const closeSnackbar = (event, reason) => {

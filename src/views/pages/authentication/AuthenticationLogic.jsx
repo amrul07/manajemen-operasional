@@ -15,12 +15,13 @@ export default function UseAuthenticationLogic() {
     message: ''
   });
   const token = Cookies.get('token'); // token
+  const verifikasi_no_hp = localStorage.getItem(`whatsapp`);
   // verifikasi otp
   const length = 6; // panjang karakter otp
   const [activeIndex, setActiveIndex] = useState(0); // Index input OTP yang sedang aktif (untuk border biru)
   const hiddenRef = useRef(null); // Ref ke input tersembunyi (hidden input)
   const [shake, setShake] = useState(false); // Untuk animasi shake ketika OTP salah
-  const [timer, setTimer] = useState(120); // Countdown timer (detik)
+  const [timer, setTimer] = useState(300); // Countdown timer (detik)
   const [canResend, setCanResend] = useState(false); // Apakah tombol resend sudah boleh diklik
   const [succesOtp, setSuccesOtp] = useState(false); // Untuk menampilkan status sukses
   // perbarui password
@@ -56,14 +57,14 @@ export default function UseAuthenticationLogic() {
       //send data to server
       const res = await postData(`/login`, formData);
 
-      console.log({ res });
-      setUserLogin(res.data);
-
       //set token on cookies
-      Cookies.set('token', res.token);
+      Cookies.set('token', res.token, {
+        expires: 365, // 1 tahun
+        secure: true,
+        sameSite: 'strict'
+      });
       //redirect to dashboard
       router('/dashboard/default');
-      console.log({ res });
     } catch (error) {
       console.error('Gagal Login:', error);
       let pesanError = 'Terjadi kesalahan saat login';
@@ -97,12 +98,15 @@ export default function UseAuthenticationLogic() {
   const handleVerifikasiWa = async () => {
     setLoading(true);
     try {
+      const noHp = verifikasi.whatsapp || localStorage.getItem('whatsapp');
       //initialize formData
       const formData = new FormData();
 
       //append data to formData
-      formData.append('whatsapp', verifikasi.whatsapp);
+      formData.append('whatsapp', noHp);
       const res = await postData(`/forgot-password/send-otp`, formData);
+
+      localStorage.setItem('whatsapp', verifikasi.whatsapp); // simpan nomor hp ke local storage
 
       // console.log(res, 'verifikasi no hp');
       router(`/verifikasi-otp`);
@@ -112,7 +116,7 @@ export default function UseAuthenticationLogic() {
       if (!canResend) return;
 
       // Reset timer
-      setTimer(60);
+      setTimer(300);
       setCanResend(false);
     } catch (error) {
       console.error('Gagal verifikasi nomor hp:', error);
@@ -159,6 +163,7 @@ export default function UseAuthenticationLogic() {
     } finally {
       setVerifikasi({ otp: '', whatsapp: '' });
       setLoading(false);
+      localStorage.removeItem('whatsapp');
     }
   };
 
@@ -184,6 +189,13 @@ export default function UseAuthenticationLogic() {
     setVerifikasi((prev) => ({ ...prev, otp: text.slice(0, length) }));
   };
 
+  // format waktu
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
   // handel perbarui password
   const handleUpdatePassword = async () => {
     setLoading(true);
@@ -198,7 +210,9 @@ export default function UseAuthenticationLogic() {
       formData.append('password_confirmation', newPassword.password_confirmation);
       const res = await postData(`/forgot-password/reset-password`, formData);
       setSuccessPerbaruiPassword(true);
-      // console.log(res, 'update password');
+
+      Cookies.remove('token'); // hapus token sebelum nya
+
       // ⏳ tunggu 1 detik sebelum redirect
       setTimeout(() => {
         router('/login');
@@ -210,7 +224,7 @@ export default function UseAuthenticationLogic() {
       setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
     } finally {
       setNewPassword({ password: '', password_confirmation: '' });
-      localStorage.removeItem('password_reset_token');
+      localStorage.removeItem('password_reset_token');  // hapus token ganti password
       setLoading(false);
     }
   };
@@ -252,7 +266,8 @@ export default function UseAuthenticationLogic() {
       newPassword,
       showConfirmPass,
       succesOtp,
-      successPerbaruiPassword
+      successPerbaruiPassword,
+      verifikasi_no_hp
     },
     func: {
       loginHandler,
@@ -270,7 +285,8 @@ export default function UseAuthenticationLogic() {
       handleUpdatePassword,
       handleChangeNewPassword,
       handleShowConfirmPassword,
-      handleLupaPassword
+      handleLupaPassword,
+      formatTime
     }
   };
 }

@@ -86,7 +86,6 @@ export default function ProfileSection() {
     } catch (error) {}
   };
 
-  console.log({ data });
   return (
     <>
       <Chip
