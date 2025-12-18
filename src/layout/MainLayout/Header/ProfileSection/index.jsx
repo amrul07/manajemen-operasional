@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import Cookies from 'js-cookie';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -31,19 +32,21 @@ import { Poppins } from '../../../../ui-component/typography/Poppins';
 // assets
 import User1 from '../../../../assets/images/users/user-round.svg';
 import { IconBrandWhatsapp, IconBriefcase, IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
+import AuthenticationLogic from '../../../../views/pages/authentication/AuthenticationLogic';
+import { fetchData } from '../../../../api/api';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 export default function ProfileSection() {
+  const { func } = AuthenticationLogic();
+  const token = Cookies.get('token');
   const theme = useTheme();
   const {
     state: { borderRadius }
   } = useConfig();
 
-  const [sdm, setSdm] = useState(true);
-  const [value, setValue] = useState('');
-  const [notification, setNotification] = useState(false);
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
 
   /**
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -71,6 +74,19 @@ export default function ProfileSection() {
     prevOpen.current = open;
   }, [open]);
 
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  // get data profile
+  const getProfile = async () => {
+    try {
+      const res = await fetchData(`/me`, token);
+      setData(res.data);
+    } catch (error) {}
+  };
+
+  console.log({ data });
   return (
     <>
       <Chip
@@ -128,44 +144,46 @@ export default function ProfileSection() {
                       }}
                     >
                       <Divider />
-                      <List
-                        component="nav"
-                        sx={{
-                          width: '100%',
-                          maxWidth: 350,
-                          minWidth: 100,
-                          borderRadius: `${borderRadius}px`,
-                          '& .MuiListItemButton-root': { mt: 0.5 }
-                        }}
-                      >
-                        {/* nama */}
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
-                          <ListItemIcon>
-                            <IconUser stroke={1.5} size="20px" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Poppins variant="body2">Alif Ramadhan</Poppins>} />
-                        </ListItemButton>
-                        {/* jabatan */}
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
-                          <ListItemIcon>
-                            <IconBriefcase stroke={1.5} size="20px" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Poppins variant="body2">Pimpinan</Poppins>} />
-                        </ListItemButton>
-                        {/* no hp */}
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
-                          <ListItemIcon>
-                            <IconBrandWhatsapp stroke={1.5} size="20px" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Poppins variant="body2">085123456789</Poppins>} />
-                        </ListItemButton>
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
-                          <ListItemIcon>
-                            <IconLogout stroke={1.5} size="20px" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Poppins variant="body2">Logout</Poppins>} />
-                        </ListItemButton>
-                      </List>
+                      {data && (
+                        <List
+                          component="nav"
+                          sx={{
+                            width: '100%',
+                            maxWidth: 350,
+                            minWidth: 100,
+                            borderRadius: `${borderRadius}px`,
+                            '& .MuiListItemButton-root': { mt: 0.5 }
+                          }}
+                        >
+                          {/* nama */}
+                          <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                            <ListItemIcon>
+                              <IconUser stroke={1.5} size="20px" />
+                            </ListItemIcon>
+                            <ListItemText primary={<Poppins variant="body2">{data.name}</Poppins>} />
+                          </ListItemButton>
+                          {/* jabatan */}
+                          <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                            <ListItemIcon>
+                              <IconBriefcase stroke={1.5} size="20px" />
+                            </ListItemIcon>
+                            <ListItemText primary={<Poppins variant="body2">{data.jabatan}</Poppins>} />
+                          </ListItemButton>
+                          {/* no hp */}
+                          <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                            <ListItemIcon>
+                              <IconBrandWhatsapp stroke={1.5} size="20px" />
+                            </ListItemIcon>
+                            <ListItemText primary={<Poppins variant="body2">{data.no_hp}</Poppins>} />
+                          </ListItemButton>
+                          <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                            <ListItemIcon>
+                              <IconLogout stroke={1.5} size="20px" />
+                            </ListItemIcon>
+                            <ListItemText onClick={func.handleLogout} primary={<Poppins variant="body2">Logout</Poppins>} />
+                          </ListItemButton>
+                        </List>
+                      )}
                     </Box>
                   </MainCard>
                 )}

@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
+import { authLoader } from './Loader';
 // import DataAbsensi from '../views/pages/data-absensi/DataAbsensi'
 // import BarangKeluar from '../views/pages/barang-keluar/BarangKeluar';
 // import User from '../views/pages/user/User';
@@ -37,6 +38,7 @@ const User = Loadable(lazy(() => import('../views/pages/user/User')));
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
+  loader: authLoader,
   children: [
     {
       path: '/',

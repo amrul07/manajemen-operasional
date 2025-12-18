@@ -12,17 +12,22 @@ import AuthCardWrapper from './AuthCardWrapper';
 
 import Logo from '../../../ui-component/Logo';
 import AuthFooter from '../../../ui-component/cards/AuthFooter';
-import AuthLogin from '../auth-forms/AuthLogin';
+// import AuthLogin from '../auth-forms/AuthLogin';
+import AnimateButton from '../../../ui-component/extended/AnimateButton';
+import CustomFormControl from '../../../ui-component/extended/Form/CustomFormControl';
 
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Poppins } from '../../../ui-component/typography/Poppins';
-import AuthenticationLogic from './AuthenticationLogic';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Button, CircularProgress, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar } from '@mui/material';
+import UseAuthenticationLogic from './AuthenticationLogic';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 export default function Login() {
-  const { value, func } = AuthenticationLogic();
+  const { value, func } = UseAuthenticationLogic();
   const downMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
+
 
   return (
     <AuthWrapper1>
@@ -39,8 +44,92 @@ export default function Login() {
                     Enter your credentials to continue
                   </Poppins>
                 </Stack>
+                {/* form login */}
                 <Box sx={{ width: 1 }}>
-                  <AuthLogin />
+                  <CustomFormControl fullWidth>
+                    <InputLabel htmlFor="outlined-adornment-email-login" sx={{ fontFamily: `'Poppins', sans-serif` }}>
+                      Nomor Wa
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-email-login"
+                      name="no_hp"
+                      value={value.data.no_hp}
+                      onChange={func.handleChange}
+                      sx={{ fontFamily: `'Poppins', sans-serif` }}
+                    />
+                  </CustomFormControl>
+
+                  <CustomFormControl fullWidth>
+                    <InputLabel htmlFor="outlined-adornment-password-login" sx={{ fontFamily: `'Poppins', sans-serif` }}>
+                      Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password-login"
+                      type={value.showPassword ? 'text' : 'password'}
+                      value={value.data.password}
+                      onChange={func.handleChange}
+                      name="password"
+                      sx={{ fontFamily: `'Poppins', sans-serif` }}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={func.handleShowPassword}
+                            onMouseDown={func.handleMouseDownPassword}
+                            edge="end"
+                            size="large"
+                          >
+                            {value.showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                    />
+                  </CustomFormControl>
+
+                  <Grid container sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Grid>
+                      {/* <FormControlLabel
+            control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
+            label="Keep me logged in"
+          /> */}
+                    </Grid>
+                    <Grid>
+                      <Poppins
+                        variant="subtitle1"
+                        // component={Link}
+                        // to="/verifikasi-noHp"
+                        onClick={func.handleLupaPassword}
+                        sx={{ textDecoration: 'none', color: 'primary.main' }}
+                      >
+                        Forgot Password?
+                      </Poppins>
+                    </Grid>
+                  </Grid>
+                  <Box sx={{ mt: 2 }}>
+                    <AnimateButton>
+                      <Button
+                        color="primary"
+                        fullWidth
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        sx={{ fontFamily: `'Poppins', sans-serif` }}
+                        onClick={func.loginHandler}
+                      >
+                        Sign In
+                        {value.loading === true && (
+                          <CircularProgress
+                            size={18}
+                            sx={{
+                              color: '#FFF',
+                              ml: '5px'
+                            }}
+                          />
+                        )}
+                      </Button>
+                    </AnimateButton>
+                  </Box>
                 </Box>
                 <Divider sx={{ width: 1 }} />
                 {/* <Stack sx={{ alignItems: 'center' }}>

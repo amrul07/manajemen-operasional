@@ -1,87 +1,38 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Poppins } from '../../../ui-component/typography/Poppins';
-import { Box, Paper, Stack, Button, Fade } from '@mui/material';
+import { Box, Paper, Stack, Button, Fade, Snackbar, Alert, CircularProgress } from '@mui/material';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import AuthWrapper1 from './AuthWrapper1';
 import AuthCardWrapper from './AuthCardWrapper';
 import { useNavigate } from 'react-router-dom';
+import UseAuthenticationLogic from './AuthenticationLogic';
 
 export default function VerifikasiOtp({ length = 6 }) {
-  const [code, setCode] = useState('');
-  const hiddenRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [shake, setShake] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const router = useNavigate();
-
-  // timer
-  const [timer, setTimer] = useState(120);
-  const [canResend, setCanResend] = useState(false);
-
-  useEffect(() => {
-    const t = timer > 0 && setInterval(() => setTimer((s) => s - 1), 1000);
-    if (timer === 0) setCanResend(true);
-    return () => clearInterval(t);
-  }, [timer]);
-
-  const focusInput = () => hiddenRef.current?.focus();
-
-  const handleChange = (e) => {
-    let v = e.target.value.replace(/[^0-9]/g, '');
-    if (v.length > length) v = v.slice(0, length);
-    setCode(v);
-    setActiveIndex(v.length);
-  };
-
-  const handlePaste = (e) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
-    setCode(text.slice(0, length));
-  };
-
-  const submitCode = (url) => {
-    if (code.length !== length) return;
-
-    if (code !== '123456') {
-      setShake(true);
-      setTimeout(() => setShake(false), 600);
-      setCode('');
-      setActiveIndex(0);
-    } else {
-      setSuccess(true);
-      router(url);
-    }
-  };
-
-  const handleResend = () => {
-    if (!canResend) return;
-    setTimer(60);
-    setCanResend(false);
-  };
+  const { value, func } = UseAuthenticationLogic();
 
   const boxes = Array.from({ length }).map((_, i) => (
     <Box
       key={i}
-      onClick={focusInput}
+      onClick={func.focusInput}
       sx={{
         width: { xs: 35, md: 56 },
         height: { xs: 40, md: 56 },
         borderRadius: 2,
-        border: i === activeIndex ? '2px solid #1e88e5' : '1px solid #ccc',
+        border: i === value.activeIndex ? '2px solid #1e88e5' : '1px solid #ccc',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 22,
         fontWeight: 600,
         bgcolor: 'background.paper',
-        boxShadow: i === activeIndex ? 3 : 1,
+        boxShadow: i === value.activeIndex ? 3 : 1,
         transition: 'all .15s ease',
         cursor: 'text'
       }}
     >
-      {code[i] || ''}
+      {value.verifikasi.otp[i] || ''}
     </Box>
   ));
 
@@ -115,27 +66,31 @@ export default function VerifikasiOtp({ length = 6 }) {
                   Verifikasi OTP
                 </Poppins>
                 <Poppins variant="body2" color="text.secondary">
-                  Kode dikirim ke 085251689674
+                  Kode dikirim ke {value.verifikasi.whatsapp}
                 </Poppins>
               </Box>
             </Box>
 
             {/* Timer */}
             <Poppins variant="body2" color="text.secondary">
-              Kode akan kedaluwarsa dalam <b>{timer}s</b>
+              Kode akan kedaluwarsa dalam <b>{value.timer}s</b>
             </Poppins>
 
             {/* OTP Boxes */}
-            <Box className={shake ? 'shake' : ''} sx={{ display: 'flex', gap: 1.5, mt: 1, maxWidth: '95%' }} onClick={focusInput}>
+            <Box
+              className={value.shake ? 'shake' : ''}
+              sx={{ display: 'flex', gap: 1.5, mt: 1, maxWidth: '95%' }}
+              onClick={func.focusInput}
+            >
               {boxes}
             </Box>
 
             {/* Hidden Input */}
             <input
-              ref={hiddenRef}
-              value={code}
-              onChange={handleChange}
-              onPaste={handlePaste}
+              ref={value.hiddenRef}
+              value={value.verifikasi.otp}
+              onChange={func.handleChangeVerifikasiOtp}
+              onPaste={func.handlePaste}
               inputMode="numeric"
               autoFocus
               style={{ position: 'absolute', opacity: 0, left: -9999 }}
@@ -146,30 +101,55 @@ export default function VerifikasiOtp({ length = 6 }) {
               variant="contained"
               fullWidth
               sx={{ mt: 2, borderRadius: 2, py: 1.3, fontFamily: `'Poppins', sans-serif` }}
-              disabled={code.length !== length}
-              onClick={() => submitCode('/perbarui-password')}
+              disabled={value.verifikasi.otp.length !== 6}
+              onClick={func.VerifikasiOtp}
             >
-              Verifikasi
+              Verifikasi{' '}
+              {value.loading === true && (
+                <CircularProgress
+                  size={18}
+                  sx={{
+                    color: '#FFF',
+                    ml: '5px'
+                  }}
+                />
+              )}
             </Button>
 
             <Button
               variant="outlined"
               fullWidth
               startIcon={<RestartAltIcon />}
-              onClick={handleResend}
-              disabled={!canResend}
+              onClick={func.handleVerifikasiWa}
+              disabled={!value.canResend}
               sx={{ borderRadius: 2, fontFamily: `'Poppins', sans-serif` }}
             >
-              {canResend ? 'Kirim Ulang Kode' : `Kirim ulang (${timer}s)`}
+              {value.canResend ? 'Kirim Ulang Kode' : `Kirim ulang (${value.timer}s)`}
             </Button>
 
-            <Fade in={success}>
+            <Fade in={value.succesOtp}>
               <Poppins sx={{ color: 'success.main', fontWeight: 700, mt: 1 }}>OTP berhasil diverifikasi ✓</Poppins>
             </Fade>
           </Stack>
           {/* </Paper> */}
         </AuthCardWrapper>
       </Box>
+      {/* snackbar */}
+      <Snackbar
+        open={value.snackbar.open}
+        // autoHideDuration={5000}
+        onClose={func.closeSnackbar}
+        // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={func.closeSnackbar}
+          severity={value.snackbar.succes ? 'success' : 'error'}
+          variant="filled"
+          sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}
+        >
+          {value.snackbar.message}
+        </Alert>
+      </Snackbar>
     </AuthWrapper1>
   );
 }

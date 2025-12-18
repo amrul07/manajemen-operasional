@@ -1,55 +1,218 @@
-import React, { useState } from 'react';
-import { postData } from '../../../api/api';
+import React, { useEffect, useRef, useState } from 'react';
+import { logout, postData } from '../../../api/api';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-export default function AuthenticationLogic() {
+export default function UseAuthenticationLogic() {
   const router = useNavigate();
-  const [data, setData] = useState({ wa: '', password: '' });
+  const [data, setData] = useState({ no_hp: '', password: '' });
+  const [verifikasi, setVerifikasi] = useState({ whatsapp: '', otp: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
+    succes: false,
     message: ''
   });
+  const token = Cookies.get('token'); // token
+  // verifikasi otp
+  const length = 6; // panjang karakter otp
+  const [activeIndex, setActiveIndex] = useState(0); // Index input OTP yang sedang aktif (untuk border biru)
+  const hiddenRef = useRef(null); // Ref ke input tersembunyi (hidden input)
+  const [shake, setShake] = useState(false); // Untuk animasi shake ketika OTP salah
+  const [timer, setTimer] = useState(120); // Countdown timer (detik)
+  const [canResend, setCanResend] = useState(false); // Apakah tombol resend sudah boleh diklik
+  const [succesOtp, setSuccesOtp] = useState(false); // Untuk menampilkan status sukses
+  // perbarui password
+  const [newPassword, setNewPassword] = useState({ password: '', password_confirmation: '' });
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [successPerbaruiPassword, setSuccessPerbaruiPassword] = useState(false); // Untuk menampilkan status sukses
+
+  // Effect untuk countdown timer (verifikasi otp)
+  useEffect(() => {
+    // Jika timer > 0, buat interval 1 detik
+    const t = timer > 0 && setInterval(() => setTimer((s) => s - 1), 1000);
+
+    // Jika timer habis, aktifkan tombol resend
+    if (timer === 0) setCanResend(true);
+
+    // Cleanup interval agar tidak menumpuk
+    return () => clearInterval(t);
+  }, [timer]);
 
   //   ketika tombol login di klik
   const loginHandler = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
-    //initialize formData
-    const formData = new FormData();
+    try {
+      //initialize formData
+      const formData = new FormData();
 
-    //append data to formData
-    formData.append('wa', data.wa);
-    formData.append('password', data.password);
+      //append data to formData
+      formData.append('no_hp', data.no_hp);
+      formData.append('password', data.password);
 
-    //send data to server
-    await postData(`/login`, formData)
-      .then((response) => {
-        //set token on cookies
-        Cookies.set('token', response.token);
-        setLoading(true);
-        //redirect to dashboard
-        router.push('/dashboard');
-        console.log({ response });
-      })
-      .catch((error) => {
-        console.error('Gagal login data:', error);
-        let pesanError = 'Terjadi kesalahan saat login';
+      //send data to server
+      const res = await postData(`/login`, formData);
 
-        if (error.response) {
-          pesanError = error.response.data.message || pesanError;
-        }
+      console.log({ res });
+      setUserLogin(res.data);
 
-        setSnackbar({
-          open: true,
-          message: pesanError
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      //set token on cookies
+      Cookies.set('token', res.token);
+      //redirect to dashboard
+      router('/dashboard/default');
+      console.log({ res });
+    } catch (error) {
+      console.error('Gagal Login:', error);
+      let pesanError = 'Terjadi kesalahan saat login';
+      if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+      setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
+    } finally {
+      setLoading(false);
+      setData({ no_hp: '', password: '' });
+    }
+  };
+
+  // handle logout
+  const handleLogout = async () => {
+    await logout(`/logout`, token).then(() => {
+      //remove token from cookies
+      Cookies.remove('token');
+
+      //redirect halaman login
+      router('/login');
+    });
+  };
+
+  // ketika lupa password di klik
+  const handleLupaPassword = () => {
+    router(`/verifikasi-noHp`);
+    setSuccessPerbaruiPassword(false);
+    setSuccesOtp(false);
+  };
+
+  // verifikasi no hp handle
+  const handleVerifikasiWa = async () => {
+    setLoading(true);
+    try {
+      //initialize formData
+      const formData = new FormData();
+
+      //append data to formData
+      formData.append('whatsapp', verifikasi.whatsapp);
+      const res = await postData(`/forgot-password/send-otp`, formData);
+
+      // console.log(res, 'verifikasi no hp');
+      router(`/verifikasi-otp`);
+
+      // kirim ulang otp
+      // Jika belum boleh resend, hentikan
+      if (!canResend) return;
+
+      // Reset timer
+      setTimer(60);
+      setCanResend(false);
+    } catch (error) {
+      console.error('Gagal verifikasi nomor hp:', error);
+      let pesanError = 'Terjadi kesalahan saat verifikasi nomor hp';
+      if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+      setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // handel verifikasi otp
+  const VerifikasiOtp = async () => {
+    setLoading(true);
+    try {
+      //initialize formData
+      const formData = new FormData();
+
+      //append data to formData
+      formData.append('otp', verifikasi.otp);
+      const res = await postData(`/forgot-password/verify-otp`, formData);
+
+      setSuccesOtp(true); // tampilkan pesan sukses
+
+      localStorage.setItem('password_reset_token', res.password_reset_token);
+
+      // console.log(res, 'verifikasi otp');
+      setTimeout(() => {
+        router('/perbarui-password');
+      }, 1000);
+    } catch (error) {
+      setShake(true); // aktifkan animasi shake
+
+      // Matikan shake setelah 600ms
+      setTimeout(() => setShake(false), 600);
+      // Reset input
+      // setCode('');
+      setActiveIndex(0);
+
+      console.error('Gagal verifikasi otp:', error);
+      let pesanError = 'Terjadi kesalahan saat verifikasi otp';
+      if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+      setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
+    } finally {
+      setVerifikasi({ otp: '', whatsapp: '' });
+      setLoading(false);
+    }
+  };
+
+  // handel verifikasi otp
+  const handleChangeVerifikasiOtp = (e) => {
+    let v = e.target.value.replace(/[^0-9]/g, ''); // Ambil hanya angka
+    if (v.length > length) v = v.slice(0, length); // Batasi panjang sesuai length
+    setVerifikasi((prev) => ({ ...prev, otp: v })); // Simpan ke state
+    setActiveIndex(v.length); // Update posisi aktif
+  };
+
+  // Fokus ke input tersembunyi (verifikasi otp)
+  const focusInput = () => hiddenRef.current?.focus();
+
+  // Handle paste OTP
+  const handlePaste = (e) => {
+    e.preventDefault();
+
+    // Ambil text clipboard, hanya angka
+    const text = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+
+    // Simpan OTP hasil paste
+    setVerifikasi((prev) => ({ ...prev, otp: text.slice(0, length) }));
+  };
+
+  // handel perbarui password
+  const handleUpdatePassword = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('password_reset_token');
+      //initialize formData
+      const formData = new FormData();
+
+      //append data to formData
+      formData.append('password_reset_token', token);
+      formData.append('password', newPassword.password);
+      formData.append('password_confirmation', newPassword.password_confirmation);
+      const res = await postData(`/forgot-password/reset-password`, formData);
+      setSuccessPerbaruiPassword(true);
+      // console.log(res, 'update password');
+      // ⏳ tunggu 1 detik sebelum redirect
+      setTimeout(() => {
+        router('/login');
+      }, 1000);
+    } catch (error) {
+      console.error('Gagal verifikasi nomor hp:', error);
+      let pesanError = 'Terjadi kesalahan saat verifikasi nomor hp';
+      if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+      setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
+    } finally {
+      setNewPassword({ password: '', password_confirmation: '' });
+      localStorage.removeItem('password_reset_token');
+      setLoading(false);
+    }
   };
 
   // lihat password
@@ -60,14 +223,54 @@ export default function AuthenticationLogic() {
     event.preventDefault();
   };
 
+  // lihat konfirmasi password
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPass(!showConfirmPass);
+  };
+
   const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value }); // input change
+  const handleChangeVerifikasi = (e) => setVerifikasi({ ...verifikasi, [e.target.name]: e.target.value }); // input change
+  const handleChangeNewPassword = (e) => setNewPassword({ ...newPassword, [e.target.name]: e.target.value }); // input change
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;
-    setSnackbar({ open: false, message: '' });
+    setSnackbar({ open: false, message: '', succes: false });
   }; // snackbar close
 
   return {
-    value: { data, loading, snackbar, showPassword },
-    func: { loginHandler, handleShowPassword, handleMouseDownPassword, handleChange, closeSnackbar }
+    value: {
+      data,
+      loading,
+      snackbar,
+      showPassword,
+      verifikasi,
+      activeIndex,
+      shake,
+      hiddenRef,
+      canResend,
+      length,
+      timer,
+      newPassword,
+      showConfirmPass,
+      succesOtp,
+      successPerbaruiPassword
+    },
+    func: {
+      loginHandler,
+      handleShowPassword,
+      handleMouseDownPassword,
+      handleChange,
+      closeSnackbar,
+      handleLogout,
+      handleChangeVerifikasi,
+      handleVerifikasiWa,
+      VerifikasiOtp,
+      handleChangeVerifikasiOtp,
+      focusInput,
+      handlePaste,
+      handleUpdatePassword,
+      handleChangeNewPassword,
+      handleShowConfirmPassword,
+      handleLupaPassword
+    }
   };
 }

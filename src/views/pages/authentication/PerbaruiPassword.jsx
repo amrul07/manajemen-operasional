@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField } from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField, Alert, Snackbar, Fade, CircularProgress } from '@mui/material';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -8,24 +8,11 @@ import { Poppins } from '../../../ui-component/typography/Poppins';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import CustomFormControl from '../../../ui-component/extended/Form/CustomFormControl';
 import { useNavigate } from 'react-router-dom';
+import UseAuthenticationLogic from './AuthenticationLogic';
 
 export default function UpdatePassword() {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
-  const [error, setError] = useState('');
-  const router = useNavigate()
+  const { value, func } = UseAuthenticationLogic();
 
-  const handleUpdate = (url) => {
-    if (password.length < 6) return setError('Password harus minimal 6 karakter');
-
-    if (password !== confirmPassword) return setError('Konfirmasi password tidak cocok');
-
-    setError('');
-    console.log('Password Updated!');
-    router(url)
-  };
 
   return (
     <AuthWrapper1>
@@ -75,22 +62,22 @@ export default function UpdatePassword() {
               Password Baru
             </InputLabel>
             <OutlinedInput
-              id="outlined-adornment-password-login"
-              type={showPass ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              // id="outlined-adornment-password-login"
+              type={value.showPassword ? 'text' : 'password'}
+              value={value.newPassword.password}
+              onChange={func.handleChangeNewPassword}
               name="password"
               sx={{ fontFamily: `'Poppins', sans-serif` }}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => setShowPass(!showPass)}
+                    onClick={func.handleShowPassword}
                     // onMouseDown={handleMouseDownPassword}
                     edge="end"
                     size="large"
                   >
-                    {showPass ? <Visibility /> : <VisibilityOff />}
+                    {value.showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }
@@ -103,22 +90,22 @@ export default function UpdatePassword() {
               Konfirmasi Password
             </InputLabel>
             <OutlinedInput
-              id="outlined-adornment-password-login"
-              type={showConfirmPass ? 'text' : 'password'}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              name="password"
+              // id="outlined-adornment-password-login"
+              type={value.showConfirmPass ? 'text' : 'password'}
+              value={value.newPassword.password_confirmation}
+              onChange={func.handleChangeNewPassword}
+              name="password_confirmation"
               sx={{ fontFamily: `'Poppins', sans-serif` }}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => setShowConfirmPass(!showConfirmPass)}
+                    onClick={func.handleShowConfirmPassword}
                     // onMouseDown={handleMouseDownPassword}
                     edge="end"
                     size="large"
                   >
-                    {showConfirmPass ? <Visibility /> : <VisibilityOff />}
+                    {value.showConfirmPass ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }
@@ -126,13 +113,41 @@ export default function UpdatePassword() {
             />
           </CustomFormControl>
 
-          {error && <Poppins sx={{ color: 'red', fontSize: 14, mb: 2 }}>{error}</Poppins>}
+          {/* <Poppins sx={{ color: 'red', fontSize: 14, mb: 2 }}>peh</Poppins> */}
 
-          <ButtonStyle bg={'#1e88e5'} color={'#fff'} hover={'#1c73beff'} width={'100%'} height={'40px'} onClick={() => handleUpdate('/login')}>
-            Perbarui Password
+          <ButtonStyle bg={'#1e88e5'} color={'#fff'} hover={'#1c73beff'} width={'100%'} height={'40px'} onClick={func.handleUpdatePassword}>
+            Perbarui Password{' '}
+            {value.loading === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  ml: '5px'
+                }}
+              />
+            )}
           </ButtonStyle>
+          <Fade in={value.successPerbaruiPassword}>
+            <Poppins sx={{ color: 'success.main', fontWeight: 700, mt: 1 }}>Password berhasil diperbarui ✓</Poppins>
+          </Fade>
         </Paper>
       </Box>
+      {/* snackbar */}
+      <Snackbar
+        open={value.snackbar.open}
+        // autoHideDuration={5000}
+        onClose={func.closeSnackbar}
+        // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={func.closeSnackbar}
+          severity={value.snackbar.succes ? 'success' : 'error'}
+          variant="filled"
+          sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}
+        >
+          {value.snackbar.message}
+        </Alert>
+      </Snackbar>
     </AuthWrapper1>
   );
 }

@@ -6,9 +6,17 @@ const api = axios.create({
   baseURL: baseUrl
 });
 
+// Set Authorization header secara global
+const setAuthHeader = (token) => {
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+};
+
 //  get data
-export const fetchData = async (endpoint) => {
+export const fetchData = async (endpoint, token) => {
   try {
+    // Set Authorization header dengan token yang diberikan
+    setAuthHeader(token);
+
     // Fetch data dari endpoint yang diberikan
     const response = await api.get(endpoint);
 
@@ -39,10 +47,23 @@ export const postData = async (endpoint, data, token) => {
 export const deleteData = async (endpoint, token) => {
   try {
     // Set Authorization header dengan token
-    // setAuthHeader(token);
+    setAuthHeader(token);
     const response = await api.delete(endpoint);
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+// logout
+export const logout = async (endpoint, token) => {
+  try {
+    // Set Authorization header dengan token
+    setAuthHeader(token);
+    const response = await api.post(endpoint);
+    return response.data;
+  } catch (error) {
+    console.log(error);
     throw error;
   }
 };

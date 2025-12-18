@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 const useGlobalStore = create((set) => ({
-  searchQuery: '',
+  searchQuery: '', // value fitur search
   setSearchQuery: (value) => set({ searchQuery: value }),
 
   
