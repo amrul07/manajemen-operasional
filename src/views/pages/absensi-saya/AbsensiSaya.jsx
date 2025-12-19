@@ -31,6 +31,33 @@ export default function AbsensiSaya() {
     }
   };
 
+  const handleClockIn = () => {
+    const now = new Date();
+
+    const jam = now.getHours().toString().padStart(2, '0');
+    const menit = now.getMinutes().toString().padStart(2, '0');
+
+    const tanggal = now.getDate().toString().padStart(2, '0');
+    const bulan = (now.getMonth() + 1).toString().padStart(2, '0'); // bulan dimulai dari 0
+    const tahun = now.getFullYear();
+
+    const waktu = `${jam}:${menit}`;
+    const tanggalLengkap = `${tahun}-${bulan}-${tanggal}`; // format aman untuk backend
+
+    const payload = {
+      tanggal: tanggalLengkap,
+      waktu: waktu,
+      jam,
+      menit,
+      hari: now.toLocaleDateString('id-ID', { weekday: 'long' })
+    };
+
+    console.log(payload);
+
+    // contoh kirim ke API
+    // postData('/clock-in', payload);
+  };
+
   return (
     <Card
       sx={{
@@ -68,21 +95,22 @@ export default function AbsensiSaya() {
       </Stack>
 
       {/* Buttons */}
+      {/* absen masuk */}
       <Grid container spacing={3} mt={4} justifyContent="center">
         <Grid size={{ xs: 6, sm: 4 }}>
-          <Stack sx={menuItemStyle}>
+          <Stack sx={menuItemStyle} onClick={handleClockIn}>
             <AccessTimeFilledIcon sx={{ fontSize: 38, mb: 1 }} />
             <Poppins sx={{ fontSize: '16px', fontWeight: 600 }}>Clock In</Poppins>
           </Stack>
         </Grid>
-
+        {/* absen pulang */}
         <Grid size={{ xs: 6, sm: 4 }}>
           <Stack sx={menuItemStyle}>
             <LogoutIcon sx={{ fontSize: 38, mb: 1 }} />
             <Poppins sx={{ fontSize: '16px', fontWeight: 600 }}>Clock Out</Poppins>
           </Stack>
         </Grid>
-
+        {/* izin/sakit */}
         <Grid size={{ xs: 6, sm: 4 }}>
           <Stack sx={menuItemStyle}>
             <MedicalInformationIcon sx={{ fontSize: 38, mb: 1 }} />

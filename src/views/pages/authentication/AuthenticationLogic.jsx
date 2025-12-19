@@ -2,8 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { logout, postData } from '../../../api/api';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import useAuthStore from '../../../store/authStore';
 
 export default function UseAuthenticationLogic() {
+  const { setToken } = useAuthStore.getState();
+
   const router = useNavigate();
   const [data, setData] = useState({ no_hp: '', password: '' });
   const [verifikasi, setVerifikasi] = useState({ whatsapp: '', otp: '' });
@@ -57,12 +60,9 @@ export default function UseAuthenticationLogic() {
       //send data to server
       const res = await postData(`/login`, formData);
 
-      //set token on cookies
-      Cookies.set('token', res.token, {
-        expires: 365, // 1 tahun
-        secure: true,
-        sameSite: 'strict'
-      });
+      //set token
+      setToken(res.token);
+
       //redirect to dashboard
       router('/dashboard/default');
     } catch (error) {
@@ -224,7 +224,7 @@ export default function UseAuthenticationLogic() {
       setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
     } finally {
       setNewPassword({ password: '', password_confirmation: '' });
-      localStorage.removeItem('password_reset_token');  // hapus token ganti password
+      localStorage.removeItem('password_reset_token'); // hapus token ganti password
       setLoading(false);
     }
   };

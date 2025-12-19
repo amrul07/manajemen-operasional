@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import useAuthStore from '../store/authStore';
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -11,31 +12,54 @@ const api = axios.create({
    REQUEST INTERCEPTOR
    Sisipkan token otomatis
 =========================== */
+// Menambahkan interceptor request ke axios instance
+// Kode di sini akan dijalankan SETIAP KALI sebelum request dikirim
 api.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get('token');
+  async (config) => {
+    const { isTokenReady, token } = useAuthStore.getState();
+    // ⏳ Jika token BELUM siap (app baru load)
+    // Kita TUNGGU sebentar agar initAuth() selesai
+    // Ini mencegah request jalan sebelum token tersedia
+    if (!isTokenReady) {
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    // Jika token tersedia
+    // Tambahkan Authorization header ke request
     if (token) {
       config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`
+        ...config.headers, // pertahankan header lain
+        Authorization: `Bearer ${token}` // inject token ke header
       };
     }
+
     return config;
   },
+  // Jika terjadi error sebelum request dikirim
+  // langsung lempar error ke pemanggil
   (error) => Promise.reject(error)
 );
+
+export default api;
 
 /* ===========================
    RESPONSE INTERCEPTOR
    Tangani Unauthenticated
 =========================== */
+// Kode ini dijalankan SETELAH response diterima
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response, // Jika response sukses (status 2xx)  // langsung kembalikan response tanpa diubah
   (error) => {
-    if (error.response?.data?.message === 'Unauthenticated.') {
-      Cookies.remove('token');
-      window.location.href = '/login'; // ✅ BENAR
+    // Cek apakah:
+    // 1. Status HTTP = 401 (Unauthorized)
+    // 2. Pesan error mengandung kata "unauthenticated"
+    if (error.response?.status === 401 && error.response?.data?.message?.toLowerCase().includes('unauthenticated')) {
+      // Hapus token dari store dan cookie
+      // Ini artinya token benar-benar tidak valid / expired
+      useAuthStore.getState().clearAuth();
+      window.location.replace('/login'); // Redirect paksa ke halaman login
     }
+    // Lempar error ke pemanggil
+    // Supaya halaman bisa tetap handle error jika perlu
     return Promise.reject(error);
   }
 );
