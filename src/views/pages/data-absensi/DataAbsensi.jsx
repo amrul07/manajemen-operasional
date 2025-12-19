@@ -4,9 +4,11 @@ import {
   Card,
   CircularProgress,
   Grid,
+  MenuItem,
   OutlinedInput,
   Pagination,
   Paper,
+  Select,
   Stack,
   Table,
   TableBody,
@@ -21,7 +23,7 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import { dataAbsensi } from '../../../utils/constan';
+import { dataAbsensi, menuItem } from '../../../utils/constan';
 import CustomButton from '../../../ui-component/button/CustomButton';
 import { IconArrowBadgeRight, IconArrowBigRight, IconArrowNarrowRight, IconPrinter } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -29,13 +31,19 @@ import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import Sukses from '../../../assets/sukses.svg';
 import CreateIcon from '@mui/icons-material/Create';
+import DataAbsensiLogic from './DataAbsensiLogic';
 
 export default function DataAbsensi() {
+  const { value, func } = DataAbsensiLogic();
   const router = useNavigate();
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
-      <div id="print-content">
+      {value.loadingGet === true ? (
+        <Stack sx={{ alignItems: 'center', height: '100vh' }}>
+          <CircularProgress sx={{ margin: 'auto', color: '#1e88e5' }} size={'50px'} />
+        </Stack>
+      ) : (
         <TableContainer sx={{ px: 5, fontFamily: "`'Poppins', sans-serif`" }} component={Paper}>
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -47,48 +55,20 @@ export default function DataAbsensi() {
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
                 >
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
+                  <Select
                     size="small"
-                    sx={{
-                      mt: '5px',
-                      borderRadius: '12px',
-                      fontFamily: `'Poppins', sans-serif`,
-                      width: '180px'
-                    }}
-                    clearIcon={true}
-                    // options={value.kabinet || []}
-                    // value={
-                    //   (value.kabinet &&
-                    //     value.kabinet.find(
-                    //       (option) => option.id === value.cabinet
-                    //     )) ||
-                    //   value.cabinet
-                    value={'30 Desember 2025'}
-                    // }
-                    // onChange={(event, v) => {
-                    //   value.setCabinet(v ? v.id : "");
-                    // }}
-                    // getOptionLabel={(option) => option.name || value.cabinet}
-                    // isOptionEqualToValue={(option, value) =>
-                    //   option.id === value.id
-                    // }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          fontFamily: `'Poppins', sans-serif`,
-                          borderRadius: '12px'
-                        }}
-                        // InputProps={{
-                        //   ...params.InputProps,
-                        //   style: { fontFamily: `'Poppins', sans-serif` },
-                        // }}
-                        // placeholder={"Pilih Periode Kepengurusan"}
-                      />
-                    )}
-                  />
+                    value={value.dataDropdown}
+                    onChange={(e) => func.handleChangeDataDropdown(e.target.value)}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                    sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
+                  >
+                    {value.dataTanggal.map((res) => (
+                      <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
+                        {res.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </TableCell>
                 {/* button cetak laporan */}
                 <TableCell
@@ -124,6 +104,8 @@ export default function DataAbsensi() {
               <TableRow>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Nomor</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Nama </TableCell>
+                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Waktu CheckIn </TableCell>
+                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Waktu CheckOut </TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Status</TableCell>
                 <TableCell
                   sx={{
@@ -136,46 +118,55 @@ export default function DataAbsensi() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {dataAbsensi.map((row) => {
-                return (
-                  <StyledTableRow key={row.id}>
-                    <StyledTableCell>{row.nomor}.</StyledTableCell>
-                    <StyledTableCell>{row.nama}</StyledTableCell>
-                    <StyledTableCell>{row.tanggal}</StyledTableCell>
-                    <StyledTableCell>
-                      <Stack
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-around',
-                          gap: { xs: 1, md: 0 }
-                        }}
-                      >
-                        {/* button verifikasi */}
-                        <CustomButton
-                          bg={'#e3f2fd'}
-                          hover={'#1e88e5'}
-                          color={'#1e88e5'}
-                          label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />}
-                          onClick={() => router(`/data-absensi/detail/${row.id}`)}
-                        />
-                        {/* button pemesanan */}
-                        <CustomButton
-                          bg={'#fff8e1'}
-                          color={'#ffc107'}
-                          hover={'#ffc107'}
-                          label={<CreateIcon style={{ fontSize: '18px' }} />}
-                          // onClick={() => func.handleEdit(row.id)}
-                        />
-                      </Stack>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                );
-              })}
+              {value.loadingPagination ? (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={5}>Loading...</StyledTableCell>
+                </StyledTableRow>
+              ) : (
+                value.data &&
+                value.data.map((row, i) => {
+                  return (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell>{(value.page - 1) * value.itemsPerPage + i + 1}</StyledTableCell>
+                      <StyledTableCell>{row.user}</StyledTableCell>
+                      <StyledTableCell>{row.waktu_checkin}</StyledTableCell>
+                      <StyledTableCell>{row.waktu_checkout}</StyledTableCell>
+                      <StyledTableCell>{row.status}</StyledTableCell>
+                      <StyledTableCell>
+                        <Stack
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            gap: { xs: 1, md: 0 }
+                          }}
+                        >
+                          {/* button verifikasi */}
+                          <CustomButton
+                            bg={'#e3f2fd'}
+                            hover={'#1e88e5'}
+                            color={'#1e88e5'}
+                            label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />}
+                            onClick={() => router(`/data-absensi/detail/${row.id}`)}
+                          />
+                          {/* button pemesanan */}
+                          <CustomButton
+                            bg={'#fff8e1'}
+                            color={'#ffc107'}
+                            hover={'#ffc107'}
+                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            // onClick={() => func.handleEdit(row.id)}
+                          />
+                        </Stack>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      )}
       {/* pagination */}
       <Card sx={{ px: { xs: 2, md: 4 }, py: { xs: 2, md: 4 } }}>
         <Stack sx={{ justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
@@ -186,17 +177,16 @@ export default function DataAbsensi() {
               textAlign: 'center'
             }}
           >
-            Menampilkan 1 - 10 dari 10 Data
+            Menampilkan 1 - {value.itemsPerPage} dari {value.totalItems} Data
             {/* Menampilkan 1 - 10 dari {value.totalItems} Data */}
           </Poppins>
           {/* pagination */}
           <ThemeProvider theme={themePagination}>
             <Pagination
               sx={{ order: { xs: 1, md: 2 }, alignSelf: 'center' }}
-              count={Math.ceil(50 / 10)}
-              // count={Math.ceil(value.totalItems / 10)}
-              // page={value.page}
-              // onChange={func.handleChangePage}
+              count={Math.ceil(value.totalItems / value.itemsPerPage)}
+              page={value.page}
+              onChange={func.handleChangePage}
             />
           </ThemeProvider>
         </Stack>

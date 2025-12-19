@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { logout, postData } from '../../../api/api';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import useAuthStore from '../../../store/authStore';
 
 export default function UseAuthenticationLogic() {
@@ -17,7 +16,6 @@ export default function UseAuthenticationLogic() {
     succes: false,
     message: ''
   });
-  const token = Cookies.get('token'); // token
   const verifikasi_no_hp = localStorage.getItem(`whatsapp`);
   // verifikasi otp
   const length = 6; // panjang karakter otp
@@ -78,13 +76,14 @@ export default function UseAuthenticationLogic() {
 
   // handle logout
   const handleLogout = async () => {
-    await logout(`/logout`, token).then(() => {
-      //remove token from cookies
-      Cookies.remove('token');
-
-      //redirect halaman login
+    try {
+      await logout('/logout');
+    } catch (e) {
+      // abaikan error logout
+    } finally {
+      useAuthStore.getState().clearAuth();
       router('/login');
-    });
+    }
   };
 
   // ketika lupa password di klik
@@ -211,7 +210,7 @@ export default function UseAuthenticationLogic() {
       const res = await postData(`/forgot-password/reset-password`, formData);
       setSuccessPerbaruiPassword(true);
 
-      Cookies.remove('token'); // hapus token sebelum nya
+      useAuthStore.getState().clearAuth(); // hapus token sebelumnya
 
       // ⏳ tunggu 1 detik sebelum redirect
       setTimeout(() => {

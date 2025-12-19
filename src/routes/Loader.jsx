@@ -18,17 +18,17 @@
 // };
 
 
-
-import Cookies from 'js-cookie';
 import { redirect } from 'react-router-dom';
+import useAuthStore from '../store/authStore';
 
 export const authLoader = () => {
-  const token = Cookies.get('token');
+  const token = useAuthStore.getState().token;
 
+  // ❌ Tidak ada token → login
   if (!token) {
     return redirect('/login');
   }
 
+  // ✅ Token ada → lanjut
   return null;
 };
-

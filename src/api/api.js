@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import useAuthStore from '../store/authStore';
 
 const baseUrl = import.meta.env.VITE_API_URL;
@@ -8,66 +7,41 @@ const api = axios.create({
   baseURL: baseUrl
 });
 
-/* ===========================
-   REQUEST INTERCEPTOR
-   Sisipkan token otomatis
-=========================== */
-// Menambahkan interceptor request ke axios instance
-// Kode di sini akan dijalankan SETIAP KALI sebelum request dikirim
+// 🔐 REQUEST INTERCEPTOR
+// Mendaftarkan interceptor request Axios
+//  Code di dalamnya selalu dieksekusi sebelum request dikirim
 api.interceptors.request.use(
-  async (config) => {
-    const { isTokenReady, token } = useAuthStore.getState();
-    // ⏳ Jika token BELUM siap (app baru load)
-    // Kita TUNGGU sebentar agar initAuth() selesai
-    // Ini mencegah request jalan sebelum token tersedia
-    if (!isTokenReady) {
-      await new Promise((r) => setTimeout(r, 0));
-    }
-    // Jika token tersedia
-    // Tambahkan Authorization header ke request
+  (config) => {
+    const token = useAuthStore.getState().token; // Mengambil token terbaru dari Zustand store
+
     if (token) {
-      config.headers = {
-        ...config.headers, // pertahankan header lain
-        Authorization: `Bearer ${token}` // inject token ke header
-      };
+      config.headers.Authorization = `Bearer ${token}`; // Menyisipkan token ke header HTTP // Format wajib untuk API berbasis Bearer Token
     }
 
     return config;
   },
-  // Jika terjadi error sebelum request dikirim
-  // langsung lempar error ke pemanggil
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error) // Jika terjadi error sebelum request terkirim → lempar error ke pemanggil
 );
-
-export default api;
 
 /* ===========================
    RESPONSE INTERCEPTOR
    Tangani Unauthenticated
 =========================== */
-// Kode ini dijalankan SETELAH response diterima
+// Mendaftarkan interceptor response Axios
 api.interceptors.response.use(
-  (response) => response, // Jika response sukses (status 2xx)  // langsung kembalikan response tanpa diubah
+  (response) => response,
+  //   Mengecek kondisi khusus
+  // Status 401 Unauthorized
+  // Pesan backend mengandung kata Unauthenticated
   (error) => {
-    // Cek apakah:
-    // 1. Status HTTP = 401 (Unauthorized)
-    // 2. Pesan error mengandung kata "unauthenticated"
     if (error.response?.status === 401 && error.response?.data?.message?.toLowerCase().includes('unauthenticated')) {
-      // Hapus token dari store dan cookie
-      // Ini artinya token benar-benar tidak valid / expired
-      useAuthStore.getState().clearAuth();
-      window.location.replace('/login'); // Redirect paksa ke halaman login
+      useAuthStore.getState().clearAuth(); //Menghapus token dari: Zustand store,localStorage
+      window.location.href = '/login'; // Redirect paksa ke halaman login
     }
-    // Lempar error ke pemanggil
-    // Supaya halaman bisa tetap handle error jika perlu
-    return Promise.reject(error);
+
+    return Promise.reject(error); // Tetap lempar error ke pemanggil API
   }
 );
-
-// // Set Authorization header secara global
-// const setAuthHeader = (token) => {
-//   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-// };
 
 //  get data
 export const fetchData = async (endpoint, token) => {
@@ -125,3 +99,5 @@ export const logout = async (endpoint, token) => {
     throw error;
   }
 };
+
+export default api;
