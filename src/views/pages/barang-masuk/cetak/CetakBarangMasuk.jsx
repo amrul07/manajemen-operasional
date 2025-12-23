@@ -50,10 +50,10 @@ export default function CetakBarangMasuk() {
         setData(detail);
 
         // simpan ke IndexedDB
-        await set(`barangMasuk-${id}`, detail);
+        await set(`cetakbarangMasuk-${id}`, detail);
       } else {
         // OFFLINE → Ambil dari IndexedDB
-        const cached = await get(`barangMasuk-${id}`);
+        const cached = await get(`cetakbarangMasuk-${id}`);
 
         if (cached) {
           setData(cached);
@@ -65,7 +65,7 @@ export default function CetakBarangMasuk() {
       console.log('Error load:', err);
 
       // Jika error API → coba fallback ke IndexedDB
-      const cached = await get(`barangMasuk-${id}`);
+      const cached = await get(`cetakbarangMasuk-${id}`);
       if (cached) {
         setData(cached);
       }
@@ -87,6 +87,7 @@ export default function CetakBarangMasuk() {
 
     html2pdf().set(opt).from(element).save();
   };
+
 
   return (
     <Card sx={{ p: 4 }}>

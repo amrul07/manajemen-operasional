@@ -62,7 +62,7 @@ const MainRoutes = {
       element: <DetailAbsensi />
     },
     {
-      path: 'data-absensi/cetak/:id',
+      path: 'data-absensi/cetak/:tahun/:bulan',
       element: <CetakDataAbsensi />
     },
     {

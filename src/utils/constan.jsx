@@ -4,6 +4,11 @@ export const menuItem = [
   { id: 3, label: 'Tampilkan 15 data', value: 15 }
 ];
 
+export const menuStatus = [
+  { label: 'Hadir', value: 'Hadir' },
+  { label: 'Terlambat', value: 'Terlambat' }
+];
+
 // export const jabatan = [
 //   { id: 1, label: 'Tampilkan 5 data', value: 5 },
 //   { id: 2, label: 'Tampilkan 10 data', value: 10 },

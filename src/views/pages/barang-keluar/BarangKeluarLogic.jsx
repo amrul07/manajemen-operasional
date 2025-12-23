@@ -1,4 +1,4 @@
-// src/path/to/UserLogic.jsx
+
 import React, { useEffect, useState } from 'react';
 import { fetchData, postData } from '../../../api/api';
 import useGlobalStore from '../../../store/globalStore';

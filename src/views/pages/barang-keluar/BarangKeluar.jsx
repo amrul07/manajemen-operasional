@@ -26,16 +26,13 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import { dataAbsensi, dataBarangKeluar, dataBarangMasuk, dataPermitaanBarang, dataStok, menuItem } from '../../../utils/constan';
+import {  menuItem } from '../../../utils/constan';
 import CustomButton from '../../../ui-component/button/CustomButton';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateIcon from '@mui/icons-material/Create';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { IconExclamationCircle, IconPrinter, IconShoppingCartPlus, IconTrash } from '@tabler/icons-react';
 import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import Sukses from '../../../assets/sukses.svg';
 import BarangKeluarLogic from './BarangKeluarLogic';
 
 export default function BarangKeluar() {
@@ -309,6 +306,17 @@ export default function BarangKeluar() {
           </ButtonStyle>
           <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} onClick={func.handleCloseModal}>
             Batal
+          </ButtonStyle>
+        </Stack>
+      </CustomModal>
+      {/* modal succes */}
+      <CustomModal open={value.modal.succes} handleClose={func.handleCloseModal}>
+        <Stack sx={{ alignItems: 'center', gap: 2 }}>
+          <img src={Sukses} alt="sukses" style={{ width: '145px', height: '145px' }} />
+          <Poppins sx={{ fontSize: '24px', fontWeight: 600 }}>Sukses!</Poppins>
+          <Poppins sx={{ fontWeight: 400 }}>Berhasil Menyimpan Data</Poppins>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleCloseModal}>
+            Kembali
           </ButtonStyle>
         </Stack>
       </CustomModal>

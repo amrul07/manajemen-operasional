@@ -1,4 +1,5 @@
 import {
+  Alert,
   Autocomplete,
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   Pagination,
   Paper,
   Select,
+  Snackbar,
   Stack,
   Table,
   TableBody,
@@ -23,7 +25,7 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import { dataAbsensi, menuItem } from '../../../utils/constan';
+import { dataAbsensi, menuItem, menuStatus } from '../../../utils/constan';
 import CustomButton from '../../../ui-component/button/CustomButton';
 import { IconArrowBadgeRight, IconArrowBigRight, IconArrowNarrowRight, IconPrinter } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -57,15 +59,14 @@ export default function DataAbsensi() {
                 >
                   <Select
                     size="small"
-                    value={value.dataDropdown}
+                    value={value.dataDropdown || ''}
                     onChange={(e) => func.handleChangeDataDropdown(e.target.value)}
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
-                    {/*  */}
                     {value.dataTanggal.map((res) => (
-                      <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
+                      <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} key={res.id} value={res}>
                         {res.label}
                       </MenuItem>
                     ))}
@@ -94,7 +95,7 @@ export default function DataAbsensi() {
                         opacity: 0.8
                       }
                     }}
-                    // onClick={onClick}
+                    onClick={func.handleModalCetak}
                   >
                     <IconPrinter />
                     <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
@@ -119,6 +120,11 @@ export default function DataAbsensi() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
+              {value.data.length === 0 && (
+                 <StyledTableRow>
+                  <StyledTableCell colSpan={5}>Tidak ada data</StyledTableCell>
+                </StyledTableRow>
+              )}
               {value.loadingPagination ? (
                 <StyledTableRow>
                   <StyledTableCell colSpan={5}>Loading...</StyledTableCell>
@@ -156,7 +162,7 @@ export default function DataAbsensi() {
                             color={'#ffc107'}
                             hover={'#ffc107'}
                             label={<CreateIcon style={{ fontSize: '18px' }} />}
-                            // onClick={() => func.handleEdit(row.id)}
+                            onClick={() => func.handleEditStatus(row.id)}
                           />
                         </Stack>
                       </StyledTableCell>
@@ -193,7 +199,7 @@ export default function DataAbsensi() {
         </Stack>
       </Card>
       {/* modal edit */}
-      <CustomModal open={false}>
+      <CustomModal open={value.modal.data}>
         <Grid container spacing={2}>
           <Grid size={12}>
             <Poppins sx={{ fontWeight: 500 }}>* Pilih Status</Poppins>
@@ -207,12 +213,12 @@ export default function DataAbsensi() {
                 borderRadius: '12px',
                 fontFamily: `'Poppins', sans-serif`
               }}
-              // value={value.newData.jabatan || null}
-              // onChange={func.handleChangeJabatan}
+              value={value.newStatus || ''}
+              onChange={func.handleChange}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  name="jabatan"
+                  name="status"
                   sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
                   InputProps={{
                     ...params.InputProps,
@@ -226,16 +232,27 @@ export default function DataAbsensi() {
         </Grid>
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleSave}>
             Simpan
+            {value.loading === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  position: 'absolute',
+                  mt: '5px',
+                  ml: '5px'
+                }}
+              />
+            )}
           </ButtonStyle>
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} onClick={func.handleCloseModal}>
             Batal
           </ButtonStyle>
         </Stack>
       </CustomModal>
       {/* modal cetak laporan */}
-      <CustomModal open={false} handleClose={''}>
+      <CustomModal open={value.modal.cetak} handleClose={func.handleCloseModal}>
         <Grid container spacing={2}>
           <Grid size={12}>
             {/* pilih bulan */}
@@ -263,12 +280,12 @@ export default function DataAbsensi() {
                 borderRadius: '12px',
                 fontFamily: `'Poppins', sans-serif`
               }}
-              // value={value.newData.jabatan || null}
-              // onChange={func.handleChangeJabatan}
+              value={value.paramsCetak.bulan || ''}
+              onChange={func.handleChangeBulan}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  name="jabatan"
+                  name="bulan"
                   sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
                   InputProps={{
                     ...params.InputProps,
@@ -287,23 +304,47 @@ export default function DataAbsensi() {
                 width: '100%',
                 borderRadius: '12px'
               }}
+              type="number"
               size="small"
               placeholder="Masukkan Tahun"
-              // value={value.name}
-              // onChange={(e) => value.setName(e.target.value)}
+              name="tahun"
+              value={value.paramsCetak.tahun}
+              onChange={func.handleChangeTahun}
             ></OutlinedInput>
           </Grid>
         </Grid>
         {/* button */}
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-around', gap: 2, mt: 4 }}>
-          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'}>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleCetak}>
             Cetak
           </ButtonStyle>
-          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'}>
+          <ButtonStyle width={'45%'} bg={'red'} color={'#fff'} hover={'#af0202ff'} onClick={func.handleCloseModal}>
             Batal
           </ButtonStyle>
         </Stack>
       </CustomModal>
+      {/* modal succes */}
+      <CustomModal open={value.modal.succes} handleClose={func.handleCloseModal}>
+        <Stack sx={{ alignItems: 'center', gap: 2 }}>
+          <img src={Sukses} alt="sukses" style={{ width: '145px', height: '145px' }} />
+          <Poppins sx={{ fontSize: '24px', fontWeight: 600 }}>Sukses!</Poppins>
+          <Poppins sx={{ fontWeight: 400 }}>Berhasil Menyimpan Data</Poppins>
+          <ButtonStyle width={'45%'} height={'40px'} bg={'#1e88e5'} color={'#fff'} hover={'#1b71bcff'} onClick={func.handleCloseModal}>
+            Kembali
+          </ButtonStyle>
+        </Stack>
+      </CustomModal>
+      {/* Snackbar */}
+      <Snackbar
+        open={value.snackbar.open}
+        // autoHideDuration={5000}
+        onClose={func.closeSnackbar}
+        // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={func.closeSnackbar} severity="error" variant="filled" sx={{ width: '100%', fontFamily: `'Poppins', sans-serif` }}>
+          {value.snackbar.message}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 }

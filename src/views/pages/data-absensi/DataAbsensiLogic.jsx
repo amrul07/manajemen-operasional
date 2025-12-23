@@ -1,14 +1,14 @@
-// src/path/to/UserLogic.jsx
 import React, { useEffect, useState } from 'react';
 import { fetchData, postData } from '../../../api/api';
 import useGlobalStore from '../../../store/globalStore';
 import { get, set } from 'idb-keyval'; // idb-keyval untuk IndexedDB ringan
+import { useNavigate } from 'react-router-dom';
 
 // --------------------
 // Offline storage keys
 // --------------------
 const OFFLINE_DATA_ABSENSI = 'offline-data-absensi'; // cache data absensi
-const OFFLINE_DROPDOWN_ABSENSI = 'offline-stok'; // cache data dropdown
+const OFFLINE_DROPDOWN_ABSENSI = 'offline-tanggal-absensi'; // cache data dropdown
 const OFFLINE_QUEUE = 'offline-queue'; // antrian operasi (update) saat offline
 
 // --------------------
@@ -31,6 +31,7 @@ const removeQueueItemByLocalId = async (localId) => {
 // Main hook / logic
 // --------------------
 export default function DataAbsensiLogic() {
+  const router = useNavigate();
   // UI / pagination state
   const [data, setData] = useState([]); // data yang ditampilkan di tabel
   const [dataTanggal, setDataTanggal] = useState([]); // data tanggal dropdown
@@ -44,12 +45,13 @@ export default function DataAbsensiLogic() {
   // form / modal state
   const [newStatus, setNewStatus] = useState(''); // status hadir
   const [statusApprove, setStatusApprove] = useState(''); // status approve izin/sakit
-  const [modal, setModal] = useState({ data: false, succes: false }); // modal flags
+  const [modal, setModal] = useState({ data: false, succes: false, cetak: false }); // modal flags
   const [editingId, setEditingId] = useState(null); // id yang sedang diedit
   const [ApproveMode, setApproveMode] = useState(false); // mode edit true/false
 
   // misc UI
   const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+  const [paramsCetak, setParamsCetak] = useState({ bulan: '', tahun: '' });
   const [loading, setLoading] = useState(false);
   const [loadingGet, setLoadingGet] = useState(true);
   const [loadingPagination, setLoadingPagination] = useState(false);
@@ -60,7 +62,7 @@ export default function DataAbsensiLogic() {
 
   // tanggal
   const today = new Date().toLocaleDateString('id-ID', {
-    day: 'numeric',
+    day: '2-digit',
     month: 'long',
     year: 'numeric'
   });
@@ -85,6 +87,7 @@ export default function DataAbsensiLogic() {
     let mounted = true;
 
     const init = async () => {
+
       // load stok dulu (biar dropdown langsung ada)
       const cachedStok = await getOfflineDropdownAbsensi();
       setDataTanggal(cachedStok);
@@ -107,7 +110,7 @@ export default function DataAbsensiLogic() {
       }
 
       // jika online, fetch data pertama kali dari server
-      await getData();
+      // await getData();
     };
 
     init();
@@ -126,18 +129,22 @@ export default function DataAbsensiLogic() {
 
   // --------------------
   // EFFECT: refetch on pagination / search change
+  useEffect(() => {
+    getDataTangal();
+  }, []);
   // --------------------
   useEffect(() => {
-    // whenever page/itemsPerPage/search changes, re-get data
+    if (!dataDropdown) return;
     getData();
-    getDataTangal();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemsPerPage, page, searchQuery]);
+  }, [dataDropdown, page, itemsPerPage, searchQuery]);
 
   useEffect(() => {
-    const dropdown = dataTanggal.find((item) => item === today);
+    if (!dataTanggal?.length) return;
+
+    const dropdown = dataTanggal.find((item) => item.label === today) || dataTanggal[0];
+
     setDataDropdown(dropdown);
-  }, [dataTanggal]);
+  }, [dataTanggal, today]);
 
   // --------------------
   // Online/offline handlers
@@ -181,10 +188,17 @@ export default function DataAbsensiLogic() {
       return;
     }
 
+    if (!isOnline) return;
+
+    if (!dataDropdown?.label) {
+      console.log('getData dibatalkan: dataDropdown belum siap');
+      return;
+    }
     // online: ambil dari API
     try {
       setLoadingPagination(true);
-      const res = await fetchData(`/data-absensi/on-day?perpage=${itemsPerPage}&page=${page}&search=${searchQuery}&date=${dataDropdown}`);
+      const dateParam = encodeURIComponent(dataDropdown.label);
+      const res = await fetchData(`/data-absensi/on-day?perpage=${itemsPerPage}&page=${page}&search=${searchQuery}&date=${dateParam}`);
       const serverData = res?.data || [];
       const sorted = sortNewestFirst(serverData); // urut terbaru dulu
       setData(sorted); // tampilkan di UI
@@ -236,17 +250,6 @@ export default function DataAbsensiLogic() {
     }
   };
 
-  // ketika data dropdown di pilih
-  const handleChangeDropdown = (event) => {
-    const id = event.target.value;
-    const selectedItem = dataTanggal.find((item) => item.id === id);
-    if (!selectedItem) return;
-    setDataDropdown(selectedItem);
-    setNewStatus((prev) => ({ ...prev, barang_id: id }));
-  };
-
-  console.log({ dataDropdown });
-
   // --------------------
   // syncOfflineQueue: proses antrian saat kembali online
   // Struktur item queue: { localId, action: 'create'|'update' data?, id?, timestamp }
@@ -266,7 +269,7 @@ export default function DataAbsensiLogic() {
           formData.append(k, v);
         });
 
-        formData.append('_method', 'PUT');
+        formData.append('_method', 'PATCH');
 
         // 🔀 tentukan endpoint berdasarkan type
         let endpoint = '';
@@ -325,6 +328,7 @@ export default function DataAbsensiLogic() {
           queue.push({
             localId,
             action: 'update',
+            type: 'approve-izin-sakit',
             data: {
               id: editingId,
               status: statusApprove
@@ -334,7 +338,7 @@ export default function DataAbsensiLogic() {
           await saveQueue(queue);
 
           // beri feedback & close modal
-          setModal((prev) => ({ ...prev, succes: true, data: false }));
+          setModal((prev) => ({ ...prev, succes: true, data: false, cetak: false }));
         } catch (err) {
           console.error('Gagal menyimpan edit offline', err);
           setSnackbar({ open: true, message: 'Gagal menyimpan perubahan (offline).' });
@@ -345,7 +349,6 @@ export default function DataAbsensiLogic() {
           //   setNewStatus('');
           setStatusApprove('');
           setLoading(false);
-          setDataDropdown(null);
         }
         return;
       }
@@ -369,7 +372,6 @@ export default function DataAbsensiLogic() {
         setStatusApprove('');
         setModal((prev) => ({ ...prev, data: false }));
         setLoading(false);
-        setDataDropdown(null);
       }
 
       return;
@@ -403,6 +405,7 @@ export default function DataAbsensiLogic() {
         queue.push({
           localId,
           action: 'update',
+          type: 'update-status',
           data: {
             id: editingId,
             status: newStatus
@@ -412,7 +415,7 @@ export default function DataAbsensiLogic() {
         await saveQueue(queue);
 
         // beri feedback & close modal
-        setModal((prev) => ({ ...prev, succes: true, data: false }));
+        setModal((prev) => ({ ...prev, succes: true, data: false, cetak: false }));
       } catch (err) {
         console.error('Gagal menyimpan edit offline', err);
         setSnackbar({ open: true, message: 'Gagal menyimpan perubahan (offline).' });
@@ -420,7 +423,6 @@ export default function DataAbsensiLogic() {
         setEditingId(null);
         setNewStatus('');
         setLoading(false);
-        setDataDropdown(null);
       }
       return;
     }
@@ -444,7 +446,6 @@ export default function DataAbsensiLogic() {
       setNewStatus('');
       setModal((prev) => ({ ...prev, data: false }));
       setLoading(false);
-      setDataDropdown(null);
     }
   };
 
@@ -454,11 +455,9 @@ export default function DataAbsensiLogic() {
   const handleModal = () => setModal((prev) => ({ ...prev, data: true })); // buka modal add/edit
   const handleCloseModal = () => {
     // tutup modal dan reset form
-    setModal({ data: false, succes: false });
+    setModal({ data: false, succes: false, cetak: false });
     setApproveMode(false);
     setEditingId(null);
-    setNewStatus();
-    setDataDropdown(null);
   };
 
   //   handle approve izin/sakit
@@ -469,9 +468,7 @@ export default function DataAbsensiLogic() {
     // const selectedDataTanggal = dataTanggal.find((item) => item.id === selectedItem.id);
 
     if (!selectedItem) return;
-    setStatusApprove({
-      status: selectedItem.status || ''
-    });
+    setStatusApprove(selectedItem.status || '');
 
     setModal((prev) => ({ ...prev, data: true }));
     setApproveMode(true);
@@ -484,21 +481,30 @@ export default function DataAbsensiLogic() {
     // const selectedDataTanggal = dataTanggal.find((item) => item.id === selectedItem.id);
 
     if (!selectedItem) return;
-    setNewStatus({
-      status: selectedItem.status || ''
-    });
 
+    setNewStatus(selectedItem.status || '');
     setModal((prev) => ({ ...prev, data: true }));
   };
 
-  const handleChange = (e) => setNewStatus({ ...newStatus, [e.target.name]: e.target.value }); // input change
-  // const handleChangejumlah = (event, newValue) => setNewStatus((prev) => ({ ...prev, jumlah: newValue ?? '' })); // autocomplete change
+  const handleModalCetak = () => {
+    setModal((prev) => ({ ...prev, cetak: true }));
+  };
+
+  //   cetak
+  const handleCetak = () => {
+    router(`/data-absensi/cetak/${paramsCetak.tahun}/${paramsCetak.bulan}`);
+  };
+
+  const handleChange = (event, newValue) => setNewStatus(newValue); // autocomplete change
+  const handleChangeTahun = (e) => setParamsCetak((prev) => ({ ...prev, tahun: e.target.value })); // input change
+
+  const handleChangeBulan = (event, newValue) => setParamsCetak((prev) => ({ ...prev, bulan: newValue })); // autocomplete tahun bulan cetak change
+
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;
     setSnackbar({ open: false, message: '' });
   }; // snackbar close
   const handleChangePage = (event, newPage) => setPage(newPage); // pagination
-
 
   //   data dropdown change
   const handleChangeDataDropdown = (value) => {
@@ -527,6 +533,7 @@ export default function DataAbsensiLogic() {
       isOnline, // expose status bila perlu di UI
       dataTanggal,
       dataDropdown,
+      paramsCetak
     },
     func: {
       handleChange,
@@ -539,7 +546,10 @@ export default function DataAbsensiLogic() {
       handleChangePage,
       handleChangeDataDropdown,
       handleSave,
-      handleChangeDropdown
+      handleModalCetak,
+      handleChangeTahun,
+      handleChangeBulan,
+      handleCetak
     }
   };
 }
