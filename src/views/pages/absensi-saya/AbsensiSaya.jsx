@@ -120,11 +120,7 @@ export default function AbsensiSaya() {
             {/* izin/sakit */}
             <Grid size={{ xs: 6, sm: 4 }}>
               <Stack sx={menuItemStyle} onClick={func.handleModalIzin}>
-                {value.loadingIzin ? (
-                  <CircularProgress size={38} sx={{ color: '#1e88e5' }} />
-                ) : (
-                  <MedicalInformationIcon sx={{ fontSize: 38, mb: 1 }} />
-                )}
+                <MedicalInformationIcon sx={{ fontSize: 38, mb: 1 }} />
                 <Poppins sx={{ fontSize: '16px', fontWeight: 600 }}>Izin / Sakit</Poppins>
               </Stack>
             </Grid>
@@ -136,8 +132,86 @@ export default function AbsensiSaya() {
       <CustomModal open={value.modal.izin} handleClose={func.handleCloseModal}>
         <Grid container spacing={2}>
           <Grid size={12}>
-            {/* Alasan tidak hadir */}
-            {/* <Poppins sx={{ fontWeight: 500 }}>* Alasan Tidak Hadir</Poppins>
+            {/* bukti */}
+            <Poppins sx={{ fontWeight: 500 }}>* Bukti</Poppins>
+            <Grid container spacing={2}>
+              <Grid size={6}>
+                <Stack
+                  sx={{
+                    border: '1px dashed #576974',
+                    borderRadius: '8px',
+                    // width: { xs: '50%', md: '45%' },
+                    mt: 1
+                  }}
+                >
+                  <img
+                    src={IconImage}
+                    width={50}
+                    style={{
+                      // width: "50px",
+                      // margin: "0 auto",
+                      margin: 'auto',
+                      marginTop: '22px'
+                    }}
+                    alt="ta"
+                  />
+                  <Poppins
+                    sx={{
+                      width: '80%',
+                      alignSelf: 'center',
+                      color: '#576974',
+                      textAlign: 'center'
+                    }}
+                  >
+                    Tarik dan lepas foto di sini
+                  </Poppins>
+
+                  <ButtonStyle
+                    mt={'30px'}
+                    // mb={"20px"}
+                    width={'100%'}
+                    height={'35px'}
+                    bg={'#1e88e5'}
+                    color={'#fff'}
+                    hover={'#1b71bcff'}
+                    onClick={func.handleChooseFileClick}
+                    value={value.izin.image_proof}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={func.handleImageChange}
+                      // value={value.izin.image_proof}
+                    />
+                    Pilih File
+                  </ButtonStyle>
+                </Stack>
+              </Grid>
+              <Grid size={6}>
+                <Stack sx={{ mt: 1 }}>
+                  {value.previewImage ? (
+                    <Stack sx={{ position: 'relative' }}>
+                      <img style={{ borderRadius: '8px' }} src={value.previewImage} alt={''} width={'100%'} height={180} />
+                      <Stack
+                        sx={{
+                          position: 'absolute',
+                          alignSelf: 'end',
+                          cursor: 'pointer',
+                          p: 1
+                        }}
+                      >
+                        <IconTrash onClick={func.removeImage} color="red" size={'20px'} />
+                      </Stack>
+                    </Stack>
+                  ) : (
+                    <p style={{ fontFamily: `'Poppins', sans-serif` }}></p>
+                  )}
+                </Stack>
+              </Grid>
+            </Grid>
+            {/* kategori */}
+            <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Kategori</Poppins>
             <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -145,112 +219,24 @@ export default function AbsensiSaya() {
               size="small"
               sx={{
                 mt: '5px',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 fontFamily: `'Poppins', sans-serif`
               }}
-              // value={value.gender}
-              onChange={(event, v) => {
-                value.setGender(v);
-              }}
+              value={value.izin.kategori || ''}
+              onChange={func.handleChangeKategori}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
+                  name="kategori"
+                  sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '8px' }}
                   InputProps={{
                     ...params.InputProps,
-                    sx: { fontFamily: `'Poppins', sans-serif` }
+                    sx: { fontFamily: `'Poppins', sans-serif`, borderRadius: '8px' }
                   }}
-                  placeholder={'Masukkan Alasan'}
+                  placeholder={'Pilih Kategori'}
                 />
               )}
-            /> */}
-            {/* bukti */}
-            <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Bukti</Poppins>
-            <Stack
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Stack
-                sx={{
-                  border: '1px dashed #576974',
-                  borderRadius: '8px',
-                  width: { xs: '50%', md: '45%' },
-                  mt: 1
-                }}
-              >
-                <img
-                  src={IconImage}
-                  width={50}
-                  style={{
-                    // width: "50px",
-                    // margin: "0 auto",
-                    margin: 'auto',
-                    marginTop: '22px'
-                  }}
-                  alt="ta"
-                />
-                <Poppins
-                  sx={{
-                    width: '80%',
-                    alignSelf: 'center',
-                    color: '#576974',
-                    textAlign: 'center'
-                  }}
-                >
-                  Tarik dan lepas foto di sini
-                </Poppins>
-
-                <ButtonStyle
-                  mt={'20px'}
-                  // mb={"20px"}
-                  width={'100%'}
-                  height={'35px'}
-                  bg={'#1e88e5'}
-                  color={'#fff'}
-                  hover={'#1b71bcff'}
-                  onClick={func.handleChooseFileClick}
-                  value={value.izin.image_proof}
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={func.handleImageChange}
-                    // value={value.izin.image_proof}
-                  />
-                  Pilih File
-                </ButtonStyle>
-              </Stack>
-              <Stack
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  gap: 1
-                }}
-              >
-                {value.previewImage ? (
-                  <Stack sx={{ position: 'relative' }}>
-                    <img style={{ borderRadius: '8px' }} src={value.previewImage} alt={''} width={180} height={200} />
-                    <Stack
-                      sx={{
-                        position: 'absolute',
-                        alignSelf: 'end',
-                        cursor: 'pointer',
-                        p: 1
-                      }}
-                    >
-                      <IconTrash onClick={func.removeImage} color="red" size={'20px'} />
-                    </Stack>
-                  </Stack>
-                ) : (
-                  <p style={{ fontFamily: `'Poppins', sans-serif` }}></p>
-                )}
-              </Stack>
-            </Stack>
+            />
             {/* keterangan */}
             <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Keterangan</Poppins>
             <OutlinedInput
@@ -265,7 +251,7 @@ export default function AbsensiSaya() {
               size="small"
               placeholder="Masukkan Keterangan"
               value={value.izin.keterangan}
-              onChange={func.handleChangeIzin}
+              onChange={func.handleChangeKeterangan}
             ></OutlinedInput>
           </Grid>
         </Grid>

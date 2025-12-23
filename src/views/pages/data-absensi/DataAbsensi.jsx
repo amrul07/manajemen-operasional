@@ -121,7 +121,7 @@ export default function DataAbsensi() {
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               {value.data.length === 0 && (
-                 <StyledTableRow>
+                <StyledTableRow>
                   <StyledTableCell colSpan={5}>Tidak ada data</StyledTableCell>
                 </StyledTableRow>
               )}
@@ -154,7 +154,7 @@ export default function DataAbsensi() {
                             hover={'#1e88e5'}
                             color={'#1e88e5'}
                             label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />}
-                            onClick={() => router(`/data-absensi/detail/${row.id}`)}
+                            onClick={() => func.handleApprove(row.id)}
                           />
                           {/* button pemesanan */}
                           <CustomButton

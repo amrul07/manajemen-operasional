@@ -68,8 +68,8 @@ karyawan biasa : - hak akses
                     - password hanya muncul ketika tambah data✅
                     - api✅
 
-9.absensi saya :
--tabel absensi : - api
+9.absensi saya :✅
+-tabel absensi : - api✅
                  - validasi
 
 10.dashboard : - ui✅

@@ -40,7 +40,7 @@ export default function AbsensiSayaLogic() {
 
   // form / modal state
   const [newData, setNewData] = useState({ latitude: '', longitude: '', tanggal: '', waktu: '' }); // form
-  const [izin, setIzin] = useState({ image_proof: '', keterangan: '' });
+  const [izin, setIzin] = useState({ image_proof: '', keterangan: '', kategori: '' });
   const [modal, setModal] = useState({ data: false, succes: false, izin: false }); // modal flags
 
   // misc UI
@@ -214,7 +214,6 @@ export default function AbsensiSayaLogic() {
     return new File([u8arr], filename, { type: mime });
   };
 
-  console.log({ data });
   // --------------------
   // getData: ambil data (online) atau fallback ke IndexedDB (offline)
   // --------------------
@@ -533,7 +532,8 @@ export default function AbsensiSayaLogic() {
       const payload = {
         // latitude: location.latitude,
         // longitude: location.longitude,
-        keterangan: izin.keterangan
+        keterangan: izin.keterangan,
+        kategori: izin.kategori
         // tanggal: getDate(),
         // waktu: getTime()
       };
@@ -553,6 +553,7 @@ export default function AbsensiSayaLogic() {
           ...payload,
           imageBase64: izin.image_proof, // SIMPAN BASE64
           filename: selectedFile.name,
+          kategori: izin.kategori,
           isOffline: true
         };
 
@@ -576,12 +577,9 @@ export default function AbsensiSayaLogic() {
 
       // ================= ONLINE =================
       const formData = new FormData();
-      // formData.append('latitude', payload.latitude);
-      // formData.append('longitude', payload.longitude);
-      // formData.append('tanggal', payload.tanggal);
-      // formData.append('waktu', payload.waktu);
       formData.append('keterangan', payload.keterangan);
       formData.append('image_proof', selectedFile);
+      formData.append('kategori', payload.kategori);
 
       await postData('/absensi/izin-sakit', formData);
       await getData();
@@ -594,9 +592,10 @@ export default function AbsensiSayaLogic() {
       setSnackbar({ open: true, message: pesanError });
     } finally {
       setLoadingIzin(false);
-      setIzin({ image_proof: '', keterangan: '' });
+      setIzin({ image_proof: '', keterangan: '', kategori: '' });
       setSelectedFile(null);
       setPreviewImage(null);
+      setModal((prev) => ({ ...prev, data: false }));
     }
   };
 
@@ -619,10 +618,12 @@ export default function AbsensiSayaLogic() {
 
   // handle change clockIn & clockOut
   const handleChange = (e) => setNewData({ ...newData, [e.target.name]: e.target.value }); // input change
-  // handleChange Izin/sakit
-  const handleChangeIzin = (e) => {
+  // handleChange keterangan Izin/sakit
+  const handleChangeKeterangan = (e) => {
     setIzin((prev) => ({ ...prev, keterangan: e.target.value }));
   };
+  // handleChange kategori Izin/sakit
+  const handleChangeKategori = (event, newValue) => setIzin((prev) => ({ ...prev, kategori: newValue })); // autocomplete kategori izin/sakit
   // const handleChangewaktu = (event, newValue) => setNewData((prev) => ({ ...prev, waktu: newValue ?? '' })); // autocomplete change
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;
@@ -710,7 +711,8 @@ export default function AbsensiSayaLogic() {
       handleClockIn,
       handleClockOut,
       handleModalIzin,
-      handleChangeIzin,
+      handleChangeKeterangan,
+      handleChangeKategori,
       handleChooseFileClick,
       handleImageChange,
       handleDrop,
