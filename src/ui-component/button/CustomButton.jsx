@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomButton = ({ label, onClick, bg, color, hover, colorHover }) => {
+const CustomButton = ({ label, onClick, bg, color, hover, colorHover,display }) => {
   // Mengatur state untuk hover effect
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -35,6 +35,7 @@ const CustomButton = ({ label, onClick, bg, color, hover, colorHover }) => {
       style={{
         ...styles.button,
         ...(isHovered ? styles.buttonHover : {}),
+        // display: display
       }}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}

@@ -285,7 +285,6 @@ export default function LaporanBarangMasukLogic() {
     });
   };
 
-  console.log({ idPrint });
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;
     setSnackbar({ open: false, message: '' });

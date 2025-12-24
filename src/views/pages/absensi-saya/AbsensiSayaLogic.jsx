@@ -406,8 +406,6 @@ export default function AbsensiSayaLogic() {
         waktu: getTime()
       };
 
-      console.log(payload);
-
       // ---------------- OFFLINE ----------------
       if (!isOnline) {
         const current = await getOfflineAbsensiSaya();
@@ -467,10 +465,10 @@ export default function AbsensiSayaLogic() {
       const payload = {
         latitude: location.latitude,
         longitude: location.longitude,
-        tanggal: '2025-12-25',
-        // tanggal: getDate(),
-        waktu: '17:05'
-        // waktu: getTime()
+        // tanggal: '2025-12-25',
+        tanggal: getDate(),
+        // waktu: '17:05'
+        waktu: getTime()
       };
 
       // ---------------- OFFLINE ----------------

@@ -34,10 +34,11 @@ import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import Sukses from '../../../assets/sukses.svg';
 import CreateIcon from '@mui/icons-material/Create';
 import DataAbsensiLogic from './DataAbsensiLogic';
+import useGlobalStore from '../../../store/globalStore';
 
 export default function DataAbsensi() {
   const { value, func } = DataAbsensiLogic();
-  const router = useNavigate();
+  const user = useGlobalStore((state) => state.user);
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
@@ -112,7 +113,8 @@ export default function DataAbsensi() {
                 <TableCell
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    display: user !== 'Pimpinan' ? 'none' : '-moz-initial'
                   }}
                 >
                   Aksi
@@ -139,7 +141,7 @@ export default function DataAbsensi() {
                       <StyledTableCell>{row.waktu_checkin}</StyledTableCell>
                       <StyledTableCell>{row.waktu_checkout}</StyledTableCell>
                       <StyledTableCell>{row.status}</StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell sx={{ display: user !== 'Pimpinan' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',

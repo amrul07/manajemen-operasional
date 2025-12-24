@@ -4,6 +4,7 @@ import { lazy } from 'react';
 import MainLayout from '../layout/MainLayout';
 import Loadable from '../ui-component/Loadable';
 import { authLoader } from './Loader';
+import ProtectedRoute from './ProtectedRoute';
 // import DataAbsensi from '../views/pages/data-absensi/DataAbsensi'
 // import BarangKeluar from '../views/pages/barang-keluar/BarangKeluar';
 // import User from '../views/pages/user/User';
@@ -55,35 +56,67 @@ const MainRoutes = {
     },
     {
       path: 'data-absensi',
-      element: <DataAbsensi />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <DataAbsensi />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'data-absensi/detail/:id',
-      element: <DetailAbsensi />
+      element: (
+        <ProtectedRoute roles={['Pimpinan']}>
+          <DetailAbsensi />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'data-absensi/cetak/:tahun/:bulan',
-      element: <CetakDataAbsensi />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <CetakDataAbsensi />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'data-stok',
-      element: <DataStok />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <DataStok />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'data-stok/detail/:id',
-      element: <DetailStok />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <DetailStok />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'data-stok/cetak',
-      element: <CetakDataStok />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <CetakDataStok />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'permintaan-barang',
-      element: <PermintaanBarang />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <PermintaanBarang />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'permintaan-barang/cetak/',
-      element: <CetakPermintaanBarang />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <CetakPermintaanBarang />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'barang-masuk',
@@ -91,7 +124,11 @@ const MainRoutes = {
     },
     {
       path: 'barang-masuk/cetak/:id',
-      element: <CetakBarangMasuk />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <CetakBarangMasuk />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'barang-keluar',
@@ -99,23 +136,43 @@ const MainRoutes = {
     },
     {
       path: 'laporan-barang-masuk',
-      element: <LaporanBarangMasuk />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <LaporanBarangMasuk />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'laporan-barang-masuk/cetak',
-      element: <CetakLaporanBarangMasuk />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <CetakLaporanBarangMasuk />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'laporan-barang-keluar',
-      element: <LaporanBarangKeluar />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Karyawan Pelapor']}>
+          <LaporanBarangKeluar />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'laporan-barang-keluar/cetak',
-      element: <CetakLaporanBarangKeluar />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Karyawan Pelapor']}>
+          <CetakLaporanBarangKeluar />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'user',
-      element: <User />
+      element: (
+        <ProtectedRoute roles={['Pimpinan', 'Staff']}>
+          <User />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'absensi-saya',
@@ -125,27 +182,6 @@ const MainRoutes = {
       path: 'absensi-saya/riwayat-absensi',
       element: <RiwayatAbsensi />
     }
-
-    // {
-    //   path: 'Tes',
-    //   element: <UtilsTes/>
-    // },
-    // {
-    //   path: 'typography',
-    //   element: <UtilsTypography />
-    // },
-    // {
-    //   path: 'color',
-    //   element: <UtilsColor />
-    // },
-    // {
-    //   path: 'shadow',
-    //   element: <UtilsShadow />
-    // },
-    // {
-    //   path: '/sample-page',
-    //   element: <SamplePage />
-    // }
   ]
 };
 

@@ -38,9 +38,12 @@ import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import BarangMasukLogic from './BarangMasukLogic';
 import Sukses from '../../../assets/sukses.svg';
+import useGlobalStore from '../../../store/globalStore';
 
 export default function BarangMasuk() {
   const { value, func } = BarangMasukLogic();
+  const user = useGlobalStore((state) => state.user);
+
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
@@ -55,7 +58,7 @@ export default function BarangMasuk() {
               <TableRow>
                 {/* dropdown tampilan .. data */}
                 <TableCell
-                  colSpan={4}
+                  colSpan={user === 'Karyawan Biasa' ? 10 : 4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
@@ -80,7 +83,8 @@ export default function BarangMasuk() {
                   colSpan={4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
-                    textAlign: 'end'
+                    textAlign: 'end',
+                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
                   }}
                 >
                   <Button
@@ -114,7 +118,15 @@ export default function BarangMasuk() {
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Jumlah Barang</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Sub Kategori</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Tanggal Masuk</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", textAlign: 'center' }}>Aksi</TableCell>
+                <TableCell
+                  sx={{
+                    fontFamily: "`'Poppins', sans-serif`",
+                    textAlign: 'center',
+                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                  }}
+                >
+                  Aksi
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -134,7 +146,7 @@ export default function BarangMasuk() {
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
                       <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.tanggal_masuk}</StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell sx={{ display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',

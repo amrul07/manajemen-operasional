@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { logout, postData } from '../../../api/api';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../../store/authStore';
+import useGlobalStore from '../../../store/globalStore';
 
 export default function UseAuthenticationLogic() {
   const { setToken } = useAuthStore.getState();
-
+  const setUser = useGlobalStore((state) => state.setUser);
   const router = useNavigate();
   const [data, setData] = useState({ no_hp: '', password: '' });
   const [verifikasi, setVerifikasi] = useState({ whatsapp: '', otp: '' });
@@ -57,6 +58,10 @@ export default function UseAuthenticationLogic() {
 
       //send data to server
       const res = await postData(`/login`, formData);
+
+      console.log(res, 'respon');
+      // set role user login
+      setUser(res.jabatan);
 
       //set token
       setToken(res.token);

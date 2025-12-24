@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
@@ -10,10 +10,14 @@ import NavGroup from './NavGroup';
 import menuItems from '../../../menu-items';
 
 import { useGetMenuMaster } from '../../../api/menu';
+import useGlobalStore from '../../../store/globalStore';
+import MenuSkeleton from '../../../ui-component/cards/Skeleton/MenuSkeleton';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 function MenuList() {
+  const user = useGlobalStore((state) => state.user);
+  // const role = user?.jabatan;
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
@@ -38,7 +42,18 @@ function MenuList() {
     }));
   }
 
-  const navItems = menuItems.items.slice(0, lastItemIndex + 1).map((item, index) => {
+  // filter menu berdasarkan role
+  const filteredMenuItems = useMemo(() => {
+    return menuItems.items
+      .filter((item) => !item.roles || item.roles.includes(user))
+      .map((item) => ({
+        ...item,
+        children: item.children ? item.children.filter((child) => !child.roles || child.roles.includes(user)) : []
+      }))
+      .filter((item) => !item.children || item.children.length > 0);
+  }, [user]);
+
+  const navItems = filteredMenuItems.map((item, index) => {
     switch (item.type) {
       case 'group':
         if (item.url && item.id !== lastItemId) {
@@ -69,6 +84,11 @@ function MenuList() {
         );
     }
   });
+
+  // 🔥 GUARD LOADING
+  if (!user) {
+    return <MenuSkeleton />;
+  }
 
   return <Box {...(drawerOpen && { sx: { mt: 1.5 } })}>{navItems}</Box>;
 }

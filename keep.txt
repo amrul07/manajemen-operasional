@@ -10,12 +10,12 @@ karyawan pelapor : - hak akses
 karyawan biasa : - hak akses
 
 
-1. data absensi:
+1. data absensi:✅
 -tabel absensi : -hak akses admin
-                 -api
--filter by hari
--cetak laporan absensi karyawan selama 1 bulan 
--fitur search
+                 -api✅
+-filter by hari✅
+-cetak laporan absensi karyawan selama 1 bulan✅ 
+-fitur search✅
 
 2.data stok :✅
 -tabel data stok : - api✅

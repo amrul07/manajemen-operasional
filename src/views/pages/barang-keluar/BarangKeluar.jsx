@@ -26,7 +26,7 @@ import React from 'react';
 import { StyledTableCell, StyledTableRow } from '../../../ui-component/table/StyledTableCell';
 import { Poppins } from '../../../ui-component/typography/Poppins';
 import { themePagination } from '../../../ui-component/pagination/Pagination';
-import {  menuItem } from '../../../utils/constan';
+import { menuItem } from '../../../utils/constan';
 import CustomButton from '../../../ui-component/button/CustomButton';
 import CreateIcon from '@mui/icons-material/Create';
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -34,9 +34,11 @@ import CustomModal from '../../../ui-component/modal/CustomModal';
 import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 import Sukses from '../../../assets/sukses.svg';
 import BarangKeluarLogic from './BarangKeluarLogic';
+import useGlobalStore from '../../../store/globalStore';
 
 export default function BarangKeluar() {
   const { value, func } = BarangKeluarLogic();
+  const user = useGlobalStore((state) => state.user);
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
@@ -51,7 +53,7 @@ export default function BarangKeluar() {
               <TableRow>
                 {/* dropdown tampilan .. data */}
                 <TableCell
-                  colSpan={4}
+                  colSpan={user === 'Karyawan Biasa' ? 10 : 4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
@@ -76,7 +78,8 @@ export default function BarangKeluar() {
                   colSpan={5}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
-                    textAlign: 'end'
+                    textAlign: 'end',
+                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
                   }}
                 >
                   <Button
@@ -111,7 +114,15 @@ export default function BarangKeluar() {
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Sub Kategori</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Toko Tujuan</TableCell>
                 <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`" }}>Jumlah Barang</TableCell>
-                <TableCell sx={{ fontFamily: "`'Poppins', sans-serif`", textAlign: 'center' }}>Aksi</TableCell>
+                <TableCell
+                  sx={{
+                    fontFamily: "`'Poppins', sans-serif`",
+                    textAlign: 'center',
+                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                  }}
+                >
+                  Aksi
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
@@ -132,7 +143,7 @@ export default function BarangKeluar() {
                       <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.toko_tujuan}</StyledTableCell>
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell sx={{ display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',
@@ -142,6 +153,7 @@ export default function BarangKeluar() {
                             alignItems: 'center'
                           }}
                         >
+                          {/* {user } */}
                           {/* button edit */}
                           <CustomButton
                             bg={'#fff8e1'}
