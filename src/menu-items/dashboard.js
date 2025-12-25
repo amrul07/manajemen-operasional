@@ -10,6 +10,7 @@ const dashboard = {
   id: 'dashboard',
   title: 'Dashboard',
   type: 'group',
+  // roles: ['Pimpinan', 'Staff', 'Karyawan Pelapor', 'Karyawan Biasa'],
   children: [
     {
       id: 'default',
@@ -17,7 +18,8 @@ const dashboard = {
       type: 'item',
       url: '/dashboard/default',
       icon: icons.IconDashboard,
-      breadcrumbs: false
+      breadcrumbs: false,
+      // roles: ['Pimpinan', 'Staff', 'Karyawan Pelapor', 'Karyawan Biasa']
     }
   ]
 };

@@ -38,7 +38,7 @@ import useGlobalStore from '../../../store/globalStore';
 
 export default function BarangKeluar() {
   const { value, func } = BarangKeluarLogic();
-  const user = useGlobalStore((state) => state.user);
+  const role = useGlobalStore((state) => state.role);
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
@@ -53,7 +53,7 @@ export default function BarangKeluar() {
               <TableRow>
                 {/* dropdown tampilan .. data */}
                 <TableCell
-                  colSpan={user === 'Karyawan Biasa' ? 10 : 4}
+                  colSpan={role === 'Karyawan Biasa' ? 10 : 4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
@@ -79,7 +79,7 @@ export default function BarangKeluar() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'end',
-                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' ? 'none' : '-moz-initial'
                   }}
                 >
                   <Button
@@ -118,7 +118,7 @@ export default function BarangKeluar() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'center',
-                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' ? 'none' : '-moz-initial'
                   }}
                 >
                   Aksi
@@ -143,7 +143,7 @@ export default function BarangKeluar() {
                       <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.toko_tujuan}</StyledTableCell>
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
-                      <StyledTableCell sx={{ display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial' }}>
+                      <StyledTableCell sx={{ display: role === 'Karyawan Biasa' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',
@@ -153,7 +153,7 @@ export default function BarangKeluar() {
                             alignItems: 'center'
                           }}
                         >
-                          {/* {user } */}
+                          {/* {role } */}
                           {/* button edit */}
                           <CustomButton
                             bg={'#fff8e1'}

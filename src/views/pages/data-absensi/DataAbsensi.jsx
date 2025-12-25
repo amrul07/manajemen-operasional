@@ -38,7 +38,7 @@ import useGlobalStore from '../../../store/globalStore';
 
 export default function DataAbsensi() {
   const { value, func } = DataAbsensiLogic();
-  const user = useGlobalStore((state) => state.user);
+  const role = useGlobalStore((state) => state.role);
   return (
     // {/* tabel */}
     <Card sx={{ mt: 2 }}>
@@ -114,7 +114,7 @@ export default function DataAbsensi() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'center',
-                    display: user !== 'Pimpinan' ? 'none' : '-moz-initial'
+                    display: role !== 'Pimpinan' ? 'none' : '-moz-initial'
                   }}
                 >
                   Aksi
@@ -141,7 +141,7 @@ export default function DataAbsensi() {
                       <StyledTableCell>{row.waktu_checkin}</StyledTableCell>
                       <StyledTableCell>{row.waktu_checkout}</StyledTableCell>
                       <StyledTableCell>{row.status}</StyledTableCell>
-                      <StyledTableCell sx={{ display: user !== 'Pimpinan' ? 'none' : '-moz-initial' }}>
+                      <StyledTableCell sx={{ display: role !== 'Pimpinan' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',

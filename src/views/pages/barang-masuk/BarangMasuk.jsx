@@ -42,7 +42,7 @@ import useGlobalStore from '../../../store/globalStore';
 
 export default function BarangMasuk() {
   const { value, func } = BarangMasukLogic();
-  const user = useGlobalStore((state) => state.user);
+  const role = useGlobalStore((state) => state.role);
 
   return (
     // {/* tabel */}
@@ -58,7 +58,7 @@ export default function BarangMasuk() {
               <TableRow>
                 {/* dropdown tampilan .. data */}
                 <TableCell
-                  colSpan={user === 'Karyawan Biasa' ? 10 : 4}
+                  colSpan={role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 10 : 4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
@@ -84,7 +84,7 @@ export default function BarangMasuk() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'end',
-                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 'none' : '-moz-initial'
                   }}
                 >
                   <Button
@@ -122,7 +122,7 @@ export default function BarangMasuk() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'center',
-                    display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 'none' : '-moz-initial'
                   }}
                 >
                   Aksi
@@ -146,7 +146,7 @@ export default function BarangMasuk() {
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
                       <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.tanggal_masuk}</StyledTableCell>
-                      <StyledTableCell sx={{ display: user === 'Karyawan Biasa' ? 'none' : '-moz-initial' }}>
+                      <StyledTableCell sx={{ display: role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',

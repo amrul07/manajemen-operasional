@@ -16,8 +16,7 @@ import MenuSkeleton from '../../../ui-component/cards/Skeleton/MenuSkeleton';
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 function MenuList() {
-  const user = useGlobalStore((state) => state.user);
-  // const role = user?.jabatan;
+  const role = useGlobalStore((state) => state.role); // role
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
@@ -45,13 +44,13 @@ function MenuList() {
   // filter menu berdasarkan role
   const filteredMenuItems = useMemo(() => {
     return menuItems.items
-      .filter((item) => !item.roles || item.roles.includes(user))
+      .filter((item) => !item.roles || item.roles.includes(role))
       .map((item) => ({
         ...item,
-        children: item.children ? item.children.filter((child) => !child.roles || child.roles.includes(user)) : []
+        children: item.children ? item.children.filter((child) => !child.roles || child.roles.includes(role)) : []
       }))
       .filter((item) => !item.children || item.children.length > 0);
-  }, [user]);
+  }, [role]);
 
   const navItems = filteredMenuItems.map((item, index) => {
     switch (item.type) {
@@ -86,7 +85,7 @@ function MenuList() {
   });
 
   // 🔥 GUARD LOADING
-  if (!user) {
+  if (role === 'undefined' || !role) {
     return <MenuSkeleton />;
   }
 

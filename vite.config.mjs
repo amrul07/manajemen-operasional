@@ -94,5 +94,15 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://api-backend-asli.com',
+  //       changeOrigin: true,
+  //       secure: false
+  //     }
+  //   }
+  // }
 });

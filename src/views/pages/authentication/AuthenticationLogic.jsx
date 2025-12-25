@@ -6,7 +6,7 @@ import useGlobalStore from '../../../store/globalStore';
 
 export default function UseAuthenticationLogic() {
   const { setToken } = useAuthStore.getState();
-  const setUser = useGlobalStore((state) => state.setUser);
+  const setRole = useGlobalStore((state) => state.setRole);
   const router = useNavigate();
   const [data, setData] = useState({ no_hp: '', password: '' });
   const [verifikasi, setVerifikasi] = useState({ whatsapp: '', otp: '' });
@@ -59,9 +59,8 @@ export default function UseAuthenticationLogic() {
       //send data to server
       const res = await postData(`/login`, formData);
 
-      console.log(res, 'respon');
       // set role user login
-      setUser(res.jabatan);
+      setRole(res.data.jabatan);
 
       //set token
       setToken(res.token);
@@ -87,6 +86,7 @@ export default function UseAuthenticationLogic() {
       // abaikan error logout
     } finally {
       useAuthStore.getState().clearAuth();
+      useGlobalStore.getState().clearRole();
       router('/login');
     }
   };
