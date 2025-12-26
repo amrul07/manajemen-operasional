@@ -47,9 +47,6 @@ export default function BarangMasukLogic() {
     jumlah: '',
     sub_kategori: '',
     tanggal_masuk: '',
-    jumlah: '',
-    sub_kategori: '',
-    tanggal_masuk: ''
   }); // form
   const [modal, setModal] = useState({ data: false, delete: false, succes: false }); // modal flags
   const [deleteId, setDeleteId] = useState(null); // id untuk delete
@@ -312,9 +309,6 @@ export default function BarangMasukLogic() {
             jumlah: '',
             sub_kategori: '',
             tanggal_masuk: '',
-            jumlah: '',
-            sub_kategori: '',
-            tanggal_masuk: ''
           });
           setLoading(false);
         }
@@ -349,9 +343,6 @@ export default function BarangMasukLogic() {
           jumlah: '',
           sub_kategori: '',
           tanggal_masuk: '',
-          jumlah: '',
-          sub_kategori: '',
-          tanggal_masuk: ''
         });
         setModal((prev) => ({ ...prev, data: false }));
         setLoading(false);
@@ -493,9 +484,6 @@ export default function BarangMasukLogic() {
       jumlah: '',
       sub_kategori: '',
       tanggal_masuk: '',
-      jumlah: '',
-      sub_kategori: '',
-      tanggal_masuk: ''
     });
   };
 

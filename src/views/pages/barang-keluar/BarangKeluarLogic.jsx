@@ -334,7 +334,7 @@ export default function BarangKeluarLogic() {
           // reset form state
           setEditMode(false);
           setEditingId(null);
-          setNewData({ barang_id: '', barang_id: '', jumlah: '' });
+          setNewData({  barang_id: '', tanggal_keluar: '', toko_tujuan: '', jumlah: ''});
           setLoading(false);
           setDataDropdown(null);
         }
