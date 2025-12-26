@@ -6,6 +6,7 @@ import {
   Checkbox,
   CircularProgress,
   Grid,
+  InputAdornment,
   MenuItem,
   OutlinedInput,
   Pagination,
@@ -58,7 +59,7 @@ export default function BarangMasuk() {
               <TableRow>
                 {/* dropdown tampilan .. data */}
                 <TableCell
-                  colSpan={role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 10 : 4}
+                  colSpan={role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 10 : 4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
@@ -84,7 +85,7 @@ export default function BarangMasuk() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'end',
-                    display: role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 'none' : '-moz-initial'
                   }}
                 >
                   <Button
@@ -105,7 +106,7 @@ export default function BarangMasuk() {
                     onClick={func.handleModal}
                   >
                     <AddBoxIcon />
-                    <Poppins sx={{ fontWeight: 500 }}>Tambah Data</Poppins>
+                    <Poppins sx={{ fontWeight: 500 }}>Tambah Data </Poppins>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -122,7 +123,7 @@ export default function BarangMasuk() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'center',
-                    display: role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 'none' : '-moz-initial'
                   }}
                 >
                   Aksi
@@ -146,7 +147,7 @@ export default function BarangMasuk() {
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
                       <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.tanggal_masuk}</StyledTableCell>
-                      <StyledTableCell sx={{ display: role === 'Karyawan Biasa' || 'Karyawan Pelapor' ? 'none' : '-moz-initial' }}>
+                      <StyledTableCell sx={{ display: role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',
@@ -257,7 +258,11 @@ export default function BarangMasuk() {
                 borderRadius: '12px'
               }}
               size="small"
-              // type='number'
+              startAdornment={
+                <InputAdornment sx={{ fontFamily: `'Poppins', sans-serif` }} position="start">
+                  Rp.
+                </InputAdornment>
+              }
               placeholder="Masukkan Harga"
               name="harga"
               value={value.newData.harga}
@@ -303,7 +308,7 @@ export default function BarangMasuk() {
                 borderRadius: '12px'
               }}
               size="small"
-              placeholder="Masukkan Tanggal Masuk"
+              placeholder="Contoh: 31-12-2025"
               name="tanggal_masuk"
               value={value.newData.tanggal_masuk}
               onChange={func.handleChange}

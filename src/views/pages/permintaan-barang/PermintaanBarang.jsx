@@ -6,6 +6,7 @@ import {
   Checkbox,
   CircularProgress,
   Grid,
+  InputAdornment,
   OutlinedInput,
   Pagination,
   Paper,
@@ -233,7 +234,7 @@ export default function PermintaanBarang() {
                 borderRadius: '12px'
               }}
               size="small"
-              placeholder="Masukkan Tanggal Permintaan"
+              placeholder="Contoh: 31-12-2025"
               name="tanggal_permintaan"
               value={value.newData.tanggal_permintaan}
               onChange={func.handleChange}
@@ -262,6 +263,11 @@ export default function PermintaanBarang() {
                 width: '100%',
                 borderRadius: '12px'
               }}
+              startAdornment={
+                <InputAdornment sx={{ fontFamily: `'Poppins', sans-serif` }} position="start">
+                  Rp.
+                </InputAdornment>
+              }
               size="small"
               placeholder="Masukkan Modal"
               name="modal"

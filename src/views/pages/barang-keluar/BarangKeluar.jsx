@@ -6,6 +6,7 @@ import {
   Checkbox,
   CircularProgress,
   Grid,
+  InputAdornment,
   MenuItem,
   OutlinedInput,
   Pagination,
@@ -247,6 +248,11 @@ export default function BarangKeluar() {
                 width: '100%',
                 borderRadius: '12px'
               }}
+              startAdornment={
+                <InputAdornment sx={{ fontFamily: `'Poppins', sans-serif` }} position="start">
+                  Rp.
+                </InputAdornment>
+              }
               size="small"
               placeholder="Masukkan Harga"
               value={value.dataDropdown?.harga || ''}
@@ -263,7 +269,7 @@ export default function BarangKeluar() {
                 borderRadius: '12px'
               }}
               size="small"
-              placeholder="Masukkan Tanggal Keluar"
+              placeholder="Contoh: 31-12-2025"
               name="tanggal_keluar"
               value={value.newData.tanggal_keluar}
               onChange={func.handleChange}

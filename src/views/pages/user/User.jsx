@@ -235,7 +235,7 @@ export default function User() {
                 borderRadius: '12px'
               }}
               size="small"
-              placeholder="Masukkan Nomor HP"
+              placeholder="Contoh: 62851234567890"
               name="noHp"
               value={value.newData.noHp}
               onChange={func.handleChange}

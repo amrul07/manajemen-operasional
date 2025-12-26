@@ -5,6 +5,7 @@ import {
   Card,
   CircularProgress,
   Grid,
+  InputAdornment,
   MenuItem,
   OutlinedInput,
   Pagination,
@@ -213,7 +214,7 @@ export default function DataStok() {
                 borderRadius: '12px'
               }}
               size="small"
-              placeholder="Masukkan Tanggal Permintaan"
+              placeholder="Contoh: 31-12-2025"
               name="tanggal_permintaan"
               value={value.pemesanan.tanggal_permintaan}
               onChange={func.handleChange}
@@ -242,6 +243,11 @@ export default function DataStok() {
                 width: '100%',
                 borderRadius: '12px'
               }}
+              startAdornment={
+                <InputAdornment sx={{ fontFamily: `'Poppins', sans-serif` }} position="start">
+                  Rp.
+                </InputAdornment>
+              }
               size="small"
               placeholder="Masukkan Modal"
               name="modal"
