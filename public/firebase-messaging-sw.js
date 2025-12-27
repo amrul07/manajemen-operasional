@@ -18,3 +18,4 @@ messaging.onBackgroundMessage((payload) => {
     icon: '/pwa-192x192.png'
   });
 });
+
