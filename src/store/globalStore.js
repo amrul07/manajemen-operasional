@@ -3,8 +3,6 @@ import { create } from 'zustand';
 const useGlobalStore = create((set) => ({
   searchQuery: '', // value fitur search
   setSearchQuery: (value) => set({ searchQuery: value }),
-  // user: 'Staff', // value user yg login
-  // setUser: (value) => set({ user: value })
 
   // 👤 Ambil role langsung dari localStorage saat store dibuat
   role: localStorage.getItem('role'), // contoh: "pimpinan", "staff", dll

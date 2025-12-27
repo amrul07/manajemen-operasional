@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { get, set } from 'idb-keyval'; // idb-keyval untuk IndexedDB ringan
-import { fetchData } from '../../../api/api';
+import { fetchData, postData } from '../../../api/api';
+import { enableNotification } from '../../../utils/fcm';
+import { useLocation } from 'react-router-dom';
 
 // --------------------
 // Offline storage keys
@@ -30,12 +32,15 @@ const removeQueueItemByLocalId = async (localId) => {
 // Main hook / logic
 // --------------------
 export default function DashboardLogic() {
+  const location = useLocation();
   // UI / pagination state
   const [data, setData] = useState([]); // data yang ditampilkan di dashboard
   const [dataChart, setDataChart] = useState([]);
+  const [open, setOpen] = useState(false); // alert untuk mengizinkan notifikasi absen
 
   // misc UI
   const [loadingGet, setLoadingGet] = useState(true);
+  const [loadingDialog, setLoadingDialog] = useState(false);
 
   // offline related state
   const [isOnline, setIsOnline] = useState(navigator.onLine); // online status
@@ -87,10 +92,20 @@ export default function DashboardLogic() {
   // --------------------
   // EFFECT: refetch on pagination / search change
   // --------------------
+
+  // useEffect(() => {
+  //   if (location.state?.showNotificationConsent) {
+  //     setOpen(true);
+  //   }
+  // }, [location.state]);
+
   useEffect(() => {
-    // whenever page/itemsPerPage/search changes, re-get data
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const tokenSent = localStorage.getItem('fcm-token-sent');
+
+    if (!tokenSent) {
+      setOpen(true); // ⬅️ dialog muncul
+      localStorage.setItem('fcm-consent-shown', 'true');
+    }
   }, []);
 
   // --------------------
@@ -158,6 +173,41 @@ export default function DashboardLogic() {
     }
   };
 
+  // saat button verifikasi notifikasi di klik
+  const handleEnableNotification = async () => {
+    setLoadingDialog(true);
+    const fcmToken = await enableNotification();
+
+    if (!fcmToken) {
+      alert('Izin notifikasi ditolak');
+      setOpen(false);
+      return;
+    }
+
+    try {
+      //initialize formData
+      const formData = new FormData();
+
+      //append data to formData
+      formData.append('token', fcmToken);
+
+      const res = await postData(`/fcm-token`, formData);
+
+      // ✅ TANDAI TOKEN SUDAH TERKIRIM
+      localStorage.setItem('fcm-token-sent', 'true');
+      // console.log(res);
+    } catch (error) {
+      console.error('Gagal :', error);
+      let pesanError = 'Terjadi kesalahan ';
+      if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
+      // setSnackbar((prev) => ({ ...prev, open: true, message: pesanError }));
+    } finally {
+      alert('Notifikasi absensi berhasil diaktifkan ✅');
+      setOpen(false);
+      setLoadingDialog(false);
+    }
+  };
+
   // --------------------
   // return API untuk komponen
   // --------------------
@@ -166,8 +216,13 @@ export default function DashboardLogic() {
       data,
       dataChart,
       loadingGet,
-      isOnline // expose status bila perlu di UI
+      isOnline, // expose status bila perlu di UI
+      open,
+      setOpen,
+      loadingDialog
     },
-    func: {}
+    func: {
+      handleEnableNotification
+    }
   };
 }

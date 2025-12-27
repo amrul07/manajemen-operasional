@@ -11,16 +11,20 @@ import TotalUser from '../../../ui-component/cards/TotalUser';
 import TotalIncomeLightCard from '../../../ui-component/cards/TotalBarang';
 import TotalBarangMasukKeluar from './TotalBarangMasukKeluar';
 
-
 import { gridSpacing } from '../../../store/constant';
 
 // assets
 import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Value } from 'sass';
+import DashboardLogic from './DashboardLogic';
+import ButtonStyle from '../../../ui-component/button/ButtonStyle';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 export default function Dashboard() {
   const [isLoading, setLoading] = useState(true);
+  const { value, func } = DashboardLogic();
 
   useEffect(() => {
     setLoading(false);
@@ -63,6 +67,47 @@ export default function Dashboard() {
           </Grid> */}
         </Grid>
       </Grid>
+      {/* alert izin notifikasi */}
+      <Dialog open={value.open}>
+        <DialogTitle sx={{ fontFamily: `'Poppins', sans-serif` }}>🔔 Notifikasi Absensi</DialogTitle>
+        <DialogContent sx={{ fontFamily: `'Poppins', sans-serif` }}>Apakah kamu ingin menerima notifikasi absensi?</DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-around' }}>
+          <ButtonStyle
+            width={'45%'}
+            height={'40px'}
+            bg={'#1e88e5'}
+            color={'#fff'}
+            hover={'#1b71bcff'}
+            onClick={func.handleEnableNotification}
+          >
+            Iya{' '}
+            {value.loadingDialog === true && (
+              <CircularProgress
+                size={18}
+                sx={{
+                  color: '#FFF',
+                  position: 'absolute',
+                  mt: '5px',
+                  ml: '5px'
+                }}
+              />
+            )}
+          </ButtonStyle>
+          <ButtonStyle
+            width={'45%'}
+            height={'40px'}
+            bg={'#fff'}
+            color={'#1e88e5'}
+            // hover={'#1b71bcff'}
+            onClick={() => {
+              localStorage.setItem('fcm-consent-shown', 'true');
+              value.setOpen(false);
+            }}
+          >
+            Tidak
+          </ButtonStyle>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }

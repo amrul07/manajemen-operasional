@@ -130,15 +130,15 @@ export default function DataAbsensiLogic() {
   // --------------------
   // EFFECT: refetch on pagination / search change
   useEffect(() => {
-    getDataTangal();
+    getDataTanggal();
   }, []);
-  useEffect(() => {
-    if (!editingId) return;
-    getDataBukti();
-    if (dataBukti) {
-      setStatusApprove(dataBukti.kategori);
-    }
-  }, [editingId, dataBukti]);
+  // useEffect(() => {
+  //   if (!editingId) return;
+  //   getDataBukti();
+  //   if (dataBukti) {
+  //     setStatusApprove(dataBukti.kategori);
+  //   }
+  // }, [editingId, dataBukti]);
   // --------------------
   useEffect(() => {
     if (!dataDropdown) return;
@@ -233,7 +233,7 @@ export default function DataAbsensiLogic() {
   };
 
   // data dropdown
-  const getDataTangal = async () => {
+  const getDataTanggal = async () => {
     // ---------- OFFLINE ----------
     if (!isOnline) {
       const cachedStok = await getOfflineDropdownAbsensi();
@@ -249,7 +249,7 @@ export default function DataAbsensiLogic() {
       setDataTanggal(tanggal); // tampilkan di UI
       await saveOfflineDropdownAbsensi(tanggal); // simpan ke IndexedDB
     } catch (err) {
-      console.error('getDataTangal error', err);
+      console.error('getDataTanggal error', err);
 
       // fallback ke cache kalau fetch gagal
       const cachedTanggal = await getOfflineDropdownAbsensi();
@@ -392,7 +392,7 @@ export default function DataAbsensiLogic() {
       if (error.response) pesanError = error?.response?.data?.message || error?.message || pesanError;
       setSnackbar({ open: true, message: pesanError });
     } finally {
-      setApproveMode(false);
+      // setApproveMode(false);
       setEditingId(null);
       setNewStatus('');
       setModal((prev) => ({ ...prev, data: false }));
@@ -407,7 +407,7 @@ export default function DataAbsensiLogic() {
   const handleCloseModal = () => {
     // tutup modal dan reset form
     setModal({ data: false, succes: false, cetak: false });
-    setApproveMode(false);
+    // setApproveMode(false);
     setEditingId(null);
   };
 

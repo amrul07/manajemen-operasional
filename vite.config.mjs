@@ -58,6 +58,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'firebase-messaging-sw.js',
       devOptions: {
         enabled: true
       },
@@ -94,15 +97,5 @@ export default defineConfig({
         ]
       }
     })
-  ],
-
-  // server: {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'https://api-backend-asli.com',
-  //       changeOrigin: true,
-  //       secure: false
-  //     }
-  //   }
-  // }
+  ]
 });

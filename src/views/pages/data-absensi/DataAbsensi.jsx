@@ -158,7 +158,7 @@ export default function DataAbsensi() {
                             label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />}
                             onClick={() => func.handleApprove(row.id)}
                           />
-                          {/* button pemesanan */}
+                          {/* button edit status */}
                           <CustomButton
                             bg={'#fff8e1'}
                             color={'#ffc107'}
