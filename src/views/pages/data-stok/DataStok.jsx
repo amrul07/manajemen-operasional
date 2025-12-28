@@ -49,7 +49,7 @@ export default function DataStok() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={3}
                   sx={{
@@ -65,6 +65,7 @@ export default function DataStok() {
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
                     {menuItem.map((res) => (
+                      // title dropdown
                       <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
                         {res.label}
                       </MenuItem>
@@ -83,8 +84,8 @@ export default function DataStok() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -96,7 +97,8 @@ export default function DataStok() {
                     }}
                     onClick={func.handleCetak}
                   >
-                    <IconPrinter />
+                    <IconPrinter /> {/* icon */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
                   </Button>
                 </TableCell>
@@ -135,18 +137,18 @@ export default function DataStok() {
                         >
                           {/* button detail */}
                           <CustomButton
-                            bg={'#e3f2fd'}
-                            hover={'#1e88e5'}
-                            color={'#1e88e5'}
+                            bg={'#e3f2fd'} // background
+                            hover={'#1e88e5'} // background ketika hover
+                            color={'#1e88e5'} // color
                             label={<VisibilityIcon style={{ fontSize: '18px' }} />}
                             onClick={() => func.handleDetail(row.id)}
                           />
 
                           {/* button pemesanan */}
                           <CustomButton
-                            bg={'#fff8e1'}
-                            color={'#ffc107'}
-                            hover={'#ffc107'}
+                            bg={'#fff8e1'} // background
+                            color={'#ffc107'} // color
+                            hover={'#ffc107'} // background ketika hover
                             label={<IconShoppingCartPlus size={18} style={{}} />}
                             onClick={() => func.handlePemesanan(row.id)}
                           />

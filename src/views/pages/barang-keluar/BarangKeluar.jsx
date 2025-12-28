@@ -52,7 +52,7 @@ export default function BarangKeluar() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={role === 'Karyawan Biasa' ? 10 : 4}
                   sx={{
@@ -68,6 +68,7 @@ export default function BarangKeluar() {
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
                     {menuItem.map((res) => (
+                      // title dropdown
                       <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
                         {res.label}
                       </MenuItem>
@@ -100,7 +101,8 @@ export default function BarangKeluar() {
                     }}
                     onClick={func.handleModal}
                   >
-                    <AddBoxIcon />
+                    <AddBoxIcon /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Tambah Data</Poppins>
                   </Button>
                 </TableCell>
@@ -154,13 +156,12 @@ export default function BarangKeluar() {
                             alignItems: 'center'
                           }}
                         >
-                          {/* {role } */}
                           {/* button edit */}
                           <CustomButton
-                            bg={'#fff8e1'}
-                            color={'#ffc107'}
-                            hover={'#ffc107'}
-                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            bg={'#fff8e1'}  // background
+                            color={'#ffc107'}  // color
+                            hover={'#ffc107'}  // background ketika hoover
+                            label={<CreateIcon style={{ fontSize: '18px' }} />}  // icon
                             onClick={() => func.handleEdit(row.id)}
                           />
                         </Stack>

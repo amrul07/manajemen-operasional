@@ -41,9 +41,9 @@ export default function AbsensiSaya() {
     justifyContent: 'center',
     transition: 'all 0.35s ease',
     boxShadow: '0px 3px 10px rgba(0,0,0,0.08)',
-    background: '#ffffff',
+    background: '#ffffff', // background card
     '&:hover': {
-      background: 'linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%)',
+      background: 'linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%)', // background ketika hover
       color: '#fff',
       transform: 'translateY(-6px) scale(1.03)',
       boxShadow: '0px 10px 20px rgba(30,136,229,0.35)'
@@ -64,8 +64,8 @@ export default function AbsensiSaya() {
         </Stack>
       ) : (
         <>
-          {/* Title */}
           <Stack>
+            {/* title riwayat absensi */}
             <Poppins sx={{ fontSize: '24px', fontWeight: 700, color: '#1e88e5' }}>Riwayat Absensi</Poppins>
             {/* button lihat riwayat */}
             <Box
@@ -78,9 +78,9 @@ export default function AbsensiSaya() {
                 textAlign: 'center',
                 cursor: 'pointer',
                 transition: '0.35s ease',
-                background: '#ffffff',
+                background: '#ffffff', // bacground
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%)',
+                  background: 'linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%)', // background ketika di hover
                   color: '#fff',
                   transform: 'translateY(-4px)',
                   boxShadow: '0px 6px 16px rgba(30,136,229,0.35)'
@@ -88,6 +88,7 @@ export default function AbsensiSaya() {
               }}
               onClick={() => router('/absensi-saya/riwayat-absensi')}
             >
+              {/* title lihat riwayat */}
               <Poppins sx={{ fontWeight: 500 }}>Lihat Riwayat</Poppins>
             </Box>
           </Stack>
@@ -99,9 +100,9 @@ export default function AbsensiSaya() {
                 {value.loading ? (
                   <CircularProgress size={38} sx={{ color: '#1e88e5' }} />
                 ) : (
-                  <AccessTimeFilledIcon sx={{ fontSize: 38, mb: 1 }} />
+                  <AccessTimeFilledIcon sx={{ fontSize: 38, mb: 1 }} /> // icon
                 )}
-
+                {/* title Clock In */}
                 <Poppins sx={{ fontSize: '16px', fontWeight: 600 }}>Clock In</Poppins>
               </Stack>
             </Grid>
@@ -111,16 +112,17 @@ export default function AbsensiSaya() {
                 {value.loadingClockOut ? (
                   <CircularProgress size={38} sx={{ color: '#1e88e5' }} />
                 ) : (
-                  <LogoutIcon sx={{ fontSize: 38, mb: 1 }} />
+                  <LogoutIcon sx={{ fontSize: 38, mb: 1 }} /> // icon
                 )}
-
+                {/* title Clock Out */}
                 <Poppins sx={{ fontSize: '16px', fontWeight: 600 }}>Clock Out</Poppins>
               </Stack>
             </Grid>
             {/* izin/sakit */}
             <Grid size={{ xs: 6, sm: 4 }}>
               <Stack sx={menuItemStyle} onClick={func.handleModalIzin}>
-                <MedicalInformationIcon sx={{ fontSize: 38, mb: 1 }} />
+                <MedicalInformationIcon sx={{ fontSize: 38, mb: 1 }} /> {/* icon */}
+                {/* title izin / sakit */}
                 <Poppins sx={{ fontSize: '16px', fontWeight: 600 }}>Izin / Sakit</Poppins>
               </Stack>
             </Grid>
@@ -136,6 +138,7 @@ export default function AbsensiSaya() {
             <Poppins sx={{ fontWeight: 500 }}>* Bukti</Poppins>
             <Grid container spacing={2}>
               <Grid size={6}>
+                {/* image */}
                 <Stack
                   sx={{
                     border: '1px dashed #576974',
@@ -155,6 +158,7 @@ export default function AbsensiSaya() {
                     }}
                     alt="ta"
                   />
+                  {/* title tarik dan lepas foto di sini */}
                   <Poppins
                     sx={{
                       width: '80%',
@@ -165,7 +169,7 @@ export default function AbsensiSaya() {
                   >
                     Tarik dan lepas foto di sini
                   </Poppins>
-
+                  {/* button */}
                   <ButtonStyle
                     mt={'30px'}
                     // mb={"20px"}
@@ -190,6 +194,7 @@ export default function AbsensiSaya() {
               </Grid>
               <Grid size={6}>
                 <Stack sx={{ mt: 1 }}>
+                  {/* foto yg di pilih */}
                   {value.previewImage ? (
                     <Stack sx={{ position: 'relative' }}>
                       <img style={{ borderRadius: '8px' }} src={value.previewImage} alt={''} width={'100%'} height={180} />
@@ -201,7 +206,7 @@ export default function AbsensiSaya() {
                           p: 1
                         }}
                       >
-                        <IconTrash onClick={func.removeImage} color="red" size={'20px'} />
+                        <IconTrash onClick={func.removeImage} color="red" size={'20px'} /> {/* icon hps foto */}
                       </Stack>
                     </Stack>
                   ) : (

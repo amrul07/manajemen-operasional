@@ -47,6 +47,7 @@ export default function DetailStok() {
   return (
     <Box>
       <Card sx={{ mt: 2, p: 4 }}>
+        {/* jika data blm terambil maka tampilkan loading... */}
         {!data && <Poppins>Loading...</Poppins>}
 
         {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
@@ -57,56 +58,56 @@ export default function DetailStok() {
               <Poppins>Nama Barang </Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.nama}</Poppins>
+              <Poppins>: {data.nama}</Poppins> {/* data nama */}
             </Grid>
             {/* kode barang */}
             <Grid size={6}>
               <Poppins>Kode Barang </Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.kode_barang}</Poppins>
+              <Poppins>: {data.kode_barang}</Poppins> {/* data kode barang */}
             </Grid>
             {/* Harga Barang */}
             <Grid size={6}>
               <Poppins>Harga Barang</Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: Rp.{data.harga}</Poppins>
+              <Poppins>: Rp.{data.harga}</Poppins> {/* data harga */}
             </Grid>
             {/* Stok */}
             <Grid size={6}>
               <Poppins>Stok</Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.stok_total}</Poppins>
+              <Poppins>: {data.stok_total}</Poppins> {/* data stok */}
             </Grid>
             {/* Stok Awal */}
             <Grid size={6}>
               <Poppins>Stok Awal</Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.stok_awal}</Poppins>
+              <Poppins>: {data.stok_awal}</Poppins> {/* data stok awal */}
             </Grid>
             {/* Tanggal Masuk */}
             <Grid size={6}>
               <Poppins>Tanggal Masuk</Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.tanggal_masuk}</Poppins>
+              <Poppins>: {data.tanggal_masuk}</Poppins> {/* data tanggal masuk */}
             </Grid>
             {/* Tanggal Update */}
             <Grid size={6}>
               <Poppins>Tanggal Update</Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.tanggal_update}</Poppins>
+              <Poppins>: {data.tanggal_update}</Poppins> {/* data tanggal update */}
             </Grid>
             {/* Jenis Barang */}
             <Grid size={6}>
               <Poppins>Jenis Barang</Poppins>
             </Grid>
             <Grid size={6}>
-              <Poppins>: {data.sub_kategori}</Poppins>
+              <Poppins>: {data.sub_kategori}</Poppins> {/* data sub kategori */}
             </Grid>
           </Grid>
         )}

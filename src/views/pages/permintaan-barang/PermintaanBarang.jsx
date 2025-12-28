@@ -63,8 +63,8 @@ export default function PermintaanBarang() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -76,7 +76,8 @@ export default function PermintaanBarang() {
                     }}
                     onClick={func.handlePrint}
                   >
-                    <IconPrinter />
+                    <IconPrinter /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
                     {value.loading === true && (
                       <CircularProgress
@@ -100,8 +101,8 @@ export default function PermintaanBarang() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#ffc107',
-                      color: '#FFFFFF',
+                      backgroundColor: '#ffc107', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -113,7 +114,8 @@ export default function PermintaanBarang() {
                     }}
                     onClick={func.handleModal}
                   >
-                    <AddBoxIcon />
+                    <AddBoxIcon /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Tambah Data</Poppins>
                   </Button>
                 </TableCell>
@@ -156,19 +158,22 @@ export default function PermintaanBarang() {
                         >
                           {/* buttom ceklis */}
                           {/* <CustomCheckBox onChange={() => func.handleCeklis(row.id)} checked={value.idPrint.includes(row.id)} /> */}
+
+
                           {/* button pemesanan */}
                           <CustomButton
-                            bg={'#fff8e1'}
-                            color={'#ffc107'}
-                            hover={'#ffc107'}
-                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            bg={'#fff8e1'} // background
+                            color={'#ffc107'} // color
+                            hover={'#ffc107'} // background ketika hover
+                            label={<CreateIcon style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.handleEdit(row.id)}
                           />
+
                           {/* button delete */}
                           <CustomButton
-                            bg={'#FFD5CC'}
-                            color={'red'}
-                            hover={'red'}
+                            bg={'#FFD5CC'} // background
+                            color={'red'} // color
+                            hover={'red'} // background ketika hover
                             label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />}
                             onClick={() => func.openModalDelete(row.id)}
                           />

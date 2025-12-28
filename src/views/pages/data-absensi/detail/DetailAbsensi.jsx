@@ -108,6 +108,7 @@ export default function DetailAbsensi() {
       ) : (
         <Card sx={{ mt: 2, p: 4 }}>
           {!data ? (
+            // jika bukti izin/sakit tidak ada
             <Poppins sx={{ color: 'red' }}>Bukti izin/sakit tidak tersedia</Poppins>
           ) : (
             // <Poppins>{err}</Poppins>
@@ -118,28 +119,28 @@ export default function DetailAbsensi() {
                   <Poppins sx={{}}>Nama Lengkap</Poppins>
                 </Grid>
                 <Grid size={8}>
-                  <Poppins sx={{}}>: {data.user}</Poppins>
+                  <Poppins sx={{}}>: {data.user}</Poppins> {/* data nama */}
                 </Grid>
                 {/* tanggal */}
                 <Grid size={4}>
                   <Poppins sx={{}}>Tanggal</Poppins>
                 </Grid>
                 <Grid size={8}>
-                  <Poppins sx={{}}>: {data.tanggal}</Poppins>
+                  <Poppins sx={{}}>: {data.tanggal}</Poppins> {/* data tanggal */}
                 </Grid>
                 {/* ketegori */}
                 <Grid size={4}>
                   <Poppins sx={{}}>Kategori</Poppins>
                 </Grid>
                 <Grid size={8}>
-                  <Poppins sx={{}}>: {data.kategori}</Poppins>
+                  <Poppins sx={{}}>: {data.kategori}</Poppins> {/* data kategori */}
                 </Grid>
                 {/* keterangan */}
                 <Grid size={4}>
                   <Poppins sx={{}}>Keterangan</Poppins>
                 </Grid>
                 <Grid size={8}>
-                  <Poppins sx={{}}>: {data.keterangan}</Poppins>
+                  <Poppins sx={{}}>: {data.keterangan}</Poppins> {/* data keterangan */}
                 </Grid>
                 {/* bukt */}
                 <Grid size={4}>
@@ -148,6 +149,7 @@ export default function DetailAbsensi() {
                 <Grid size={8}>
                   <Stack sx={{ flexDirection: 'row', gap: 2 }}>
                     <p>:</p>
+                    {/* data bukti */}
                     <img
                       src={data.image}
                       alt="image"

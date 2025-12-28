@@ -21,7 +21,7 @@ import DashboardLogic from '../../views/dashboard/Default/DashboardLogic';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.vars.palette.primary.dark,
+  backgroundColor: theme.vars.palette.primary.dark, // background
   color: theme.vars.palette.primary.light,
   overflow: 'hidden',
   position: 'relative',
@@ -30,7 +30,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: `linear-gradient(210.04deg, ${theme.vars.palette.primary[200]} -50.94%, rgba(144, 202, 249, 0) 83.49%)`,
+    background: `linear-gradient(210.04deg, ${theme.vars.palette.primary[200]} -50.94%, rgba(144, 202, 249, 0) 83.49%)`, // gradasi bawah
     borderRadius: '50%',
     top: -30,
     right: -180
@@ -40,7 +40,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: `linear-gradient(140.9deg, ${theme.vars.palette.primary[200]} -14.02%, rgba(144, 202, 249, 0) 77.58%)`,
+    background: `linear-gradient(140.9deg, ${theme.vars.palette.primary[200]} -14.02%, rgba(144, 202, 249, 0) 77.58%)`, // gradasi atas
     borderRadius: '50%',
     top: -160,
     right: -130
@@ -48,7 +48,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 }));
 
 export default function TotalUser({ isLoading }) {
-  const {value} = DashboardLogic()
+  const { value } = DashboardLogic();
   const theme = useTheme();
 
   return (
@@ -61,13 +61,14 @@ export default function TotalUser({ isLoading }) {
             <List sx={{ py: 0 }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                 <ListItemAvatar>
+                  {/* icon */}
                   <Avatar
                     variant="rounded"
                     sx={{
                       ...theme.typography.largeAvatar,
                       borderRadius: 2,
-                      bgcolor: 'primary.800',
-                      color: 'common.white'
+                      bgcolor: 'primary.800', // background icon
+                      color: 'common.white' // warna icon
                     }}
                   >
                     <IconUser />
@@ -81,11 +82,13 @@ export default function TotalUser({ isLoading }) {
                     mb: 0.45
                   }}
                   primary={
+                    // title jumlah user
                     <Poppins component="span" variant="h4" sx={{ color: 'common.white' }}>
                       {value?.data.totalUser}
                     </Poppins>
                   }
                   secondary={
+                    // title total user
                     <Poppins component="span" variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
                       Total User
                     </Poppins>

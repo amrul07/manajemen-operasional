@@ -51,7 +51,7 @@ export default function DataAbsensi() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={2}
                   sx={{
@@ -67,6 +67,7 @@ export default function DataAbsensi() {
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
                     {value.dataTanggal.map((res) => (
+                      // title dropdown
                       <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} key={res.id} value={res}>
                         {res.label}
                       </MenuItem>
@@ -85,8 +86,8 @@ export default function DataAbsensi() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5',  // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -98,8 +99,8 @@ export default function DataAbsensi() {
                     }}
                     onClick={func.handleModalCetak}
                   >
-                    <IconPrinter />
-                    <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
+                    <IconPrinter /> {/* icon */}
+                    <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins> {/* title button */}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -152,17 +153,17 @@ export default function DataAbsensi() {
                         >
                           {/* button verifikasi */}
                           <CustomButton
-                            bg={'#e3f2fd'}
-                            hover={'#1e88e5'}
-                            color={'#1e88e5'}
-                            label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />}
+                            bg={'#e3f2fd'}  // background
+                            hover={'#1e88e5'} // color
+                            color={'#1e88e5'}  // background ketika hover
+                            label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />} // icon 
                             onClick={() => func.handleApprove(row.id)}
                           />
                           {/* button edit status */}
                           <CustomButton
-                            bg={'#fff8e1'}
-                            color={'#ffc107'}
-                            hover={'#ffc107'}
+                            bg={'#fff8e1'}  // background
+                            color={'#ffc107'} // color
+                            hover={'#ffc107'} // background ketika hover
                             label={<CreateIcon style={{ fontSize: '18px' }} />}
                             onClick={() => func.handleEditStatus(row.id)}
                           />
@@ -204,6 +205,7 @@ export default function DataAbsensi() {
       <CustomModal open={value.modal.data}>
         <Grid container spacing={2}>
           <Grid size={12}>
+            {/* title pilih status */}
             <Poppins sx={{ fontWeight: 500 }}>* Pilih Status</Poppins>
             <Autocomplete
               disablePortal

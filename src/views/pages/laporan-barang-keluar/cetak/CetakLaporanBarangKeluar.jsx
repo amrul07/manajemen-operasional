@@ -105,6 +105,7 @@ export default function CetakLaporanBarangKeluar() {
   return (
     <div id="print-content">
       <Card sx={{ p: 4 }}>
+        {/* jika data nya error(tdk tersedia offline) maka tampilkan pesan error */}
         {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
         {data && !data.error && (
           <>

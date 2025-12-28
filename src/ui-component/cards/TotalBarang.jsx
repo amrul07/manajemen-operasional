@@ -59,13 +59,14 @@ export default function TotalBarang({ isLoading, total, icon, label }) {
             <List sx={{ py: 0 }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                 <ListItemAvatar>
+                  {/* icon */}
                   <Avatar
                     variant="rounded"
                     sx={{
                       ...theme.typography.largeAvatar,
                       borderRadius: 2,
-                      bgcolor: label === 'Meeting attends' ? withAlpha(theme.vars.palette.error.light, 0.25) : 'warning.light',
-                      color: label === 'Meeting attends' ? 'error.dark' : 'warning.dark'
+                      bgcolor: 'warning.light', // background icon
+                      color: 'warning.dark' // color icon
                     }}
                   >
                     <StorefrontTwoToneIcon />
@@ -74,11 +75,13 @@ export default function TotalBarang({ isLoading, total, icon, label }) {
                 <ListItemText
                   sx={{ py: 0, mt: 0.45, mb: 0.45 }}
                   primary={
+                    // title jumlah barang
                     <Poppins component="span" variant="h4">
                       {value?.data.totalBarang}
                     </Poppins>
                   }
                   secondary={
+                    // title total barang
                     <Poppins component="span" variant="subtitle2" sx={{ color: 'grey.500', mt: 0.5 }}>
                       Total Barang
                     </Poppins>

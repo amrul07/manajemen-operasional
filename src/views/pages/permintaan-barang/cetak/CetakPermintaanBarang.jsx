@@ -105,12 +105,16 @@ export default function CetakPermintaanBarang() {
   return (
     <div id="print-content">
       <Card sx={{ p: 4 }}>
+        {/* jika datanya error(tidak tersedia offline) maka tampilkan pesan error */}
         {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
         {data && !data.error && (
           <>
             <Stack>
+              {/* title perusahaan */}
               <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
+              {/* title permintaan barang */}
               <Poppins sx={{ mt: 2 }}>Permintaan Barang</Poppins>
+              {/* title tanggal print */}
               <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>
             </Stack>
             {/* tabel data */}

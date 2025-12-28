@@ -195,7 +195,6 @@ export default function DashboardLogic() {
 
       // ✅ TANDAI TOKEN SUDAH TERKIRIM
       localStorage.setItem('fcm-token-sent', 'true');
-      // console.log(res);
     } catch (error) {
       console.error('Gagal :', error);
       let pesanError = 'Terjadi kesalahan ';

@@ -51,7 +51,7 @@ export default function TotalPermintaanBarang({ isLoading }) {
           border={false}
           content={false}
           sx={{
-            bgcolor: 'warning.dark',
+            bgcolor: 'warning.dark', // background
             color: '#fff',
             overflow: 'hidden',
             position: 'relative',
@@ -60,7 +60,7 @@ export default function TotalPermintaanBarang({ isLoading }) {
               position: 'absolute',
               width: 210,
               height: 210,
-              background: theme.vars.palette.warning[800],
+              background: theme.vars.palette.warning[800], // gradasi kanan
               borderRadius: '50%',
               top: { xs: -85 },
               right: { xs: -95 }
@@ -70,7 +70,7 @@ export default function TotalPermintaanBarang({ isLoading }) {
               position: 'absolute',
               width: 210,
               height: 210,
-              background: theme.vars.palette.warning[800],
+              background: theme.vars.palette.warning[800], // gradasi kiri
               borderRadius: '50%',
               top: { xs: -125 },
               right: { xs: -15 },
@@ -85,11 +85,11 @@ export default function TotalPermintaanBarang({ isLoading }) {
                 sx={{
                   ...theme.typography.largeAvatar,
                   borderRadius: 2,
-                  bgcolor: 'warning.800',
+                  bgcolor: 'warning.800', // background icon
                   mt: 1
                 }}
               >
-                <IconShoppingCartPlus color="#fff" />
+                <IconShoppingCartPlus color="#fff" /> {/* icon */}
                 {/* <CardMedia sx={{ width: 30, height: 30 }} component="img" src={EarningIcon} alt="Notification" /> */}
               </Avatar>
               {/* <Avatar
@@ -108,37 +108,8 @@ export default function TotalPermintaanBarang({ isLoading }) {
                 <MoreHorizIcon fontSize="inherit" />
               </Avatar> */}
             </Stack>
-            <Menu
-              id="menu-earning-card"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              variant="selectedMenu"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-            >
-              <MenuItem onClick={handleClose}>
-                <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> Import Card
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> Copy Data
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> Export
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
-              </MenuItem>
-            </Menu>
             <Stack direction="row" sx={{ alignItems: 'center' }}>
-              {/* title total permintaan barang */}
+              {/* title jumlah permintaan barang */}
               <Poppins sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
                 {value?.data.totalPermintaanBarang}
               </Poppins>
@@ -146,6 +117,7 @@ export default function TotalPermintaanBarang({ isLoading }) {
                 <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
               </Avatar>
             </Stack>
+            {/* titel total permintaan barang */}
             <Poppins
               sx={{
                 mb: 1.25,

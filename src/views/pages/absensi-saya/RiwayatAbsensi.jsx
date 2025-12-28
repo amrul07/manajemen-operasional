@@ -45,7 +45,7 @@ export default function RiwayatAbsensi() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={2}
                   sx={{
@@ -79,7 +79,7 @@ export default function RiwayatAbsensi() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
+                      backgroundColor: '#1e88e5', // background
                       color: '#FFFFFF',
                       textTransform: 'none',
                       gap: 1,
@@ -92,7 +92,8 @@ export default function RiwayatAbsensi() {
                     }}
                     onClick={func.handleModal}
                   >
-                    <AddBoxIcon />
+                    <AddBoxIcon /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Absensi Saya</Poppins>
                   </Button>
                 </TableCell>

@@ -57,7 +57,7 @@ export default function BarangMasuk() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 10 : 4}
                   sx={{
@@ -73,6 +73,7 @@ export default function BarangMasuk() {
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
                     {menuItem.map((res) => (
+                      // title
                       <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
                         {res.label}
                       </MenuItem>
@@ -85,15 +86,15 @@ export default function BarangMasuk() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'end',
-                    display: role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || role === 'Karyawan Pelapor' ? 'none' : '-moz-initial' // validasi hak akses(jika role nya karyawan pelapor/biasa maka button tambah tidak tampil)
                   }}
                 >
                   <Button
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -105,7 +106,8 @@ export default function BarangMasuk() {
                     }}
                     onClick={func.handleModal}
                   >
-                    <AddBoxIcon />
+                    <AddBoxIcon /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Tambah Data </Poppins>
                   </Button>
                 </TableCell>
@@ -157,28 +159,28 @@ export default function BarangMasuk() {
                             alignItems: 'center'
                           }}
                         >
-                          {/* lapor */}
+                          {/* button lapor */}
                           <CustomButton
-                            bg={'#e3f2fd'}
-                            color={'#1e88e5'}
-                            hover={'#1e88e5'}
-                            label={<IconPrinter size={18} />}
+                            bg={'#e3f2fd'} // background
+                            color={'#1e88e5'} // color
+                            hover={'#1e88e5'} // background ketika hover
+                            label={<IconPrinter size={18} />} // icon
                             onClick={() => func.handlePrint(row.id)}
                           />
                           {/* button edit */}
                           <CustomButton
-                            bg={'#fff8e1'}
-                            color={'#ffc107'}
-                            hover={'#ffc107'}
-                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            bg={'#fff8e1'} // background
+                            color={'#ffc107'} // color
+                            hover={'#ffc107'} // background ketika hover
+                            label={<CreateIcon style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.handleEdit(row.id)}
                           />
                           {/* hapus */}
                           <CustomButton
-                            bg={'#FFD5CC'}
-                            color={'red'}
-                            hover={'red'}
-                            label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />}
+                            bg={'#FFD5CC'} // background
+                            color={'red'} // color
+                            hover={'red'} // background ketika hover
+                            label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.openModalDelete(row.id)}
                           />
                         </Stack>

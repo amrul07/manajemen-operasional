@@ -17,7 +17,7 @@ const chartOptions = {
   dataLabels: { enabled: false },
   xaxis: {
     type: 'category',
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] // kategori bar
   },
   fill: { type: 'solid' },
   legend: {

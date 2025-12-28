@@ -45,7 +45,7 @@ export default function LaporanBarangMasuk() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={4}
                   sx={{
@@ -79,8 +79,8 @@ export default function LaporanBarangMasuk() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -92,7 +92,8 @@ export default function LaporanBarangMasuk() {
                     }}
                     onClick={func.handlePrint}
                   >
-                    <IconPrinter />
+                    <IconPrinter /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
                     {value.loading === true && (
                       <CircularProgress

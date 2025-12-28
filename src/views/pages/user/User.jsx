@@ -57,7 +57,7 @@ export default function User() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={3}
                   sx={{
@@ -73,6 +73,7 @@ export default function User() {
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
                     {menuItem.map((res) => (
+                      // title dropdown
                       <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
                         {res.label}
                       </MenuItem>
@@ -91,8 +92,8 @@ export default function User() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -104,7 +105,8 @@ export default function User() {
                     }}
                     onClick={func.handleModal}
                   >
-                    <AddBoxIcon />
+                    <AddBoxIcon /> {/* icon button */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Tambah Data</Poppins>
                   </Button>
                 </TableCell>
@@ -158,18 +160,18 @@ export default function User() {
                         >
                           {/* button edit */}
                           <CustomButton
-                            bg={'#fff8e1'}
-                            color={'#ffc107'}
-                            hover={'#ffc107'}
-                            label={<CreateIcon style={{ fontSize: '18px' }} />}
+                            bg={'#fff8e1'} // background
+                            color={'#ffc107'} // color
+                            hover={'#ffc107'} // background ketika hover
+                            label={<CreateIcon style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.handleEdit(row.id)}
                           />
                           {/* button delete */}
                           <CustomButton
-                            bg={'#FFD5CC'}
-                            color={'red'}
-                            hover={'red'}
-                            label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />}
+                            bg={'#FFD5CC'} // background
+                            color={'red'} // color
+                            hover={'red'} // background ketika hover
+                            label={<DeleteOutlineIcon style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.openModalDelete(row.id)}
                           />
                         </Stack>

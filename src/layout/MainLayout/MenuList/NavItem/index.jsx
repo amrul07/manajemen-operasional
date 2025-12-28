@@ -89,7 +89,7 @@ export default function NavItem({ item, level, isParents = false, setSelectedID 
               '&:hover': { bgcolor: 'transparent' },
               bgcolor: 'transparent'
             }
-          }),
+          })
         }}
         selected={isSelected}
         onClick={() => itemHandler()}
@@ -105,6 +105,7 @@ export default function NavItem({ item, level, isParents = false, setSelectedID 
                   height: 46,
                   alignItems: 'center',
                   justifyContent: 'center',
+
                   '&:hover': { bgcolor: 'secondary.light' },
                   ...(isSelected && {
                     bgcolor: 'secondary.light',

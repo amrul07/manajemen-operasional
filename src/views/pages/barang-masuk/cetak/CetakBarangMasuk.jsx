@@ -72,7 +72,7 @@ export default function CetakBarangMasuk() {
     }
   };
 
-  // ketika button di klik
+  // ketika button print di klik
   const handlePrint = () => {
     const element = document.getElementById('print-content');
     if (!element) return;
@@ -91,14 +91,15 @@ export default function CetakBarangMasuk() {
 
   return (
     <Card sx={{ p: 4 }}>
-      {!data && <Poppins>Loading...</Poppins>}
+      {!data && <Poppins>Loading...</Poppins>} {/* jika data nya belum terambil maka tampilkan loading... */}
 
-      {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
+      {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>} {/* jika datanya error(tidak tersedia offline) maka tampilkan pesan error */}
       <div id="print-content">
         <Stack>
+          {/* title perusahaan */}
           <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
-          <Poppins sx={{ mt: 2 }}>Lapor Barang</Poppins>
-          <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>
+          <Poppins sx={{ mt: 2 }}>Lapor Barang</Poppins> {/* title lapor barang */}
+          <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>  {/* title tanggal print */}
         </Stack>
         {/* tabel data */}
         <TableContainer sx={{ fontFamily: "`'Poppins', sans-serif`", mt: 2 }} component={Paper}>

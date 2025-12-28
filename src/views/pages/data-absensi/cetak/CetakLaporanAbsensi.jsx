@@ -77,13 +77,14 @@ export default function CetakLaporanAbsensi() {
   };
   return (
     <div id="print-content">
+      {/* jika data nya error(tidak tersedia offline) maka tampilkan pesan error nya */}
       {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}
       <Card sx={{ p: 4 }}>
         <Stack>
           <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
           <Poppins sx={{ mt: 2 }}>Laporan Absensi</Poppins>
           <Poppins sx={{ mt: 1 }}>
-            Bulan : {bulan} {tahun}
+            Bulan : {bulan} {tahun} {/* title bulan dan tahun  */}
           </Poppins>
         </Stack>
         {/* tabel absensi */}

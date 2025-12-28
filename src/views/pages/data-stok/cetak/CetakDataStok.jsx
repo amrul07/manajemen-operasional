@@ -83,13 +83,17 @@ export default function CetakDataStok() {
   return (
     <div id="print-content">
       <Card sx={{ p: 4 }}>
+        {/* jika data error(tidak tersedia offline) maka tampilkan pesan error */}
         {data?.error && <Poppins sx={{ color: 'red', textAlign: 'center' }}>{data.error}</Poppins>}
 
         {data && !data.error && (
           <>
             <Stack>
+              {/* title perusahaan */}
               <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
+              {/* title data stok */}
               <Poppins sx={{ mt: 2 }}>Data Stok</Poppins>
+              {/* title tanggal */}
               <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>
             </Stack>
 

@@ -60,7 +60,7 @@ export default function LaporanBarangKeluar() {
           <Table>
             <TableHead sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
               <TableRow>
-                {/* dropdown tampilan .. data */}
+                {/* dropdown tampilkan .. data */}
                 <TableCell
                   colSpan={6}
                   sx={{
@@ -76,6 +76,7 @@ export default function LaporanBarangKeluar() {
                     sx={{ mt: '5px', fontFamily: `'Poppins', sans-serif`, width: '180px' }}
                   >
                     {menuItem.map((res) => (
+                      // title dropdown
                       <MenuItem sx={{ fontFamily: `'Poppins', sans-serif` }} value={res.value}>
                         {res.label}
                       </MenuItem>
@@ -94,8 +95,8 @@ export default function LaporanBarangKeluar() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',
-                      color: '#FFFFFF',
+                      backgroundColor: '#1e88e5', // background
+                      color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
                       px: 2,
@@ -107,7 +108,8 @@ export default function LaporanBarangKeluar() {
                     }}
                     onClick={func.handlePrint}
                   >
-                    <IconPrinter />
+                    <IconPrinter /> {/* icon */}
+                    {/* title button */}
                     <Poppins sx={{ fontWeight: 500 }}>Cetak Laporan</Poppins>
                     {value.loading === true && (
                       <CircularProgress

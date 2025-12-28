@@ -8,6 +8,7 @@ import PopularCard from './PopularCard';
 import TotalAbsen from './TotalAbsen';
 import TotalPermintaanBarang from './TotalPermintaanBarang';
 import TotalUser from '../../../ui-component/cards/TotalUser';
+import TotalBarang from '../../../ui-component/cards/TotalBarang';
 import TotalIncomeLightCard from '../../../ui-component/cards/TotalBarang';
 import TotalBarangMasukKeluar from './TotalBarangMasukKeluar';
 
@@ -50,7 +51,7 @@ export default function Dashboard() {
               </Grid>
               {/* total barang */}
               <Grid size={{ sm: 6, xs: 12, md: 6, lg: 12 }}>
-                <TotalIncomeLightCard isLoading={isLoading} />
+                <TotalBarang isLoading={isLoading} />
               </Grid>
             </Grid>
           </Grid>

@@ -54,7 +54,7 @@ export default function TotalBarangMasukKeluar({ isLoading }) {
     setChartOptions({
       ...barChartOptions,
       chart: { ...barChartOptions.chart, fontFamily: `'Poppins', sans-serif` },
-      colors: [warningDark, primaryDark, secondaryMain, secondaryLight],
+      colors: [warningDark, primaryDark, secondaryMain, secondaryLight], // color 
       xaxis: { ...barChartOptions.xaxis, labels: { style: { colors: textPrimary } } },
       yaxis: { ...barChartOptions.yaxis, labels: { style: { colors: textPrimary } } },
       grid: { borderColor: divider },
@@ -74,6 +74,7 @@ export default function TotalBarangMasukKeluar({ isLoading }) {
           <Stack sx={{ gap: gridSpacing }}>
             <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
               <Stack sx={{ gap: 1 }}>
+                {/* title total barang masuk & keluar */}
                 <Poppins variant="subtitle2">Total Barang Masuk & Keluar</Poppins>
                 {/* <Poppins variant="h3">$2,324.00</Poppins> */}
               </Stack>
