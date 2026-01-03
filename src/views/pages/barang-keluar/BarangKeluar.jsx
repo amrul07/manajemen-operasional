@@ -54,7 +54,7 @@ export default function BarangKeluar() {
               <TableRow>
                 {/* dropdown tampilkan .. data */}
                 <TableCell
-                  colSpan={role === 'Karyawan Biasa' ? 10 : 4}
+                  colSpan={role === 'Karyawan Biasa' || role === 'Staff' ? 10 : 4}
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`"
                   }}
@@ -81,7 +81,7 @@ export default function BarangKeluar() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'end',
-                    display: role === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || role === 'Staff' ? 'none' : '-moz-initial'
                   }}
                 >
                   <Button
@@ -121,7 +121,7 @@ export default function BarangKeluar() {
                   sx={{
                     fontFamily: "`'Poppins', sans-serif`",
                     textAlign: 'center',
-                    display: role === 'Karyawan Biasa' ? 'none' : '-moz-initial'
+                    display: role === 'Karyawan Biasa' || role === 'Staff' ? 'none' : '-moz-initial'
                   }}
                 >
                   Aksi
@@ -146,7 +146,7 @@ export default function BarangKeluar() {
                       <StyledTableCell>{row.sub_kategori}</StyledTableCell>
                       <StyledTableCell>{row.toko_tujuan}</StyledTableCell>
                       <StyledTableCell>{row.jumlah}</StyledTableCell>
-                      <StyledTableCell sx={{ display: role === 'Karyawan Biasa' ? 'none' : '-moz-initial' }}>
+                      <StyledTableCell sx={{ display: role === 'Karyawan Biasa' || role === 'Staff' ? 'none' : '-moz-initial' }}>
                         <Stack
                           sx={{
                             display: 'flex',
@@ -158,10 +158,10 @@ export default function BarangKeluar() {
                         >
                           {/* button edit */}
                           <CustomButton
-                            bg={'#fff8e1'}  // background
-                            color={'#ffc107'}  // color
-                            hover={'#ffc107'}  // background ketika hoover
-                            label={<CreateIcon style={{ fontSize: '18px' }} />}  // icon
+                            bg={'#fff8e1'} // background
+                            color={'#ffc107'} // color
+                            hover={'#ffc107'} // background ketika hoover
+                            label={<CreateIcon style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.handleEdit(row.id)}
                           />
                         </Stack>

@@ -439,9 +439,10 @@ export default function DataAbsensiLogic() {
   };
 
   const handleChange = (event, newValue) => setNewStatus(newValue); // autocomplete change
-  const handleChangeTahun = (e) => setParamsCetak((prev) => ({ ...prev, tahun: e.target.value })); // input change
+  // const handleChangeTahun = (e) => setParamsCetak((prev) => ({ ...prev, tahun: e.target.value })); // input change
 
-  const handleChangeBulan = (event, newValue) => setParamsCetak((prev) => ({ ...prev, bulan: newValue })); // autocomplete tahun bulan cetak change
+  const handleChangeBulan = (event, newValue) => setParamsCetak((prev) => ({ ...prev, bulan: newValue })); // autocomplete bulan cetak change
+  const handleChangeTahun = (event, newValue) => setParamsCetak((prev) => ({ ...prev, tahun: newValue })); // autocomplete tahun bulan cetak change
 
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') return;

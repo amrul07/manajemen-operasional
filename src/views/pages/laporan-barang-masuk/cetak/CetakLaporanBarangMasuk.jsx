@@ -87,12 +87,22 @@ export default function CetakLaporanBarangMasuk() {
     if (!element) return;
 
     const opt = {
-      margin: 10,
-      filename: 'laporan barang masuk.pdf',
+      margin: [5, 5, 5, 5],
+      filename: 'barang masuk.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-       pagebreak: {
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: element.scrollWidth // 🔥 penting
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'landscape' // 🔥 WAJIB
+      },
+      pagebreak: {
         mode: ['avoid-all', 'css', 'legacy'] // 🔥 KUNCI UTAMA
       }
     };

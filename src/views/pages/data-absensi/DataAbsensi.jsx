@@ -86,7 +86,7 @@ export default function DataAbsensi() {
                     variant="contained"
                     sx={{
                       mt: '5px',
-                      backgroundColor: '#1e88e5',  // background
+                      backgroundColor: '#1e88e5', // background
                       color: '#FFFFFF', // color
                       textTransform: 'none',
                       gap: 1,
@@ -153,15 +153,15 @@ export default function DataAbsensi() {
                         >
                           {/* button verifikasi */}
                           <CustomButton
-                            bg={'#e3f2fd'}  // background
+                            bg={'#e3f2fd'} // background
                             hover={'#1e88e5'} // color
-                            color={'#1e88e5'}  // background ketika hover
-                            label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />} // icon 
+                            color={'#1e88e5'} // background ketika hover
+                            label={<IconArrowNarrowRight style={{ fontSize: '18px' }} />} // icon
                             onClick={() => func.handleApprove(row.id)}
                           />
                           {/* button edit status */}
                           <CustomButton
-                            bg={'#fff8e1'}  // background
+                            bg={'#fff8e1'} // background
                             color={'#ffc107'} // color
                             hover={'#ffc107'} // background ketika hover
                             label={<CreateIcon style={{ fontSize: '18px' }} />}
@@ -299,22 +299,33 @@ export default function DataAbsensi() {
                 />
               )}
             />
-            {/* tahun */}
-            <Poppins sx={{ fontWeight: 500, mt: 2 }}>* Masukkan Tahun</Poppins>
-            <OutlinedInput
-              sx={{
-                mt: 1,
-                fontFamily: `'Poppins', sans-serif`,
-                width: '100%',
-                borderRadius: '12px'
-              }}
-              type="number"
+            {/* pilih tahun */}
+            <Poppins sx={{ fontWeight: 500 }}>* Pilih Tahun</Poppins>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={['2026', '2027', '2028', '2029', '2030']}
               size="small"
-              placeholder="Masukkan Tahun"
-              name="tahun"
-              value={value.paramsCetak.tahun}
+              sx={{
+                mt: '5px',
+                borderRadius: '12px',
+                fontFamily: `'Poppins', sans-serif`
+              }}
+              value={value.paramsCetak.tahun || ''}
               onChange={func.handleChangeTahun}
-            ></OutlinedInput>
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  name="tahun"
+                  sx={{ fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { fontFamily: `'Poppins', sans-serif`, borderRadius: '12px' }
+                  }}
+                  placeholder={'Pilih Tahun'}
+                />
+              )}
+            />
           </Grid>
         </Grid>
         {/* button */}
