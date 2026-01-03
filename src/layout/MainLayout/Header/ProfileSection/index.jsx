@@ -39,7 +39,6 @@ import { fetchData } from '../../../../api/api';
 
 export default function ProfileSection() {
   const { func } = AuthenticationLogic();
-  const token = Cookies.get('token');
   const theme = useTheme();
   const {
     state: { borderRadius }
@@ -81,7 +80,7 @@ export default function ProfileSection() {
   // get data profile
   const getProfile = async () => {
     try {
-      const res = await fetchData(`/me`, token);
+      const res = await fetchData(`/me`);
       setData(res.data);
     } catch (error) {}
   };

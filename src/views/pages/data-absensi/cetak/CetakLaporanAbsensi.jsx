@@ -70,7 +70,10 @@ export default function CetakLaporanAbsensi() {
       filename: `rekap absensi ${bulan} ${tahun}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: {
+        mode: ['avoid-all', 'css', 'legacy'] // 🔥 KUNCI UTAMA
+      }
     };
 
     html2pdf().set(opt).from(element).save();
@@ -102,8 +105,8 @@ export default function CetakLaporanAbsensi() {
               </TableRow>
             </TableHead>
             <TableBody sx={{ fontFamily: "`'Poppins', sans-serif`" }}>
-              {data.length === 0 &&(
-                 <StyledTableRowCetak>
+              {data.length === 0 && (
+                <StyledTableRowCetak>
                   <StyledTableCellCetak colSpan={5}>Tidak ada data</StyledTableCellCetak>
                 </StyledTableRowCetak>
               )}

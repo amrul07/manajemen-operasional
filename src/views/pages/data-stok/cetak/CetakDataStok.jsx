@@ -60,8 +60,6 @@ export default function CetakDataStok() {
     }
   };
 
-  // console.log({ data });
-
   // =============================
   // FUNGSI CETAK PDF
   // =============================
@@ -70,11 +68,24 @@ export default function CetakDataStok() {
     if (!element) return;
 
     const opt = {
-      margin: 10,
+      margin: [5, 5, 5, 5],
       filename: 'data-stok.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: element.scrollWidth // 🔥 penting
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'landscape' // 🔥 WAJIB
+      },
+      pagebreak: {
+        mode: ['avoid-all', 'css', 'legacy'] // 🔥 KUNCI UTAMA
+      }
     };
 
     html2pdf().set(opt).from(element).save();
@@ -108,8 +119,9 @@ export default function CetakDataStok() {
                     <TableCell sx={{ color: '#fff' }}>Harga Barang</TableCell>
                     <TableCell sx={{ color: '#fff' }}>Stok</TableCell>
                     <TableCell sx={{ color: '#fff' }}>Stok Awal</TableCell>
-                    <TableCell sx={{ color: '#fff' }}>Terjual</TableCell>
+                    <TableCell sx={{ color: '#fff' }}>Sub Kategori</TableCell>
                     <TableCell sx={{ color: '#fff' }}>Tanggal Masuk</TableCell>
+                    <TableCell sx={{ color: '#fff' }}>Tanggal Update</TableCell>
                   </TableRow>
                 </TableHead>
 
@@ -123,8 +135,9 @@ export default function CetakDataStok() {
                         <StyledTableCellCetak>{row.harga}</StyledTableCellCetak>
                         <StyledTableCellCetak>{row.stok_total}</StyledTableCellCetak>
                         <StyledTableCellCetak>{row.stok_awal}</StyledTableCellCetak>
-                        <StyledTableCellCetak>{row.terjual}</StyledTableCellCetak>
+                        <StyledTableCellCetak>{row.sub_kategori}</StyledTableCellCetak>
                         <StyledTableCellCetak>{row.tanggal_masuk}</StyledTableCellCetak>
+                        <StyledTableCellCetak>{row.tanggal_update}</StyledTableCellCetak>
                       </StyledTableRowCetak>
                     ))}
                 </TableBody>

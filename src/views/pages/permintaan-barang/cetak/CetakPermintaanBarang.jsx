@@ -24,8 +24,8 @@ export default function CetakPermintaanBarang() {
     //   getData();
     // }
 
-    getData()
-  // }, [ids]);
+    getData();
+    // }, [ids]);
   }, []);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function CetakPermintaanBarang() {
     //   printedRef.current = true;
     //   generatePDF();
     // }
-    if (!loading && data.length > 0 ) {
+    if (!loading && data.length > 0) {
       printedRef.current = true;
       generatePDF();
     }
@@ -97,7 +97,10 @@ export default function CetakPermintaanBarang() {
       filename: 'permintaan barang.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: {
+        mode: ['avoid-all', 'css', 'legacy'] // 🔥 KUNCI UTAMA
+      }
     };
 
     html2pdf().set(opt).from(element).save();

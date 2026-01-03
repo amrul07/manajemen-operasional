@@ -1,11 +1,13 @@
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 
+
 const baseUrl = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: baseUrl
 });
+
 
 // 🔐 REQUEST INTERCEPTOR
 // Mendaftarkan interceptor request Axios
@@ -34,9 +36,14 @@ api.interceptors.response.use(
   // Status 401 Unauthorized
   // Pesan backend mengandung kata Unauthenticated
   (error) => {
+    // ⛔ JANGAN redirect jika request logout
+    if (error.config?.url?.includes('/logout')) {
+      return Promise.reject(error);
+    }
     if (error.response?.status === 401 && error.response?.data?.message?.toLowerCase().includes('unauthenticated')) {
       useAuthStore.getState().clearAuth(); //Menghapus token dari: Zustand store,localStorage
       window.location.href = '/login'; // Redirect paksa ke halaman login
+      // router('/login', { replace: true });
     }
 
     return Promise.reject(error); // Tetap lempar error ke pemanggil API

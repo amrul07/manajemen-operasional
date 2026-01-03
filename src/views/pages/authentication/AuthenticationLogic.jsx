@@ -84,6 +84,7 @@ export default function UseAuthenticationLogic() {
       await logout('/logout');
     } catch (e) {
       // abaikan error logout
+      console.log(e);
     } finally {
       useAuthStore.getState().clearAuth();
       useGlobalStore.getState().clearRole();

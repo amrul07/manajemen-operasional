@@ -82,24 +82,26 @@ export default function CetakBarangMasuk() {
       filename: 'lapor barang.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: {
+        mode: ['avoid-all', 'css', 'legacy'] // 🔥 KUNCI UTAMA
+      }
     };
 
     html2pdf().set(opt).from(element).save();
   };
 
-
   return (
     <Card sx={{ p: 4 }}>
       {!data && <Poppins>Loading...</Poppins>} {/* jika data nya belum terambil maka tampilkan loading... */}
-
-      {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>} {/* jika datanya error(tidak tersedia offline) maka tampilkan pesan error */}
+      {data?.error && <Poppins style={{ color: 'red' }}>{data.error}</Poppins>}{' '}
+      {/* jika datanya error(tidak tersedia offline) maka tampilkan pesan error */}
       <div id="print-content">
         <Stack>
           {/* title perusahaan */}
           <Poppins sx={{ fontWeight: 700, textAlign: 'center' }}>CV. INDO RETAIL ABADI</Poppins>
           <Poppins sx={{ mt: 2 }}>Lapor Barang</Poppins> {/* title lapor barang */}
-          <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins>  {/* title tanggal print */}
+          <Poppins sx={{ mt: 1 }}>Tanggal : {today}</Poppins> {/* title tanggal print */}
         </Stack>
         {/* tabel data */}
         <TableContainer sx={{ fontFamily: "`'Poppins', sans-serif`", mt: 2 }} component={Paper}>
@@ -156,7 +158,6 @@ export default function CetakBarangMasuk() {
           </Stack>
         </Stack>
       </div>
-
       {/* button cetak */}
       <Stack sx={{ float: 'right' }}>
         <Button
